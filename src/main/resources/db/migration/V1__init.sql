@@ -5,7 +5,7 @@ CREATE SEQUENCE hibernate_sequence
     NO MAXVALUE
     CACHE 1;
 
-create table dokumentti (
+CREATE TABLE dokumentti (
     id              bigint not null primary key,
     sisalto_id      bigint,
     tyyppi          character varying not null,

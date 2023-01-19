@@ -12,16 +12,29 @@
 	<artifactId>eperusteet-pdf-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>eperusteet-pdf-service</name>
+	<packaging>war</packaging>
 	<description>Eperusteet PDF generation service</description>
 	<properties>
+		<java.version>11</java.version>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<flyway.user>oph</flyway.user>
+		<flyway.password>test</flyway.password>
+		<flyway.url>jdbc:postgresql://localhost:5435/pdf</flyway.url>
+		<flyway.baselineOnMigrate>true</flyway.baselineOnMigrate>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<postgresql.version>42.5.1</postgresql.version>
 		<pdfbox.version>2.0.24</pdfbox.version>
 		<slf4j.version>1.7.21</slf4j.version>
-		<java.version>11</java.version>
-		<flyway.version>5.2.4</flyway.version>
+		<flyway.version>6.5.7</flyway.version>
 		<jsoup.version>1.9.2</jsoup.version>
 		<fop.version>2.6</fop.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -52,11 +65,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
@@ -66,14 +74,8 @@
 			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jul-to-slf4j</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
-			<version>${flyway.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
@@ -123,16 +125,33 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>local</id>
+			<properties>
+				<eperusteet.devdb.user>oph</eperusteet.devdb.user>
+				<eperusteet.devdb.password>test</eperusteet.devdb.password>
+				<eperusteet.devdb.jdbcurl>jdbc:postgresql://localhost:5432/eperusteet</eperusteet.devdb.jdbcurl>
 
+				<eperusteet-amosaa.devdb.user>oph</eperusteet-amosaa.devdb.user>
+				<eperusteet-amosaa.devdb.password>test</eperusteet-amosaa.devdb.password>
+				<eperusteet-amosaa.devdb.jdbcurl>jdbc:postgresql://localhost:5433/amosaa</eperusteet-amosaa.devdb.jdbcurl>
+
+				<eperusteet-ylops.devdb.user>oph</eperusteet-ylops.devdb.user>
+				<eperusteet-ylops.devdb.password>test</eperusteet-ylops.devdb.password>
+				<eperusteet-ylops.devdb.jdbcurl>jdbc:postgresql://localhost:5434/ylops</eperusteet-ylops.devdb.jdbcurl>
+
+				<eperusteet-pdf.devdb.user>oph</eperusteet-pdf.devdb.user>
+				<eperusteet-pdf.devdb.password>test</eperusteet-pdf.devdb.password>
+				<eperusteet-pdf.devdb.jdbcurl>jdbc:postgresql://localhost:5435/pdf</eperusteet-pdf.devdb.jdbcurl>
+			</properties>
+		</profile>
+	</profiles>
 </project>
