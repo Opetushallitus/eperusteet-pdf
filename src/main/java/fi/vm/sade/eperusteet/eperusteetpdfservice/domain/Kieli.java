@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.eperusteetpdfservice.model;
+package fi.vm.sade.eperusteet.eperusteetpdfservice.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

@@ -13,7 +13,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>eperusteet-pdf-service</name>
 	<packaging>war</packaging>
-	<description>Eperusteet PDF generation service</description>
 	<properties>
 		<java.version>11</java.version>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
@@ -29,6 +28,7 @@
 		<flyway.version>6.5.7</flyway.version>
 		<jsoup.version>1.9.2</jsoup.version>
 		<fop.version>2.6</fop.version>
+		<eperusteet.backend-utils.version>2.5</eperusteet.backend-utils.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -117,6 +117,11 @@
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
 			<version>2.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>fi.vm.sade.eperusteet</groupId>
+			<artifactId>eperusteet-backend-utils</artifactId>
+			<version>${eperusteet.backend-utils.version}</version>
 		</dependency>
 	</dependencies>
 

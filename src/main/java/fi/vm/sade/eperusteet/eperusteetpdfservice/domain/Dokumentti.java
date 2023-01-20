@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.eperusteetpdfservice.model;
+package fi.vm.sade.eperusteet.eperusteetpdfservice.domain;
 
 import com.sun.istack.NotNull;
 import lombok.Data;
@@ -41,7 +41,7 @@ public class Dokumentti {
     @NotNull
     private DokumenttiTila tila = DokumenttiTila.EI_OLE;
 
-    @Column(insertable = true, updatable = false)
+    @Column(updatable = false)
     @Enumerated(EnumType.STRING)
     @NotNull
     private Kieli kieli;
