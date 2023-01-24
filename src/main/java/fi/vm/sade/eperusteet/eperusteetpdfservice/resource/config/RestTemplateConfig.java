@@ -1,8 +1,5 @@
 package fi.vm.sade.eperusteet.eperusteetpdfservice.resource.config;
 
-import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
-import fi.vm.sade.javautils.cas.CasClient;
-import fi.vm.sade.javautils.http.OphHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -11,23 +8,6 @@ import org.springframework.http.HttpHeaders;
 
 @Configuration
 public class RestTemplateConfig {
-
-    @Bean
-    RestClientFactory restClientFactory() {
-        return new RestClientFactory() {
-
-            public OphHttpClient get(String service, boolean requireCas) {
-                return null;
-            }
-            public CasClient getCasClient(String service, boolean requireCas) {
-                return null;
-            }
-
-            public String getCallerId() {
-                return null;
-            }
-        };
-    }
 
     @Bean
     @Scope("prototype")

@@ -37,23 +37,6 @@ public class LokalisointiServiceImpl implements LokalisointiService {
     @Autowired
     HttpHeaders httpHeaders;
 
-    @Bean
-    RestClientFactory restClientFactory() {
-        return new RestClientFactory() {
-            @Override
-            public OphHttpClient get(String service, boolean requireCas) {
-                return null;
-            }
-            public CasClient getCasClient(String service, boolean requireCas) {
-                return null;
-            }
-            @Override
-            public String getCallerId() {
-                return null;
-            }
-        };
-    }
-
     @Override
     @Cacheable("lokalisoinnit")
     public LokalisointiDto get(String key, String locale) {
