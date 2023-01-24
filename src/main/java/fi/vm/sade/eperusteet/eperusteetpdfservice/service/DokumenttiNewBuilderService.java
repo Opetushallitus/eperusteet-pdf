@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.eperusteetpdfservice.service;
 
 import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.Dokumentti;
-import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.eperusteet.peruste.PerusteDto;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.ParserConfigurationException;

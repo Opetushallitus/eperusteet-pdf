@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.eperusteetpdfservice.service;
 
 import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.Dokumentti;
-import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.eperusteet.peruste.PerusteDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;

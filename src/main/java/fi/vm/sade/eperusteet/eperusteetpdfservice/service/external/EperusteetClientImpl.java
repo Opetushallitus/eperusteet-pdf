@@ -3,7 +3,7 @@ package fi.vm.sade.eperusteet.eperusteetpdfservice.service.external;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.tutkinnonrakenne.AbstractRakenneOsaDto;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.eperusteet.tutkinnonrakenne.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.eperusteetpdfservice.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.eperusteetpdfservice.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.eperusteetpdfservice.service.BusinessRuleViolationException;

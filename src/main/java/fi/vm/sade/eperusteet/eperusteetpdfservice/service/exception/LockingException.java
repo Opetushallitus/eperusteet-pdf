@@ -16,7 +16,7 @@
 
 package fi.vm.sade.eperusteet.eperusteetpdfservice.service.exception;
 
-import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.LukkoDto;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.eperusteet.LukkoDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 

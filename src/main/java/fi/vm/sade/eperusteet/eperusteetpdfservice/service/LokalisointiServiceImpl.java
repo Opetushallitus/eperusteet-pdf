@@ -1,15 +1,11 @@
 package fi.vm.sade.eperusteet.eperusteetpdfservice.service;
 
-import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.LokalisointiDto;
-import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
-import fi.vm.sade.javautils.cas.CasClient;
-import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.eperusteet.LokalisointiDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;

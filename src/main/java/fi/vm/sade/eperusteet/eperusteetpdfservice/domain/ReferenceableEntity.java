@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.eperusteetpdfservice.domain;
 
-import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.Reference;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.eperusteet.Reference;
 
 import java.io.Serializable;
 import java.util.function.Predicate;

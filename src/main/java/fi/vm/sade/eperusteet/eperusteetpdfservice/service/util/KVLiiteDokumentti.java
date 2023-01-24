@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.eperusteetpdfservice.service.util;
 
-import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.peruste.KVLiiteJulkinenDto;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.eperusteet.peruste.KVLiiteJulkinenDto;
 import lombok.Getter;
 import lombok.Setter;
 

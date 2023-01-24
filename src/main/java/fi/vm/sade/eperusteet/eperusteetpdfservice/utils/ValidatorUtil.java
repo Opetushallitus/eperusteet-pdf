@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.eperusteetpdfservice.utils;
 
-import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.peruste.TutkintonimikeKoodiDto;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.eperusteet.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.eperusteet.peruste.TutkintonimikeKoodiDto;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 
