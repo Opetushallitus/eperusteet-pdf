@@ -1,8 +1,8 @@
-package fi.vm.sade.eperusteet.pdf.service;
+package fi.vm.sade.eperusteet.pdf.service.impl;
 
 import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.repository.DokumenttiRepository;
-import fi.vm.sade.eperusteet.pdf.service.util.IgnorePerusteUpdateCheck;
+import fi.vm.sade.eperusteet.pdf.service.DokumenttiStateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -14,7 +14,6 @@ public class DokumenttiStateServiceImpl implements DokumenttiStateService {
     @Autowired
     private DokumenttiRepository dokumenttiRepository;
 
-    @IgnorePerusteUpdateCheck
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Dokumentti save(Dokumentti dokumentti) {
         return dokumenttiRepository.save(dokumentti);

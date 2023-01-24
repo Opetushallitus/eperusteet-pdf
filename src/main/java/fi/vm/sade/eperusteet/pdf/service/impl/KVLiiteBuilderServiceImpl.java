@@ -1,7 +1,8 @@
-package fi.vm.sade.eperusteet.pdf.service;
+package fi.vm.sade.eperusteet.pdf.service.impl;
 
 import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.pdf.service.KVLiiteBuilderService;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 

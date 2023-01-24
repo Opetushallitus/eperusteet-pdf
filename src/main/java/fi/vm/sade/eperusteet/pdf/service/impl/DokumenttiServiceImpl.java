@@ -1,8 +1,10 @@
-package fi.vm.sade.eperusteet.pdf.service;
+package fi.vm.sade.eperusteet.pdf.service.impl;
 
 import fi.vm.sade.eperusteet.pdf.domain.enums.GeneratorVersion;
 import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.domain.enums.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.pdf.service.DokumenttiService;
+import fi.vm.sade.eperusteet.pdf.service.DokumenttiStateService;
 import fi.vm.sade.eperusteet.pdf.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiDto;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @Profile("default")
-public class DokumenttiServiceImpl implements DokumenttiService{
+public class DokumenttiServiceImpl implements DokumenttiService {
     @Override
     public void setStarted(DokumenttiDto dto) {
 

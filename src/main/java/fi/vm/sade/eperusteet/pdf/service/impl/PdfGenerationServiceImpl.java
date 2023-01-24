@@ -1,6 +1,7 @@
-package fi.vm.sade.eperusteet.pdf.service;
+package fi.vm.sade.eperusteet.pdf.service.impl;
 
 import fi.vm.sade.eperusteet.pdf.domain.enums.GeneratorVersion;
+import fi.vm.sade.eperusteet.pdf.service.PdfGenerationService;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
@@ -28,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class PdfGenerationServiceImpl implements PdfGenerationService{
+public class PdfGenerationServiceImpl implements PdfGenerationService {
 
     @Value("classpath:docgen/xhtml-to-xslfo.xsl")
     private Resource template;
