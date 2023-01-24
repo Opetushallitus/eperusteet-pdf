@@ -1,0 +1,27 @@
+package fi.vm.sade.eperusteet.pdf.dto.eperusteet.opas.lops2019.oppiaineet;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.opas.lops2019.oppiaineet.moduuli.Lops2019ModuuliBaseDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.LokalisoituTekstiDto;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class Lops2019OppiaineDto extends Lops2019OppiaineBaseDto {
+    private LokalisoituTekstiDto pakollisetModuulitKuvaus;
+    private LokalisoituTekstiDto valinnaisetModuulitKuvaus;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<Lops2019ModuuliBaseDto> moduulit = new ArrayList<>();
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<Lops2019OppiaineDto> oppimaarat = new ArrayList<>();
+}
