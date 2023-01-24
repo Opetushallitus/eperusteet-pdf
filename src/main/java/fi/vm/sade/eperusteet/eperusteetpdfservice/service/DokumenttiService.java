@@ -1,10 +1,10 @@
 package fi.vm.sade.eperusteet.eperusteetpdfservice.service;
 
-import fi.vm.sade.eperusteet.eperusteetpdfservice.DokumenttiException;
-import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.GeneratorVersion;
-import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.Kieli;
-import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.Suoritustapakoodi;
-import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.DokumenttiDto;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.enums.GeneratorVersion;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.enums.Kieli;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.enums.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.service.exception.DokumenttiException;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.service.util.DokumenttiDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 

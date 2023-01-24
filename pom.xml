@@ -28,7 +28,8 @@
 		<flyway.version>6.5.7</flyway.version>
 		<jsoup.version>1.9.2</jsoup.version>
 		<fop.version>2.6</fop.version>
-		<eperusteet.backend-utils.version>2.5</eperusteet.backend-utils.version>
+		<springfox.version>2.7.0</springfox.version>
+		<jackson.version>2.11.4</jackson.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -119,10 +120,45 @@
 			<version>2.3.1</version>
 		</dependency>
 		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>fi.vm.sade.eperusteet</groupId>
 			<artifactId>eperusteet-backend-utils</artifactId>
-			<version>${eperusteet.backend-utils.version}</version>
+			<version>2.4-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>fi.vm.sade.java-utils</groupId>
+			<artifactId>java-http</artifactId>
+			<version>0.6.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.7</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>30.0-jre</version>
+		</dependency>
+		<dependency>
+			<groupId>ma.glasnost.orika</groupId>
+			<artifactId>orika-core</artifactId>
+			<version>1.5.4</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

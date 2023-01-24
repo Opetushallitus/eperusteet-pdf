@@ -1,6 +1,8 @@
 package fi.vm.sade.eperusteet.eperusteetpdfservice.domain;
 
 import com.sun.istack.NotNull;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.enums.DokumenttiTila;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.enums.Kieli;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +20,7 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
@@ -25,7 +28,7 @@ import java.util.Date;
 @Table(name = "dokumentti")
 @Getter
 @Setter
-public class Dokumentti {
+public class Dokumentti implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

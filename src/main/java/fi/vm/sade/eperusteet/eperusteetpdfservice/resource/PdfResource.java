@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.eperusteetpdfservice.resource;
 
-import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.Kieli;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.enums.Kieli;
 import fi.vm.sade.eperusteet.eperusteetpdfservice.service.DokumenttiService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

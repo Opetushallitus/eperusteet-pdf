@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.eperusteetpdfservice.service;
 
-import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.GeneratorVersion;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.enums.GeneratorVersion;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;

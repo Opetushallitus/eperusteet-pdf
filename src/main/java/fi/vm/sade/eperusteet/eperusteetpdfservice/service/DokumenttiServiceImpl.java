@@ -1,34 +1,18 @@
 package fi.vm.sade.eperusteet.eperusteetpdfservice.service;
 
-import fi.vm.sade.eperusteet.eperusteetpdfservice.DokumenttiException;
-import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.GeneratorVersion;
-import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.Kieli;
-import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.Suoritustapakoodi;
-import fi.vm.sade.eperusteet.eperusteetpdfservice.dto.DokumenttiDto;
-import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
-import org.apache.pdfbox.preflight.ValidationResult;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.enums.GeneratorVersion;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.enums.Kieli;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.domain.enums.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.service.exception.DokumenttiException;
+import fi.vm.sade.eperusteet.eperusteetpdfservice.service.util.DokumenttiDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
+@Slf4j
 @Service
+@Profile("default")
 public class DokumenttiServiceImpl implements DokumenttiService{
     @Override
     public void setStarted(DokumenttiDto dto) {
@@ -82,27 +66,20 @@ public class DokumenttiServiceImpl implements DokumenttiService{
 //    @Autowired
 //    private DokumenttiRepository dokumenttiRepository;
 //
-//    @Dto
-//    @Autowired
-//    private DtoMapper mapper;
-//
 //    @Autowired
 //    private PerusteRepository perusteRepository;
-//
-//    @Autowired
-//    private DokumenttiBuilderService builder;
 //
 //    @Autowired
 //    private DokumenttiNewBuilderService newBuilder;
 //
 //    @Autowired
-//    private PdfService pdfService;
+//    private PdfGenerationService pdfGenerationService;
 //
 //    @Autowired
 //    private KVLiiteBuilderService kvLiiteBuilderService;
 //
-//    @Autowired
-//    private DokumenttiStateService dokumenttiStateService;
+    @Autowired
+    private DokumenttiStateService dokumenttiStateService;
 //
 //    @Autowired
 //    private PerusteprojektiRepository perusteprojektiRepository;
@@ -125,7 +102,6 @@ public class DokumenttiServiceImpl implements DokumenttiService{
 //
 //    @Override
 //    @Transactional
-//    @IgnorePerusteUpdateCheck
 //    public DokumenttiDto createDtoFor(
 //            long id,
 //            Kieli kieli,
@@ -137,34 +113,29 @@ public class DokumenttiServiceImpl implements DokumenttiService{
 //        dokumentti.setTila(DokumenttiTila.EI_OLE);
 //        dokumentti.setKieli(kieli);
 //        dokumentti.setAloitusaika(new Date());
-//        dokumentti.setLuoja(name);
-//        dokumentti.setPerusteId(id);
-//        dokumentti.setSuoritustapakoodi(suoritustapakoodi);
-//        dokumentti.setGeneratorVersion(version);
+//        dokumentti.setSisaltoId(id);
 //
-//        Peruste peruste = perusteRepository.findOne(id);
+//        PerusteDto peruste = perusteRepository.findOne(id);
 //        if (peruste != null) {
 //            Dokumentti saved = dokumenttiRepository.save(dokumentti);
 //            return mapper.map(saved, DokumenttiDto.class);
 //        } else {
 //            dokumentti.setTila(DokumenttiTila.EPAONNISTUI);
-//            dokumentti.setVirhekoodi(DokumenttiVirhe.PERUSTETTA_EI_LOYTYNYT);
+////            dokumentti.setVirhekoodi(DokumenttiVirhe.PERUSTETTA_EI_LOYTYNYT);
 //            return mapper.map(dokumentti, DokumenttiDto.class);
 //        }
 //    }
 //
 //    @Override
 //    @Transactional(readOnly = true)
-//    @IgnorePerusteUpdateCheck
 //    public DokumenttiDto findLatest(Long id, Kieli kieli, Suoritustapakoodi suoritustapakoodi) {
 //        return findLatest(id, kieli, suoritustapakoodi, null);
 //    }
 //
 //    @Override
 //    @Transactional(readOnly = true)
-//    @IgnorePerusteUpdateCheck
 //    public DokumenttiDto findLatest(Long id, Kieli kieli, Suoritustapakoodi suoritustapakoodi, GeneratorVersion version) {
-//        Sort sort = new Sort(Sort.Direction.DESC, "valmistumisaika");
+//        Sort sort = Sort.by(Sort.Direction.DESC, "valmistumisaika");
 //
 //        List<Dokumentti> documents;
 //
@@ -182,7 +153,7 @@ public class DokumenttiServiceImpl implements DokumenttiService{
 //            return mapper.map(documents.get(0), DokumenttiDto.class);
 //        } else {
 //            DokumenttiDto dto = new DokumenttiDto();
-//            dto.setPerusteId(id);
+//            dto.setSisaltoId(id);
 //            dto.setKieli(kieli);
 //            dto.setTila(DokumenttiTila.EI_OLE);
 //            return dto;
@@ -191,14 +162,13 @@ public class DokumenttiServiceImpl implements DokumenttiService{
 //
 //    @Override
 //    @Transactional(noRollbackFor = DokumenttiException.class)
-//    @IgnorePerusteUpdateCheck
 //    @Async(value = "docTaskExecutor")
 //    public void generateWithDto(DokumenttiDto dto) throws DokumenttiException {
 //        dto.setTila(DokumenttiTila.LUODAAN);
 //        dokumenttiStateService.save(dto);
 //
-//        Dokumentti dokumentti = dokumenttiRepository.findById(dto.getId());
-//        if (dokumentti == null) {
+//        Optional<Dokumentti> dokumentti = dokumenttiRepository.findById(dto.getId());
+//        if (dokumentti.isPresent()) {
 //            dokumentti = mapper.map(dto, Dokumentti.class);
 //        }
 //
@@ -219,12 +189,11 @@ public class DokumenttiServiceImpl implements DokumenttiService{
 //
 //    @Override
 //    @Transactional(noRollbackFor = DokumenttiException.class)
-//    @IgnorePerusteUpdateCheck
 //    public void generateWithDtoSynchronous(DokumenttiDto dto) throws DokumenttiException {
 //        dto.setTila(DokumenttiTila.LUODAAN);
 //        dokumenttiStateService.save(dto);
 //
-//        Dokumentti dokumentti = dokumenttiRepository.findById(dto.getId());
+//        Optional<Dokumentti> dokumentti = dokumenttiRepository.findById(dto.getId());
 //        if (dokumentti == null) {
 //            dokumentti = mapper.map(dto, Dokumentti.class);
 //        }
@@ -246,11 +215,10 @@ public class DokumenttiServiceImpl implements DokumenttiService{
 //
 //    @Override
 //    @Transactional(readOnly = true)
-//    @IgnorePerusteUpdateCheck
 //    public byte[] get(Long id) {
-//        Dokumentti dokumentti = dokumenttiRepository.findById(id);
+//        Optional<Dokumentti> dokumentti = dokumenttiRepository.findById(id);
 //
-//        if (dokumentti != null) {
+//        if (dokumentti.isPresent()) {
 //            Peruste peruste = perusteRepository.findOne(dokumentti.getPerusteId());
 //            if (peruste == null) {
 //                return null;
@@ -269,11 +237,10 @@ public class DokumenttiServiceImpl implements DokumenttiService{
 //
 //    @Override
 //    @Transactional
-//    @IgnorePerusteUpdateCheck
 //    public Long getDokumenttiId(Long perusteId, Kieli kieli, Suoritustapakoodi suoritustapakoodi, GeneratorVersion generatorVersion) {
-//        Sort sort = new Sort(Sort.Direction.DESC, "valmistumisaika");
+//        Sort sort = Sort.by(Sort.Direction.DESC, "valmistumisaika");
 //
-//        Peruste peruste = perusteRepository.findOne(perusteId);
+//        PerustePerusteDto peruste = perusteRepository.findOne(perusteId);
 //        if (peruste == null) {
 //            return null;
 //        }
@@ -299,7 +266,6 @@ public class DokumenttiServiceImpl implements DokumenttiService{
 //
 //    @Override
 //    @Transactional
-//    @IgnorePerusteUpdateCheck
 //    public void setStarted(DokumenttiDto dto) {
 //        dto.setAloitusaika(new Date());
 //        dto.setLuoja(SecurityUtil.getAuthenticatedPrincipal().getName());
@@ -309,10 +275,9 @@ public class DokumenttiServiceImpl implements DokumenttiService{
 //
 //    @Override
 //    @Transactional(readOnly = true)
-//    @IgnorePerusteUpdateCheck
 //    public DokumenttiDto query(Long id) {
-//        Dokumentti dokumentti = dokumenttiRepository.findById(id);
-//        if (dokumentti != null) {
+//        Optional<Dokumentti> dokumentti = dokumenttiRepository.findById(id);
+//        if (dokumentti.isPresent()) {
 //            Peruste peruste = perusteRepository.findOne(dokumentti.getPerusteId());
 //            String name = SecurityUtil.getAuthenticatedPrincipal().getName();
 //            if (name.equals("anonymousUser") && !peruste.getTila().equals(PerusteTila.VALMIS) && julkaisutRepository.findAllByPeruste(peruste).isEmpty()) {
@@ -339,48 +304,20 @@ public class DokumenttiServiceImpl implements DokumenttiService{
 //        log.info("Luodaan dokumenttia (" + dto.getPerusteId() + ", " + dto.getSuoritustapakoodi() + ", "
 //                + kieli + ", " + version + ") perusteelle.");
 //        switch (version) {
-//            case VANHA:
-//                throw new BusinessRuleViolationException("vanha-generointi-poistettu-kaytosta");
+////            case VANHA:
+////                throw new BusinessRuleViolationException("vanha-generointi-poistettu-kaytosta");
 //            case UUSI:
 //                Document doc = newBuilder.generateXML(peruste, dokumentti);
 //
 //                meta.setSubject(messages.translate("docgen.meta.subject.peruste", kieli));
-//                toReturn = pdfService.xhtml2pdf(doc, meta);
-//
-//                /*
-//                // Validoidaan dokumnetti
-//                result = DokumenttiUtils.validatePdf(toReturn);
-//                if (result.isValid()) {
-//                    log.debug("Dokumentti (" + dto.getPerusteId() + ", "
-//                            + dto.getSuoritustapakoodi() + ", " + kieli + ") on PDF/A-1b mukainen.");
-//                } else {
-//                    log.debug("Dokumentti (" + dto.getPerusteId() + ", " + dto.getSuoritustapakoodi() + ", "
-//                            + kieli + ") ei ole PDF/A-1b mukainen. Dokumentti sisältää virheen/virheet:");
-//                    result.getErrorsList().forEach(error -> log
-//                            .debug("  - " + error.getDetails() + " (" + error.getErrorCode() + ")"));
-//                }
-//                */
+//                toReturn = pdfGenerationService.xhtml2pdf(doc, meta);
 //
 //                break;
 //            case KVLIITE:
 //                doc = kvLiiteBuilderService.generateXML(peruste, kieli);
 //
 //                meta.setSubject(messages.translate("docgen.meta.subject.kvliite", kieli));
-//                toReturn = pdfService.xhtml2pdf(doc, version, meta);
-//
-//                /*
-//                // Validoi kvliite
-//                result = DokumenttiUtils.validatePdf(toReturn);
-//                if (result.isValid()) {
-//                    log.debug("Dokumentti (" + dto.getPerusteId() + ", " + kieli + ") on PDF/A-1b mukainen.");
-//                } else {
-//                    log.debug("Dokumentti (" + dto.getId() + ", " + kieli
-//                            + ") ei ole PDF/A-1b mukainen. Dokumentti sisältää virheen/virheet:");
-//                    result.getErrorsList().forEach(error -> log
-//                            .debug("  - " + error.getDetails() + " (" + error.getErrorCode() + ")"));
-//                }
-//                */
-//
+//                toReturn = pdfGenerationService.xhtml2pdf(doc, version, meta);
 //                break;
 //            default:
 //                break;
@@ -389,7 +326,6 @@ public class DokumenttiServiceImpl implements DokumenttiService{
 //    }
 //
 //    @Override
-//    @IgnorePerusteUpdateCheck
 //    @Transactional(propagation = Propagation.NEVER)
 //    public void paivitaDokumentit() {
 //
