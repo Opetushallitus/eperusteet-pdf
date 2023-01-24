@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiService;
@@ -34,13 +35,14 @@ public class PdfResource {
                                             @PathVariable("revision") Integer revision) throws JsonProcessingException {
 
         PerusteKaikkiDto test = eperusteetService.getKaikkiDto(perusteId, revision);
+
+        final Dokumentti createDtoFor = dokumenttiService.createDtoFor(
+                perusteId,
+                Kieli.FI,
+                revision);
+
         return ResponseEntity.ok().build();
 
-//        final DokumenttiDto createDtoFor = dokumenttiService.createDtoFor(
-//                perusteId,
-//                Kieli.of(kieli),
-//                Suoritustapakoodi.of(suoritustapakoodi),
-//                GeneratorVersion.of(version));
 //        if (createDtoFor != null && createDtoFor.getTila() != DokumenttiTila.EPAONNISTUI) {
 //            service.setStarted(createDtoFor);
 //            service.generateWithDto(createDtoFor);

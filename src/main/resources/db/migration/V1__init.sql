@@ -7,12 +7,12 @@ CREATE SEQUENCE hibernate_sequence
 
 CREATE TABLE dokumentti (
     id              bigint not null primary key,
-    sisalto_id      bigint,
+    sisalto_id      bigint not null,
     tyyppi          character varying not null,
     tila            character varying not null,
     kieli           character varying not null,
-    revision        int4,
-    aloitusaika     timestamp without time zone,
+    revision        int4 not null,
+    aloitusaika     timestamp without time zone not null,
     valmistumisaika timestamp without time zone,
     dokumenttidata  oid
 );

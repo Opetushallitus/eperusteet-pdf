@@ -1,72 +1,35 @@
 package fi.vm.sade.eperusteet.pdf.service.impl;
 
+import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.domain.enums.GeneratorVersion;
 import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.domain.enums.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.pdf.repository.DokumenttiRepository;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiService;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiStateService;
 import fi.vm.sade.eperusteet.pdf.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiDto;
+import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.utils.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 @Slf4j
 @Service
 @Profile("default")
 public class DokumenttiServiceImpl implements DokumenttiService {
-    @Override
-    public void setStarted(DokumenttiDto dto) {
 
-    }
+    @Autowired
+    private DokumenttiRepository dokumenttiRepository;
 
-    @Override
-    public void generateWithDto(DokumenttiDto dto) throws DokumenttiException {
-
-    }
-
-    @Override
-    public void generateWithDtoSynchronous(DokumenttiDto dto) throws DokumenttiException {
-
-    }
-
-    @Override
-    public DokumenttiDto createDtoFor(long id, Kieli kieli, Suoritustapakoodi suoritustapakoodi, GeneratorVersion version) {
-        return null;
-    }
-
-    @Override
-    public byte[] get(Long id) {
-        return new byte[0];
-    }
-
-    @Override
-    public Long getDokumenttiId(Long perusteId, Kieli kieli, Suoritustapakoodi suoritustapakoodi, GeneratorVersion generatorVersion) {
-        return null;
-    }
-
-    @Override
-    public DokumenttiDto query(Long id) {
-        return null;
-    }
-
-    @Override
-    public DokumenttiDto findLatest(Long id, Kieli kieli, Suoritustapakoodi suoritustapakoodi) {
-        return null;
-    }
-
-    @Override
-    public DokumenttiDto findLatest(Long id, Kieli kieli, Suoritustapakoodi suoritustapakoodi, GeneratorVersion version) {
-        return null;
-    }
-
-    @Override
-    public void paivitaDokumentit() {
-
-    }
-//    @Autowired
-//    private DokumenttiRepository dokumenttiRepository;
+    @Autowired
+    private DokumenttiStateService dokumenttiStateService;
 //
 //    @Autowired
 //    private PerusteRepository perusteRepository;
@@ -79,9 +42,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 //
 //    @Autowired
 //    private KVLiiteBuilderService kvLiiteBuilderService;
-//
-    @Autowired
-    private DokumenttiStateService dokumenttiStateService;
 //
 //    @Autowired
 //    private PerusteprojektiRepository perusteprojektiRepository;
@@ -102,31 +62,21 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 //    @Value("${spring.profiles.active:normal}")
 //    private String activeProfile;
 //
-//    @Override
-//    @Transactional
-//    public DokumenttiDto createDtoFor(
-//            long id,
-//            Kieli kieli,
-//            Suoritustapakoodi suoritustapakoodi,
-//            GeneratorVersion version
-//    ) {
-//        String name = SecurityUtil.getAuthenticatedPrincipal().getName();
-//        Dokumentti dokumentti = new Dokumentti();
-//        dokumentti.setTila(DokumenttiTila.EI_OLE);
-//        dokumentti.setKieli(kieli);
-//        dokumentti.setAloitusaika(new Date());
-//        dokumentti.setSisaltoId(id);
-//
-//        PerusteDto peruste = perusteRepository.findOne(id);
-//        if (peruste != null) {
-//            Dokumentti saved = dokumenttiRepository.save(dokumentti);
-//            return mapper.map(saved, DokumenttiDto.class);
-//        } else {
-//            dokumentti.setTila(DokumenttiTila.EPAONNISTUI);
-////            dokumentti.setVirhekoodi(DokumenttiVirhe.PERUSTETTA_EI_LOYTYNYT);
-//            return mapper.map(dokumentti, DokumenttiDto.class);
-//        }
-//    }
+    @Override
+    @Transactional
+    public Dokumentti createDtoFor(long id, Kieli kieli, Integer revision) {
+        String name = SecurityUtil.getAuthenticatedPrincipal().getName();
+        Dokumentti dokumentti = new Dokumentti();
+        dokumentti.setSisaltoId(id);
+        dokumentti.setTyyppi(DokumenttiTyyppi.PERUSTE);
+        dokumentti.setTila(DokumenttiTila.EI_OLE);
+        dokumentti.setKieli(kieli);
+        dokumentti.setRevision(revision);
+        dokumentti.setAloitusaika(new Date());
+
+        Dokumentti saved = dokumenttiRepository.save(dokumentti);
+        return saved;
+    }
 //
 //    @Override
 //    @Transactional(readOnly = true)
@@ -417,5 +367,48 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 //
 //        });
 //    }
+@Override
+public void setStarted(DokumenttiDto dto) {
 
+}
+
+    @Override
+    public void generateWithDto(DokumenttiDto dto) throws DokumenttiException {
+
+    }
+
+    @Override
+    public void generateWithDtoSynchronous(DokumenttiDto dto) throws DokumenttiException {
+
+    }
+
+    @Override
+    public byte[] get(Long id) {
+        return new byte[0];
+    }
+
+    @Override
+    public Long getDokumenttiId(Long perusteId, Kieli kieli, Suoritustapakoodi suoritustapakoodi, GeneratorVersion generatorVersion) {
+        return null;
+    }
+
+    @Override
+    public DokumenttiDto query(Long id) {
+        return null;
+    }
+
+    @Override
+    public DokumenttiDto findLatest(Long id, Kieli kieli, Suoritustapakoodi suoritustapakoodi) {
+        return null;
+    }
+
+    @Override
+    public DokumenttiDto findLatest(Long id, Kieli kieli, Suoritustapakoodi suoritustapakoodi, GeneratorVersion version) {
+        return null;
+    }
+
+    @Override
+    public void paivitaDokumentit() {
+
+    }
 }

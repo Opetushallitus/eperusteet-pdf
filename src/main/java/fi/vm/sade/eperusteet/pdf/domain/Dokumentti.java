@@ -3,7 +3,7 @@ package fi.vm.sade.eperusteet.pdf.domain;
 import com.sun.istack.NotNull;
 import fi.vm.sade.eperusteet.pdf.domain.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
-import lombok.Data;
+import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiTyyppi;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,7 +23,6 @@ import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 
-@Data
 @Entity
 @Table(name = "dokumentti")
 @Getter
@@ -35,10 +34,12 @@ public class Dokumentti implements Serializable {
     private long id;
 
     @NotNull
+    @Column(name = "sisalto_id")
     private Long sisaltoId;
 
+    @Enumerated(EnumType.STRING)
     @NotNull
-    private String tyyppi;
+    private DokumenttiTyyppi tyyppi;
 
     @Enumerated(EnumType.STRING)
     @NotNull

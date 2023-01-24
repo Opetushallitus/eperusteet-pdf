@@ -16,7 +16,7 @@ import java.util.Date;
 public class DokumenttiDto {
     private Long id;
     private Long sisaltoId;
-    private String tyyppi;
+    private DokumenttiTyyppi tyyppi;
     private DokumenttiTila tila = DokumenttiTila.EI_OLE;
     private Kieli kieli;
     private Integer revision;
