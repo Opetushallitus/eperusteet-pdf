@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import java.util.TimeZone;
 
 @SpringBootApplication
+@ComponentScan(basePackages = {"fi.vm.sade.eperusteet.eperusteetpdfservice", "fi.vm.sade.eperusteet.utils.client"})
 public class EperusteetPdfServiceApplication {
 
 	public static void main(String[] args) {
