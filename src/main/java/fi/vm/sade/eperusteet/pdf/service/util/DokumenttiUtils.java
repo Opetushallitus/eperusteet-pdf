@@ -132,6 +132,16 @@ public class DokumenttiUtils {
         }
     }
 
+    public static String getTextString(Kieli kieli, LokalisoituTekstiDto lokalisoituTekstiDto) {
+        if (lokalisoituTekstiDto != null && lokalisoituTekstiDto.getTekstit() != null && kieli != null
+                && lokalisoituTekstiDto.getTekstit().containsKey(kieli)
+                && lokalisoituTekstiDto.getTekstit().get(kieli) != null) {
+            return unescapeHtml5(lokalisoituTekstiDto.getTekstit().get(kieli));
+        } else {
+            return "";
+        }
+    }
+
     public static String getTextString(DokumenttiBase docBase, LokalisoituTeksti lokalisoituTeksti) {
         if (lokalisoituTeksti == null || lokalisoituTeksti.getTeksti() == null
                 || lokalisoituTeksti.getTeksti() == null) {

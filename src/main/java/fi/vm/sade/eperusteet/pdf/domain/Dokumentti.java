@@ -47,10 +47,8 @@ public class Dokumentti implements Serializable {
 
     @Column(updatable = false)
     @Enumerated(EnumType.STRING)
-    @NotNull
     private Kieli kieli;
 
-    @NotNull
     private Integer revision;
 
     @Temporal(TemporalType.TIMESTAMP)

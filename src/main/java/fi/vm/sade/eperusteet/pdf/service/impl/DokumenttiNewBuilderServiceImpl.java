@@ -1,26 +1,25 @@
 package fi.vm.sade.eperusteet.pdf.service.impl;
 
 import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiNewBuilderService;
+import fi.vm.sade.eperusteet.pdf.service.util.CharapterNumberGenerator;
+import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiPeruste;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
 
 @Slf4j
 @Service
 @Profile("!test")
 public class DokumenttiNewBuilderServiceImpl implements DokumenttiNewBuilderService {
-    @Override
-    public Document generateXML(PerusteDto peruste, Dokumentti dokumentti) throws ParserConfigurationException, IOException, TransformerException {
-        return null;
-    }
-
 //    private static final float COMPRESSION_LEVEL = 0.9f;
 //
 //    @Autowired
@@ -45,50 +44,49 @@ public class DokumenttiNewBuilderServiceImpl implements DokumenttiNewBuilderServ
 //    @Autowired
 //    private PerusteService perusteService;
 //
-//    @Override
-//    public Document generateXML(PerusteDto peruste, Dokumentti dokumentti)
-//            throws ParserConfigurationException, IOException, TransformerException {
-//        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-//        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-//        Document doc = docBuilder.newDocument();
-//
-//        // Luodaan XHTML pohja
-//        Element rootElement = doc.createElement("html");
-//        rootElement.setAttribute("lang", dokumentti.getKieli().toString());
-//        doc.appendChild(rootElement);
-//
-//        // Head-elementti
-//        Element headElement = doc.createElement("head");
-//        rootElement.appendChild(headElement);
-//
-//        // Poistetaan HEAD:in <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-//        if (headElement.hasChildNodes()) {
-//            headElement.removeChild(headElement.getFirstChild());
-//        }
-//
-//        // Body-elementti
-//        Element bodyElement = doc.createElement("body");
-//        rootElement.appendChild(bodyElement);
-//
-//        // Apuolio dataan siirtelyyn
-//        DokumenttiPeruste docBase = new DokumenttiPeruste();
-//        docBase.setDocument(doc);
-//        docBase.setHeadElement(headElement);
-//        docBase.setBodyElement(bodyElement);
-//        docBase.setGenerator(new CharapterNumberGenerator());
-//        docBase.setKieli(dokumentti.getKieli());
-//        docBase.setPeruste(peruste);
+    @Override
+    public Document generateXML(PerusteKaikkiDto peruste, Dokumentti dokumentti) throws ParserConfigurationException {
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document doc = docBuilder.newDocument();
+
+        // Luodaan XHTML pohja
+        Element rootElement = doc.createElement("html");
+        rootElement.setAttribute("lang", dokumentti.getKieli().toString());
+        doc.appendChild(rootElement);
+
+        // Head-elementti
+        Element headElement = doc.createElement("head");
+        rootElement.appendChild(headElement);
+
+        // Poistetaan HEAD:in <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        if (headElement.hasChildNodes()) {
+            headElement.removeChild(headElement.getFirstChild());
+        }
+
+        // Body-elementti
+        Element bodyElement = doc.createElement("body");
+        rootElement.appendChild(bodyElement);
+
+        // Apuolio dataan siirtelyyn
+        DokumenttiPeruste docBase = new DokumenttiPeruste();
+        docBase.setDocument(doc);
+        docBase.setHeadElement(headElement);
+        docBase.setBodyElement(bodyElement);
+        docBase.setGenerator(new CharapterNumberGenerator());
+        docBase.setKieli(dokumentti.getKieli());
+        docBase.setPeruste(peruste);
 //        docBase.setKvLiiteJulkinenDto(perusteService.getJulkinenKVLiite(peruste.getId()));
-//        docBase.setDokumentti(dokumentti);
+        docBase.setDokumentti(dokumentti);
 //        docBase.setMapper(mapper);
-//        docBase.setSisalto(peruste.getSisallot(dokumentti.getSuoritustapakoodi()));
-//        docBase.setAipeOpetuksenSisalto(peruste.getAipeOpetuksenPerusteenSisalto());
-//
-//        // Tästä aloitetaan varsinaisen dokumentin muodostus
+        docBase.setSisalto((PerusteenOsaViiteDto) peruste.getSisallot());
+        docBase.setAipeOpetuksenSisalto(peruste.getAipeOpetuksenPerusteenSisalto());
+
+        // Tästä aloitetaan varsinaisen dokumentin muodostus
 //        addDokumentti(docBase);
-//
-//        return doc;
-//    }
+
+        return doc;
+    }
 //
 //    private void addDokumentti(DokumenttiPeruste docBase) {
 //        // Kansilehti & Infosivu

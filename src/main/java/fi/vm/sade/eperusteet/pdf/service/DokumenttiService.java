@@ -1,6 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.domain.enums.GeneratorVersion;
 import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.domain.enums.Suoritustapakoodi;
@@ -11,18 +13,20 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface DokumenttiService {
-    @PreAuthorize("hasPermission(#dto.perusteId, 'peruste', 'LUKU')")
-    void setStarted(@P("dto") DokumenttiDto dto);
+//    @PreAuthorize("hasPermission(#dto.perusteId, 'peruste', 'LUKU')")
+    void setStarted(@P("dto") Dokumentti dto);
 
-    @PreAuthorize("hasPermission(#dto.perusteId, 'peruste', 'LUKU')")
-    void generateWithDto(@P("dto") DokumenttiDto dto) throws DokumenttiException;
+//    @PreAuthorize("hasPermission(#dto.perusteId, 'peruste', 'LUKU')")
+    void generateWithDto(@P("dto") Dokumentti dto) throws DokumenttiException, JsonProcessingException;
+
+    void updateTila(Dokumentti dto, DokumenttiTila tila);
 
     @PreAuthorize("hasPermission(#dto.perusteId, 'peruste', 'LUKU')")
     void generateWithDtoSynchronous(@P("dto") DokumenttiDto dto) throws DokumenttiException;
 
 //    @PreAuthorize("hasPermission(#id, 'peruste', 'LUKU')")
     @Transactional
-    Dokumentti createDtoFor(long id, Kieli kieli, Integer revision);
+    Dokumentti createDtoFor(long id, Kieli kieli, Integer revision) throws JsonProcessingException;
 
     @PreAuthorize("permitAll()")
     byte[] get(Long id);

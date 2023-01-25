@@ -2,10 +2,10 @@ package fi.vm.sade.eperusteet.pdf.resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiService;
-import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
+import fi.vm.sade.eperusteet.pdf.service.exception.DokumenttiException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,27 +27,22 @@ public class PdfResource {
     @Autowired
     DokumenttiService dokumenttiService;
 
-    @Autowired
-    EperusteetService eperusteetService;
-
     @GetMapping(path = "/generate/{perusteId}/{revision}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> generatePdf(@PathVariable("perusteId") Long perusteId,
-                                            @PathVariable("revision") Integer revision) throws JsonProcessingException {
+                                            @PathVariable("revision") Integer revision) throws JsonProcessingException, DokumenttiException {
 
-        PerusteKaikkiDto test = eperusteetService.getKaikkiDto(perusteId, revision);
-
-        final Dokumentti createDtoFor = dokumenttiService.createDtoFor(
+        Dokumentti createDtoFor = dokumenttiService.createDtoFor(
                 perusteId,
                 Kieli.FI,
                 revision);
 
-        return ResponseEntity.ok().build();
+        if (createDtoFor != null && createDtoFor.getTila() != DokumenttiTila.EPAONNISTUI) {
+            dokumenttiService.setStarted(createDtoFor);
+            dokumenttiService.generateWithDto(createDtoFor);
+//            dokumenttiService = HttpStatus.ACCEPTED;
+        }
 
-//        if (createDtoFor != null && createDtoFor.getTila() != DokumenttiTila.EPAONNISTUI) {
-//            service.setStarted(createDtoFor);
-//            service.generateWithDto(createDtoFor);
-//            status = HttpStatus.ACCEPTED;
-//        }
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(path = "/fetch/{perusteId}/{revision}/{kieli}", produces = MediaType.APPLICATION_JSON_VALUE)

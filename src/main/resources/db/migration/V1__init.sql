@@ -10,8 +10,8 @@ CREATE TABLE dokumentti (
     sisalto_id      bigint not null,
     tyyppi          character varying not null,
     tila            character varying not null,
-    kieli           character varying not null,
-    revision        int4 not null,
+    kieli           character varying,
+    revision        int4,
     aloitusaika     timestamp without time zone not null,
     valmistumisaika timestamp without time zone,
     dokumenttidata  oid
