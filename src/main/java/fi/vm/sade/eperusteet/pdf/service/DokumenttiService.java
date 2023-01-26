@@ -21,6 +21,8 @@ public interface DokumenttiService {
 
     void updateTila(Dokumentti dto, DokumenttiTila tila);
 
+    Dokumentti findLatest(Long id, Integer revision, Kieli kieli);
+
     @PreAuthorize("hasPermission(#dto.perusteId, 'peruste', 'LUKU')")
     void generateWithDtoSynchronous(@P("dto") DokumenttiDto dto) throws DokumenttiException;
 
@@ -36,12 +38,6 @@ public interface DokumenttiService {
 
     @PreAuthorize("permitAll()")
     DokumenttiDto query(Long id);
-
-    @PreAuthorize("isAuthenticated()")
-    DokumenttiDto findLatest(Long id, Kieli kieli, Suoritustapakoodi suoritustapakoodi);
-
-    @PreAuthorize("isAuthenticated()")
-    DokumenttiDto findLatest(Long id, Kieli kieli, Suoritustapakoodi suoritustapakoodi, GeneratorVersion version);
 
     void paivitaDokumentit();
 

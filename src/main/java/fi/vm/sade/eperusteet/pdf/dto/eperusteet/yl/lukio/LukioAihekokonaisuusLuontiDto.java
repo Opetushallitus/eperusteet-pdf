@@ -1,6 +1,5 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.lukio;
 
-import com.sun.istack.NotNull;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.UpdateDto;
 import lombok.AllArgsConstructor;
@@ -9,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Optional;
 

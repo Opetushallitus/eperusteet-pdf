@@ -1,6 +1,5 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.lukio;
 
-import com.sun.istack.NotNull;
 import fi.vm.sade.eperusteet.pdf.domain.enums.LukiokurssiTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TekstiOsaDto;
@@ -9,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;

@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -85,7 +88,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         updateTila(dokumentti, DokumenttiTila.LUODAAN);
 
         try {
-            PerusteKaikkiDto perusteData = eperusteetService.getKaikkiDto(dokumentti.getSisaltoId(), dokumentti.getRevision());
+            PerusteKaikkiDto perusteData = eperusteetService.getPerusteKaikkiDto(dokumentti.getSisaltoId(), dokumentti.getRevision());
             dokumentti.setData(generateFor(dokumentti, perusteData));
             dokumentti.setTila(DokumenttiTila.VALMIS);
             dokumentti.setValmistumisaika(new Date());
@@ -103,7 +106,8 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     public void setStarted(Dokumentti dto) {
         dto.setAloitusaika(new Date());
         dto.setTila(DokumenttiTila.JONOSSA);
-        dokumenttiStateService.save(dto);
+        Dokumentti test = dokumenttiStateService.save(dto);
+        boolean te = false;
     }
 
     @Override
@@ -147,40 +151,59 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 //        }
         return toReturn;
     }
-    //    @Override
-    //    @Transactional(readOnly = true)
-    //    public DokumenttiDto findLatest(Long id, Kieli kieli, Suoritustapakoodi suoritustapakoodi) {
-    //        return findLatest(id, kieli, suoritustapakoodi, null);
-    //    }
-    //
-    //    @Override
-    //    @Transactional(readOnly = true)
-    //    public DokumenttiDto findLatest(Long id, Kieli kieli, Suoritustapakoodi suoritustapakoodi, GeneratorVersion version) {
-    //        Sort sort = Sort.by(Sort.Direction.DESC, "valmistumisaika");
-    //
-    //        List<Dokumentti> documents;
-    //
-    //        // Kvliite ei riipu suoritustavasta
-    //        if (GeneratorVersion.KVLIITE.equals(version)) {
-    //            documents = dokumenttiRepository.findByPerusteIdAndKieliAndTilaAndGeneratorVersion(
-    //                    id, kieli, DokumenttiTila.VALMIS, version, sort);
-    //        } else {
-    //            documents = dokumenttiRepository.findByPerusteIdAndKieliAndTilaAndSuoritustapakoodiAndGeneratorVersion(
-    //                    id, kieli, DokumenttiTila.VALMIS, suoritustapakoodi,
-    //                    version != null ? version : GeneratorVersion.UUSI, sort);
-    //        }
-    //
-    //        if (documents.size() > 0) {
-    //            return mapper.map(documents.get(0), DokumenttiDto.class);
-    //        } else {
-    //            DokumenttiDto dto = new DokumenttiDto();
-    //            dto.setSisaltoId(id);
-    //            dto.setKieli(kieli);
-    //            dto.setTila(DokumenttiTila.EI_OLE);
-    //            return dto;
-    //        }
-    //    }
-    //
+
+    @Override
+    @Transactional(readOnly = true)
+    public byte[] get(Long id) {
+        Optional<Dokumentti> dokumentti = dokumenttiRepository.findById(id);
+
+        //            Peruste peruste = perusteRepository.findOne(dokumentti.getPerusteId());
+        //            if (peruste == null) {
+        //                return null;
+        //            }
+        //
+        //            String name = SecurityUtil.getAuthenticatedPrincipal().getName();
+        //            if (name.equals("anonymousUser") && !peruste.getTila().equals(PerusteTila.VALMIS) && julkaisutRepository.findAllByPeruste(peruste).isEmpty()) {
+        //                return null;
+        //            }
+        return dokumentti.map(Dokumentti::getData).orElse(null);
+
+    }
+
+//        @Override
+//        @Transactional(readOnly = true)
+//        public DokumenttiDto findLatest(Long id, Integer revision, Kieli kieli) {
+//            return findLatest(id, revision, kieli);
+//        }
+
+        @Override
+        @Transactional(readOnly = true)
+        public Dokumentti findLatest(Long id, Integer revision, Kieli kieli) {
+            Sort sort = Sort.by(Sort.Direction.DESC, "valmistumisaika");
+
+            List<Dokumentti> documents = dokumenttiRepository.findBySisaltoIdAndRevisionAndKieli(id, revision, kieli, sort);
+
+            // Kvliite ei riipu suoritustavasta
+//            if (GeneratorVersion.KVLIITE.equals(version)) {
+//                documents = dokumenttiRepository.findBySisaltoIdAndRevisionAndKieli(
+//                        id, revision, kieli, sort);
+//            } else {
+//                documents = dokumenttiRepository.findBySisaltoIdAndRevisionAndKieli(
+//                        id, kieli, DokumenttiTila.VALMIS, suoritustapakoodi,
+//                        version != null ? version : GeneratorVersion.UUSI, sort);
+//            }
+
+            if (documents.size() > 0) {
+                return documents.get(0);
+            } else {
+//                DokumenttiDto dto = new DokumenttiDto();
+//                dto.setSisaltoId(id);
+//                dto.setKieli(kieli);
+//                dto.setTila(DokumenttiTila.EI_OLE);
+                return new Dokumentti();
+            }
+        }
+
 //
 //    @Override
 //    @Transactional(noRollbackFor = DokumenttiException.class)
@@ -208,27 +231,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 //        }
 //    }
 //
-//    @Override
-//    @Transactional(readOnly = true)
-//    public byte[] get(Long id) {
-//        Optional<Dokumentti> dokumentti = dokumenttiRepository.findById(id);
-//
-//        if (dokumentti.isPresent()) {
-//            Peruste peruste = perusteRepository.findOne(dokumentti.getPerusteId());
-//            if (peruste == null) {
-//                return null;
-//            }
-//
-//            String name = SecurityUtil.getAuthenticatedPrincipal().getName();
-//            if (name.equals("anonymousUser") && !peruste.getTila().equals(PerusteTila.VALMIS) && julkaisutRepository.findAllByPeruste(peruste).isEmpty()) {
-//                return null;
-//            }
-//
-//            return dokumentti.getData();
-//        }
-//
-//        return null;
-//    }
 //
 //    @Override
 //    @Transactional
@@ -368,12 +370,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     public void generateWithDtoSynchronous(DokumenttiDto dto) throws DokumenttiException {
-
-    }
-
-    @Override
-    public byte[] get(Long id) {
-        return new byte[0];
     }
 
     @Override
@@ -387,17 +383,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     @Override
-    public DokumenttiDto findLatest(Long id, Kieli kieli, Suoritustapakoodi suoritustapakoodi) {
-        return null;
-    }
-
-    @Override
-    public DokumenttiDto findLatest(Long id, Kieli kieli, Suoritustapakoodi suoritustapakoodi, GeneratorVersion version) {
-        return null;
-    }
-
-    @Override
     public void paivitaDokumentit() {
-
     }
 }

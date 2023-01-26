@@ -1,6 +1,5 @@
 package fi.vm.sade.eperusteet.pdf.domain;
 
-import com.sun.istack.NotNull;
 import fi.vm.sade.eperusteet.pdf.domain.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiTyyppi;
@@ -20,6 +19,7 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
