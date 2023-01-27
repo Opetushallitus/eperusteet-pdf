@@ -85,7 +85,8 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         updateTila(dokumentti, DokumenttiTila.LUODAAN);
 
         try {
-            PerusteKaikkiDto perusteData = eperusteetService.getPerusteKaikkiDto(dokumentti.getSisaltoId(), dokumentti.getRevision());
+            //TODO: haetaan opintopolusta toistaiseksi testidataa
+            PerusteKaikkiDto perusteData = eperusteetService.getPerusteKaikkiDtoTemp(dokumentti.getSisaltoId(), dokumentti.getRevision());
             dokumentti.setData(generateFor(dokumentti, perusteData));
             dokumentti.setTila(DokumenttiTila.VALMIS);
             dokumentti.setValmistumisaika(new Date());
