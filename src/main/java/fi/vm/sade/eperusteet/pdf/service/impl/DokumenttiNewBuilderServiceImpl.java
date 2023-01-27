@@ -109,7 +109,12 @@ import java.util.StringJoiner;
 import java.util.TreeSet;
 import java.util.UUID;
 
-import static fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils.*;
+import static fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils.addHeader;
+import static fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils.addTeksti;
+import static fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils.getTextString;
+import static fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils.newBoldElement;
+import static fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils.newItalicElement;
+import static fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils.tagTeksti;
 
 @Slf4j
 @Service

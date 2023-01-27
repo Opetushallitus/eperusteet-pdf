@@ -2,9 +2,7 @@ package fi.vm.sade.eperusteet.pdf.service.impl;
 
 import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.enums.DokumenttiTila;
-import fi.vm.sade.eperusteet.pdf.domain.enums.GeneratorVersion;
 import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.enums.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.repository.DokumenttiRepository;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiNewBuilderService;
@@ -13,7 +11,6 @@ import fi.vm.sade.eperusteet.pdf.service.DokumenttiStateService;
 import fi.vm.sade.eperusteet.pdf.service.PdfGenerationService;
 import fi.vm.sade.eperusteet.pdf.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
-import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiDto;
 import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils;
 import fi.vm.sade.eperusteet.pdf.utils.LocalizedMessagesService;
@@ -154,8 +151,11 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional(readOnly = true)
-    public byte[] get(Long id) {
-        Optional<Dokumentti> dokumentti = dokumenttiRepository.findById(id);
+    public byte[] get(Long perusteId, Integer revision, Kieli kieli) {
+        List<Dokumentti> documents = dokumenttiRepository.findBySisaltoIdAndRevisionAndKieli(perusteId, revision, kieli, Sort.by(Sort.Direction.DESC, "revision"));
+
+
+        Optional<Dokumentti> dokumentti = dokumenttiRepository.findById(documents.get(0).getId());
 
         //            Peruste peruste = perusteRepository.findOne(dokumentti.getPerusteId());
         //            if (peruste == null) {
@@ -203,186 +203,4 @@ public class DokumenttiServiceImpl implements DokumenttiService {
                 return new Dokumentti();
             }
         }
-
-//
-//    @Override
-//    @Transactional(noRollbackFor = DokumenttiException.class)
-//    public void generateWithDtoSynchronous(DokumenttiDto dto) throws DokumenttiException {
-//        dto.setTila(DokumenttiTila.LUODAAN);
-//        dokumenttiStateService.save(dto);
-//
-//        Optional<Dokumentti> dokumentti = dokumenttiRepository.findById(dto.getId());
-//        if (dokumentti == null) {
-//            dokumentti = mapper.map(dto, Dokumentti.class);
-//        }
-//
-//        try {
-//            dokumentti.setData(generateFor(dto));
-//            dokumentti.setTila(DokumenttiTila.VALMIS);
-//            dokumentti.setValmistumisaika(new Date());
-//            dokumenttiRepository.save(dokumentti);
-//        } catch (Exception ex) {
-//            dto.setTila(DokumenttiTila.EPAONNISTUI);
-//            dto.setVirhekoodi(DokumenttiVirhe.TUNTEMATON);
-//            dto.setValmistumisaika(new Date());
-//            dokumenttiStateService.save(dto);
-//
-//            throw new DokumenttiException(ex.getMessage(), ex);
-//        }
-//    }
-//
-//
-//    @Override
-//    @Transactional
-//    public Long getDokumenttiId(Long perusteId, Kieli kieli, Suoritustapakoodi suoritustapakoodi, GeneratorVersion generatorVersion) {
-//        Sort sort = Sort.by(Sort.Direction.DESC, "valmistumisaika");
-//
-//        PerustePerusteDto peruste = perusteRepository.findOne(perusteId);
-//        if (peruste == null) {
-//            return null;
-//        }
-//
-//        Set<Suoritustapa> suoritustavat = peruste.getSuoritustavat();
-//        List<Dokumentti> documents;
-//        if (suoritustavat.isEmpty()) {
-//            documents = dokumenttiRepository
-//                    .findByPerusteIdAndKieliAndTilaAndGeneratorVersion(
-//                            perusteId, kieli, DokumenttiTila.VALMIS, generatorVersion, sort);
-//        } else {
-//            documents = dokumenttiRepository
-//                    .findByPerusteIdAndKieliAndTilaAndSuoritustapakoodiAndGeneratorVersion(
-//                            perusteId, kieli, DokumenttiTila.VALMIS, suoritustapakoodi, generatorVersion, sort);
-//        }
-//
-//        if (!documents.isEmpty()) {
-//            return documents.get(0).getId();
-//        } else {
-//            return null;
-//        }
-//    }
-//
-//
-//    @Override
-//    @Transactional(readOnly = true)
-//    public DokumenttiDto query(Long id) {
-//        Optional<Dokumentti> dokumentti = dokumenttiRepository.findById(id);
-//        if (dokumentti.isPresent()) {
-//            Peruste peruste = perusteRepository.findOne(dokumentti.getPerusteId());
-//            String name = SecurityUtil.getAuthenticatedPrincipal().getName();
-//            if (name.equals("anonymousUser") && !peruste.getTila().equals(PerusteTila.VALMIS) && julkaisutRepository.findAllByPeruste(peruste).isEmpty()) {
-//                return null;
-//            }
-//        }
-//        return mapper.map(dokumentti, DokumenttiDto.class);
-//    }
-//
-//
-//    @Override
-//    @Transactional(propagation = Propagation.NEVER)
-//    public void paivitaDokumentit() {
-//
-//        // Haetaan päivitettävät dokumentit
-//        TransactionTemplate template = new TransactionTemplate(tm);
-//        List<PerusteprojektiDokumenttiDto> tarkistettavat = template.execute(status -> mapper.mapAsList(
-//                perusteprojektiRepository.findAllByTilaAndPerusteTyyppi(ProjektiTila.JULKAISTU, PerusteTyyppi.NORMAALI),
-//                PerusteprojektiDokumenttiDto.class));
-//
-//        List<DokumenttiDto> paivitettavat = getPaivitettavat(tarkistettavat);
-//
-//        log.debug("Päivitetään " + paivitettavat.size() + " dokumenttia");
-//
-//        int counter = 1;
-//        for (DokumenttiDto d : paivitettavat) {
-//            try {
-//                paivitaDokumentti(d, counter);
-//            } catch (RuntimeException e) {
-//                log.error(e.getLocalizedMessage(), e);
-//            }
-//            counter++;
-//        }
-//    }
-//
-//    @Transactional(propagation = Propagation.NEVER)
-//    private List<DokumenttiDto> getPaivitettavat(List<PerusteprojektiDokumenttiDto> tarkistettavat) {
-//
-//        TransactionTemplate template = new TransactionTemplate(tm);
-//
-//        List<DokumenttiDto> paivitettavat = new ArrayList<>();
-//        for (PerusteprojektiDokumenttiDto pp : tarkistettavat) {
-//            PerusteDokumenttiDto p = pp.getPeruste();
-//
-//            for (Kieli kieli : p.getKielet()) {
-//                for (SuoritustapaDto st : p.getSuoritustavat()) {
-//                    template.execute(status -> {
-//                        DokumenttiDto latest = findLatest(p.getId(), kieli, st.getSuoritustapakoodi(), GeneratorVersion.UUSI);
-//                        if (latest != null
-//                                && latest.getAloitusaika() != null
-//                                && latest.getAloitusaika().before(p.getViimeisinJulkaisuAika().orElse(p.getGlobalVersion().getAikaleima()))) {
-//                            paivitettavat.add(latest);
-//                        }
-//
-//                        DokumenttiDto latestKvliite = findLatest(p.getId(), kieli, st.getSuoritustapakoodi(), GeneratorVersion.KVLIITE);
-//                        if (latestKvliite != null
-//                                && !DokumenttiTila.EI_OLE.equals(latestKvliite.getTila())
-//                                && (latestKvliite.getAloitusaika() == null || latestKvliite.getAloitusaika()
-//                                .before(p.getViimeisinJulkaisuAika().orElse(p.getGlobalVersion().getAikaleima())))) {
-//                            paivitettavat.add(latestKvliite);
-//                        }
-//                        return true;
-//                    });
-//                }
-//            }
-//        }
-//
-//        return paivitettavat;
-//    }
-//
-//    @Transactional(propagation = Propagation.NEVER)
-//    private void paivitaDokumentti(DokumenttiDto latest, int counter) {
-//
-//        TransactionTemplate template = new TransactionTemplate(tm);
-//
-//        template.execute(status -> {
-//
-//            log.debug(String.format("%04d", counter)
-//                    + " Aloitetaan perusteelle (" + latest.getPerusteId() + ", " + latest.getSuoritustapakoodi()
-//                    + ", " + latest.getKieli() + ", " + latest.getGeneratorVersion() + ") uuden dokumentin luonti.");
-//            try {
-//                DokumenttiDto createDtoFor = createDtoFor(
-//                        latest.getPerusteId(),
-//                        latest.getKieli(),
-//                        latest.getSuoritustapakoodi(),
-//                        GeneratorVersion.UUSI
-//                );
-//                setStarted(createDtoFor);
-//                generateWithDtoSynchronous(createDtoFor);
-//
-//                return true;
-//
-//            } catch (DokumenttiException e) {
-//                log.error(e.getLocalizedMessage(), e);
-//            }
-//
-//            return false;
-//
-//        });
-//    }
-
-    @Override
-    public void generateWithDtoSynchronous(DokumenttiDto dto) throws DokumenttiException {
-    }
-
-    @Override
-    public Long getDokumenttiId(Long perusteId, Kieli kieli, Suoritustapakoodi suoritustapakoodi, GeneratorVersion generatorVersion) {
-        return null;
-    }
-
-    @Override
-    public DokumenttiDto query(Long id) {
-        return null;
-    }
-
-    @Override
-    public void paivitaDokumentit() {
-    }
 }
