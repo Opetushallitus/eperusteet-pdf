@@ -1,8 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import fi.vm.sade.eperusteet.pdf.domain.enums.PerusteTila;
-import fi.vm.sade.eperusteet.pdf.domain.enums.PerusteenOsaTunniste;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteTila;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KevytTekstiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.NavigationType;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaDto;

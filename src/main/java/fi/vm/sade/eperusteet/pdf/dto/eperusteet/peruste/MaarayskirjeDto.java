@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste;
 
-import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.liite.LiiteBaseDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

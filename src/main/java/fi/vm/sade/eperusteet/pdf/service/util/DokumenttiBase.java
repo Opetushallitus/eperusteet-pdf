@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.service.util;
 
-import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import lombok.Getter;
 import lombok.Setter;

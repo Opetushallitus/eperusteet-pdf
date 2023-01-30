@@ -17,12 +17,12 @@ package fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import fi.vm.sade.eperusteet.pdf.domain.annotation.Identifiable;
-import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.enums.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.enums.KoulutustyyppiToteutus;
-import fi.vm.sade.eperusteet.pdf.domain.enums.PerusteTila;
-import fi.vm.sade.eperusteet.pdf.domain.enums.PerusteTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.annotation.Identifiable;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.KoulutustyyppiToteutus;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteTila;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KoulutusDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.MuutosmaaraysDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;

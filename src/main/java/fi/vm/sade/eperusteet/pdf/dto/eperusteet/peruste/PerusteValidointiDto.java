@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste;
 
-import fi.vm.sade.eperusteet.pdf.domain.enums.PerusteTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteTyyppi;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

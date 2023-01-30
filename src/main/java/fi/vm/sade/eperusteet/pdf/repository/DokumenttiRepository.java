@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.repository;
 
-import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

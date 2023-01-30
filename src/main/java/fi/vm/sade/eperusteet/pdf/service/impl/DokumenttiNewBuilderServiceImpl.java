@@ -1,15 +1,15 @@
 package fi.vm.sade.eperusteet.pdf.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.enums.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.enums.KoulutustyyppiToteutus;
-import fi.vm.sade.eperusteet.pdf.domain.enums.LaajuusYksikko;
-import fi.vm.sade.eperusteet.pdf.domain.enums.PerusteTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.enums.PerusteenOsaTunniste;
-import fi.vm.sade.eperusteet.pdf.domain.enums.TavoiteAlueTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.enums.TutkinnonOsaTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.KoulutustyyppiToteutus;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.LaajuusYksikko;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteenOsaTunniste;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.TavoiteAlueTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.TutkinnonOsaTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerisenArvioinninOsaamistasonKriteeriDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KevytTekstiKappaleDto;

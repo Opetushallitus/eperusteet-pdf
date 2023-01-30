@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl;
 
-import fi.vm.sade.eperusteet.pdf.domain.enums.OsaTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.OsaTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

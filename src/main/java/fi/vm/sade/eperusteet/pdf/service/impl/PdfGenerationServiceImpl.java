@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.impl;
 
-import fi.vm.sade.eperusteet.pdf.domain.enums.GeneratorVersion;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.GeneratorVersion;
 import fi.vm.sade.eperusteet.pdf.service.PdfGenerationService;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import org.apache.fop.apps.FOUserAgent;

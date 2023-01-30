@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste;
 
-import fi.vm.sade.eperusteet.pdf.domain.enums.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

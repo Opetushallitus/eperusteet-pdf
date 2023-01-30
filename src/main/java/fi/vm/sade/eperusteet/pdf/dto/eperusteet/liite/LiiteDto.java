@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.liite;
 
-import fi.vm.sade.eperusteet.pdf.domain.enums.LiiteTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.LiiteTyyppi;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

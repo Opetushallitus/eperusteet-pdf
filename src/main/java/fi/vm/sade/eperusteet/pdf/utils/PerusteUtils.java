@@ -1,9 +1,9 @@
 package fi.vm.sade.eperusteet.pdf.utils;
 
-import fi.vm.sade.eperusteet.pdf.domain.StructurallyComparable;
-import fi.vm.sade.eperusteet.pdf.domain.enums.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.enums.KoulutustyyppiToteutus;
-import fi.vm.sade.eperusteet.pdf.domain.enums.PerusteTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.StructurallyComparable;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.KoulutustyyppiToteutus;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteTyyppi;
 import lombok.experimental.UtilityClass;
 
 import java.util.Collection;

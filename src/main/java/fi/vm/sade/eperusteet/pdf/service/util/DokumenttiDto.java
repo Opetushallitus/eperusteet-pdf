@@ -1,8 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.service.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.pdf.domain.enums.DokumenttiTila;
-import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.DokumenttiTila;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

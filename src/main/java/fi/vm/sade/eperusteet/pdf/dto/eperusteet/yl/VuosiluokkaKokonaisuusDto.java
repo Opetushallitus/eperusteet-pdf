@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl;
 
-import fi.vm.sade.eperusteet.pdf.domain.enums.Vuosiluokka;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Vuosiluokka;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ReferenceableDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;

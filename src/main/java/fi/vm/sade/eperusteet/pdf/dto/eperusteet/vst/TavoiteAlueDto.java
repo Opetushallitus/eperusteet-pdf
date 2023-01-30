@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst;
 
-import fi.vm.sade.eperusteet.pdf.domain.enums.TavoiteAlueTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.TavoiteAlueTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.impl;
 
-import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.repository.DokumenttiRepository;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiStateService;
 import org.springframework.beans.factory.annotation.Autowired;

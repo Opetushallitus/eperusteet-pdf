@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
-import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import org.w3c.dom.Document;
 

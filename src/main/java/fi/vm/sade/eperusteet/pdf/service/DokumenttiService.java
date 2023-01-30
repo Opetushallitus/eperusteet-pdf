@@ -1,9 +1,9 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.enums.DokumenttiTila;
-import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.DokumenttiTila;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.service.exception.DokumenttiException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;

@@ -1,10 +1,10 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.enums.PerusteTila;
-import fi.vm.sade.eperusteet.pdf.domain.enums.PerusteenOsaTunniste;
-import fi.vm.sade.eperusteet.pdf.domain.enums.TutkinnonOsaTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteTila;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteenOsaTunniste;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.TutkinnonOsaTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KevytTekstiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ammattitaitovaatimukset.AmmattitaitovaatimusKohdealueetDto;

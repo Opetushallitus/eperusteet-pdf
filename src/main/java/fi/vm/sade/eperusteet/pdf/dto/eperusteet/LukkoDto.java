@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import fi.vm.sade.eperusteet.pdf.domain.Lukko;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Lukko;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

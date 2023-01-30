@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste;
 
-import fi.vm.sade.eperusteet.pdf.domain.enums.KiinnitettyKoodiTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.KiinnitettyKoodiTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.utils;
 
-import fi.vm.sade.eperusteet.pdf.domain.ReferenceableEntity;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.ReferenceableEntity;
 
 import java.util.Collection;
 import java.util.Optional;

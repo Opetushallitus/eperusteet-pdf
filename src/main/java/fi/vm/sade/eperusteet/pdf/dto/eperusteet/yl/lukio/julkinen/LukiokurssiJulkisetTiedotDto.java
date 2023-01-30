@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.lukio.julkinen;
 
-import fi.vm.sade.eperusteet.pdf.domain.enums.LukiokurssiTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.LukiokurssiTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.Lokalisoitava;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;

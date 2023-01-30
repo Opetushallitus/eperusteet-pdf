@@ -1,11 +1,11 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.pdf.domain.enums.DokumenttiTila;
-import fi.vm.sade.eperusteet.pdf.domain.enums.DokumenttiVirhe;
-import fi.vm.sade.eperusteet.pdf.domain.enums.GeneratorVersion;
-import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.enums.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.DokumenttiTila;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.DokumenttiVirhe;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.GeneratorVersion;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Suoritustapakoodi;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

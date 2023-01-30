@@ -1,9 +1,9 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet;
 
-import fi.vm.sade.eperusteet.pdf.domain.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.enums.ProjektiTila;
-import fi.vm.sade.eperusteet.pdf.domain.enums.Suoritustapakoodi;
-import fi.vm.sade.eperusteet.pdf.domain.validointi.Validointi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.ProjektiTila;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.validointi.Validointi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.NavigationNodeDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.NavigationType;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.perusteprojekti.PerusteprojektiListausDto;

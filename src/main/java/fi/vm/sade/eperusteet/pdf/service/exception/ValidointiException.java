@@ -15,7 +15,7 @@
  */
 package fi.vm.sade.eperusteet.pdf.service.exception;
 
-import fi.vm.sade.eperusteet.pdf.domain.validointi.Validointi;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.validointi.Validointi;
 import lombok.Getter;
 import org.springframework.core.NestedRuntimeException;
 
