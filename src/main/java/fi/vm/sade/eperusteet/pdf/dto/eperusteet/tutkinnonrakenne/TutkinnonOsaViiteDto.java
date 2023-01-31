@@ -7,7 +7,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ReferenceableDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Sortable;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

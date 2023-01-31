@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.service.DokumenttiOldDto;
+import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaDokumenttiService;
+import fi.vm.sade.eperusteet.pdf.service.eperusteet.DokumenttiOldDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiService;
 import fi.vm.sade.eperusteet.pdf.service.exception.DokumenttiException;
+import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiTyyppi;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -32,16 +34,16 @@ public class PdfResource {
     @Autowired
     DokumenttiService dokumenttiService;
 
+    @Autowired
+    AmosaaDokumenttiService amosaaDokumenttiService;
+
     ModelMapper mapper = new ModelMapper();
 
-    @GetMapping(path = "/generate/{perusteId}/{revision}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DokumenttiOldDto> generatePdf(@PathVariable("perusteId") Long perusteId,
-                                                        @PathVariable("revision") Integer revision) throws JsonProcessingException, DokumenttiException {
+    @GetMapping(path = "/generate/eperusteet/{id}/{revision}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DokumenttiOldDto> generateEperusteetPdf(@PathVariable("id") Long id,
+                                                                  @PathVariable("revision") Integer revision) throws JsonProcessingException, DokumenttiException {
 
-        Dokumentti createDtoFor = dokumenttiService.createDtoFor(
-                perusteId,
-                Kieli.FI,
-                revision);
+        Dokumentti createDtoFor = dokumenttiService.createDtoFor(id, Kieli.FI, revision, DokumenttiTyyppi.PERUSTE);
 
         if (createDtoFor != null && createDtoFor.getTila() != DokumenttiTila.EPAONNISTUI) {
             dokumenttiService.setStarted(createDtoFor);
@@ -50,19 +52,19 @@ public class PdfResource {
         return new ResponseEntity<>(tempOldMapper(createDtoFor), HttpStatus.ACCEPTED);
     }
 
-//    @GetMapping(path = "/latest/{perusteId}/{revision}/{kieli}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<DokumenttiOldDto> getLatestDokumentti(@RequestParam("perusteId") final Long perusteId,
-//                                                             @RequestParam("kieli") final Kieli kieli,
-//                                                             @RequestParam("revision") final Integer revision) {
-//        try {
-//            Dokumentti dto = dokumenttiService.findLatest(perusteId, revision, kieli);
-//
-//            return new ResponseEntity<>(tempOldMapper(dto), HttpStatus.OK);
-//        } catch (IllegalArgumentException ex) {
-//            LOG.warn("{}", ex.getMessage());
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//    }
+    @GetMapping(path = "/generate/amosaa/{id}/{ktId}/{revision}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DokumenttiOldDto> generateAmosaaPdf(@PathVariable("id") Long id,
+                                                              @PathVariable("ktId") Long ktId,
+                                                              @PathVariable("revision") Integer revision) throws JsonProcessingException, DokumenttiException {
+
+        Dokumentti createDtoFor = amosaaDokumenttiService.createDtoFor(id, Kieli.FI, revision, DokumenttiTyyppi.OPS);
+
+        if (createDtoFor != null && createDtoFor.getTila() != DokumenttiTila.EPAONNISTUI) {
+            dokumenttiService.setStarted(createDtoFor);
+            dokumenttiService.generateWithDto(createDtoFor);
+        }
+        return new ResponseEntity<>(tempOldMapper(createDtoFor), HttpStatus.ACCEPTED);
+    }
 
     @GetMapping(path = "/fetch/{perusteId}/{kieli}/{revision}", produces = "application/pdf")
     @ResponseBody
@@ -88,4 +90,18 @@ public class PdfResource {
         old.setKieli(newDokumentti.getKieli());
         return old;
     }
+
+//    @GetMapping(path = "/latest/{perusteId}/{revision}/{kieli}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<DokumenttiOldDto> getLatestDokumentti(@RequestParam("perusteId") final Long perusteId,
+//                                                             @RequestParam("kieli") final Kieli kieli,
+//                                                             @RequestParam("revision") final Integer revision) {
+//        try {
+//            Dokumentti dto = dokumenttiService.findLatest(perusteId, revision, kieli);
+//
+//            return new ResponseEntity<>(tempOldMapper(dto), HttpStatus.OK);
+//        } catch (IllegalArgumentException ex) {
+//            LOG.warn("{}", ex.getMessage());
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
 }

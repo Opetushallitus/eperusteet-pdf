@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.lukio;
 
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.LukiokurssiTyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TekstiOsaDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

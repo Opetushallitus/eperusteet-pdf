@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 
 import java.util.Collection;
 import java.util.stream.Stream;

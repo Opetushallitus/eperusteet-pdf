@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.pdf.dto.eperusteet.koodisto;
+package fi.vm.sade.eperusteet.pdf.domain.common;
 
 import lombok.experimental.UtilityClass;
 
@@ -27,4 +27,6 @@ public class KoodistoUriArvo {
     public static final String KOTOUTUMISKOULUTUSTAVOITTEET = "kotoutumiskoulutustavoitteet";
     public static final String TUTKINTOKOULUTUKSEEN_VALMENTAVAKOULUTUS_LAAJAALAINENOSAAMINEN = "tutkintokoulutukseenvalmentavakoulutuslaajaalainenosaaminen";
     public static final String KOULUTUKSENOSATTUVA = "koulutuksenosattuva";
+    public static final String OPINTOKOKONAISUUDET = "opintokokonaisuudet";
+    public static final String OPINTOKOKONAISUUS_TAVOITTEET = "opintokokonaisuustavoitteet";
 }

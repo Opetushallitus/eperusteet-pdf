@@ -1,8 +1,8 @@
-package fi.vm.sade.eperusteet.pdf.service.impl;
+package fi.vm.sade.eperusteet.pdf.service.eperusteet.impl;
 
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.LokalisointiDto;
-import fi.vm.sade.eperusteet.pdf.service.LokalisointiService;
+import fi.vm.sade.eperusteet.pdf.service.eperusteet.LokalisointiService;
 import fi.vm.sade.eperusteet.pdf.utils.LocalizedMessagesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

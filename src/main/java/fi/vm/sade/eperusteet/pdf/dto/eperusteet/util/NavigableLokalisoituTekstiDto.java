@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.util;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.NavigationNodeDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.NavigationType;

@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.pdf.dto.eperusteet.util;
+package fi.vm.sade.eperusteet.pdf.domain.common;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;

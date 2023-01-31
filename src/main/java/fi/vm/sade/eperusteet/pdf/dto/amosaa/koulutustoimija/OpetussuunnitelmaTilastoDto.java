@@ -3,7 +3,7 @@ package fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fi.vm.sade.eperusteet.pdf.domain.amosaa.enums.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.CachedPerusteKevytDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.utils.domain.utils.Kieli;
 import fi.vm.sade.eperusteet.utils.domain.utils.Tila;
 import lombok.AllArgsConstructor;

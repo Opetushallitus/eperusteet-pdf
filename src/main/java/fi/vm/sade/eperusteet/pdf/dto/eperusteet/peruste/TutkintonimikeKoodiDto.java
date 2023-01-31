@@ -2,7 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Reference;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

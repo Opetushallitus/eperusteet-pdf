@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class KotoTaitotasoDto {
     private Long id;
     private KoodiDto nimi;
+    private String koodiUri;
     private LokalisoituTekstiDto tavoitteet;
     private LokalisoituTekstiDto kielenkayttotarkoitus;
     private LokalisoituTekstiDto aihealueet;
@@ -26,4 +27,6 @@ public class KotoTaitotasoDto {
     private LokalisoituTekstiDto suullinenVastaanottaminen;
     private LokalisoituTekstiDto suullinenTuottaminen;
     private LokalisoituTekstiDto vuorovaikutusJaMediaatio;
+    private LokalisoituTekstiDto tavoiteTarkennus;
+    private LokalisoituTekstiDto sisaltoTarkennus;
 }

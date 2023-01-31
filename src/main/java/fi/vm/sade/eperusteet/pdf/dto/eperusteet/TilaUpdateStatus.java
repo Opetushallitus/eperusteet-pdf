@@ -7,7 +7,7 @@ import fi.vm.sade.eperusteet.pdf.domain.eperusteet.validointi.Validointi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.NavigationNodeDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.NavigationType;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.perusteprojekti.PerusteprojektiListausDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

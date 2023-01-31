@@ -1,6 +1,5 @@
-package fi.vm.sade.eperusteet.pdf.service.impl;
+package fi.vm.sade.eperusteet.pdf.service.eperusteet.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.KoulutusTyyppi;
@@ -18,8 +17,8 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ammattitaitovaatimukset.Ammattit
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArvioinninKohdeDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArvioinninKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArviointiDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.koodisto.KoodistoKoodiDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.koodisto.KoodistoMetadataDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoKoodiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteJulkinenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaDto;
@@ -43,7 +42,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.TuvaLaajaAlainenOsaaminenDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoOpintoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.OpintokokonaisuusDto;
@@ -56,7 +55,8 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.LaajaalainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OpetuksenTavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TaiteenalaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TekstiOsaDto;
-import fi.vm.sade.eperusteet.pdf.service.DokumenttiNewBuilderService;
+import fi.vm.sade.eperusteet.pdf.service.eperusteet.EperusteetDokumenttiBuilderService;
+import fi.vm.sade.eperusteet.pdf.service.eperusteet.EperusteetPdfService;
 import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClient;
 import fi.vm.sade.eperusteet.pdf.service.util.CharapterNumberGenerator;
@@ -64,7 +64,9 @@ import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiPeruste;
 import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiRivi;
 import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiRiviTyyppi;
 import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiTaulukko;
+import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils;
 import fi.vm.sade.eperusteet.pdf.utils.LocalizedMessagesService;
+import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +78,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -85,6 +88,7 @@ import javax.imageio.stream.MemoryCacheImageOutputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -119,7 +123,7 @@ import static fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils.tagTeksti;
 @Slf4j
 @Service
 @Profile("!test")
-public class DokumenttiNewBuilderServiceImpl implements DokumenttiNewBuilderService {
+public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumenttiBuilderService {
 
     private static final float COMPRESSION_LEVEL = 0.9f;
 
@@ -131,6 +135,9 @@ public class DokumenttiNewBuilderServiceImpl implements DokumenttiNewBuilderServ
 
     @Autowired
     private KoodistoClient koodistoService;
+
+    @Autowired
+    EperusteetPdfService pdfGenerationService;
 
 //    @Autowired
 //    private TutkintonimikeKoodiRepository tutkintonimikeKoodiRepository;
@@ -145,7 +152,7 @@ public class DokumenttiNewBuilderServiceImpl implements DokumenttiNewBuilderServ
 //    private PerusteService perusteService;
 
     @Override
-    public Document generateXML(PerusteKaikkiDto peruste, Dokumentti dokumentti) throws ParserConfigurationException, JsonProcessingException {
+    public byte[] generatePdf(Dokumentti dokumentti) throws ParserConfigurationException, IOException, TransformerException, SAXException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         Document doc = docBuilder.newDocument();
@@ -175,17 +182,46 @@ public class DokumenttiNewBuilderServiceImpl implements DokumenttiNewBuilderServ
         docBase.setBodyElement(bodyElement);
         docBase.setGenerator(new CharapterNumberGenerator());
         docBase.setKieli(dokumentti.getKieli());
-        docBase.setPeruste(peruste);
-        docBase.setKvLiiteJulkinenDto(eperusteetService.getKvLiite(peruste.getId()));
+
+        //TODO: haetaan opintopolusta toistaiseksi testidataa
+        PerusteKaikkiDto perusteData = eperusteetService.getPerusteKaikkiDtoTemp(dokumentti.getSisaltoId(), dokumentti.getRevision());
+
+        docBase.setPeruste(perusteData);
+        docBase.setKvLiiteJulkinenDto(eperusteetService.getKvLiite(perusteData.getId()));
         docBase.setDokumentti(dokumentti);
-//        docBase.setMapper(mapper);
-        docBase.setSisalto(peruste.getSisallot().stream().findFirst().get().getSisalto());
-        docBase.setAipeOpetuksenSisalto(peruste.getAipeOpetuksenPerusteenSisalto());
+        docBase.setSisalto(perusteData.getSisallot().stream().findFirst().get().getSisalto());
+        docBase.setAipeOpetuksenSisalto(perusteData.getAipeOpetuksenPerusteenSisalto());
 
         // Tästä aloitetaan varsinaisen dokumentin muodostus
         addDokumentti(docBase);
 
-        return doc;
+        DokumenttiMetaDto meta = DokumenttiMetaDto.builder()
+                .title(DokumenttiUtils.getTextString(dokumentti.getKieli(), perusteData.getNimi()))
+                .build();
+
+        log.info("Luodaan dokumenttia (" + dokumentti.getSisaltoId() + ", " + dokumentti.getTyyppi() + ", " + dokumentti.getKieli() + ") perusteelle.");
+        meta.setSubject(messages.translate("docgen.meta.subject.peruste", dokumentti.getKieli()));
+        return pdfGenerationService.xhtml2pdf(doc, meta);
+
+//        switch (version) {
+//            case UUSI:
+//                Document doc = newBuilder.generateXML(perusteData, dokumentti);
+//
+//                meta.setSubject(messages.translate("docgen.meta.subject.peruste", kieli));
+//                toReturn = pdfGenerationService.xhtml2pdf(doc, meta);
+//
+//                break;
+//            case KVLIITE:
+//                doc = kvLiiteBuilderService.generateXML(perusteData, kieli);
+//
+//                meta.setSubject(messages.translate("docgen.meta.subject.kvliite", kieli));
+//                toReturn = pdfGenerationService.xhtml2pdf(doc, version, meta);
+//                break;
+//            default:
+//                break;
+//        }
+
+//        return doc;
     }
 
     private void addDokumentti(DokumenttiPeruste docBase) {
@@ -209,7 +245,6 @@ public class DokumenttiNewBuilderServiceImpl implements DokumenttiNewBuilderServ
 
 //        // Kuvat
         buildImages(docBase);
-
     }
 
     private void addMetaPages(DokumenttiPeruste docBase) {

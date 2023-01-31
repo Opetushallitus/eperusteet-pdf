@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.external;
 
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.koodisto.KoodistoKoodiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoKoodiDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -18,4 +18,6 @@ public interface KoodistoClient {
 
     @PreAuthorize("permitAll()")
     KoodistoKoodiDto get(String koodistoUri, String koodiUri, Long versio);
+
+    KoodistoKoodiDto getByUri(String uri);
 }

@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.pdf.service;
+package fi.vm.sade.eperusteet.pdf.service.eperusteet;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.DokumenttiTila;

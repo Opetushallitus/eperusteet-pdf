@@ -1,9 +1,12 @@
 package fi.vm.sade.eperusteet.pdf.service.util;
 
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.ValidHtml;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.common.ValidHtml;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.LaajuusYksikko;
+import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaDokumenttiBase;
+import fi.vm.sade.eperusteet.pdf.service.eperusteet.DokumenttiBase;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.pdfbox.preflight.PreflightDocument;
@@ -33,39 +36,51 @@ import java.util.Date;
 public class DokumenttiUtils {
     private static final int MAX_TIME_IN_MINUTES = 5;
 
-    //FIX THIS LokalisoituTeksti -> LokalisoituTekstiDto
-//    public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTekstiDto lTekstiDto, String tagi) {
-//        if (lTekstiDto != null) {
-//            addLokalisoituteksti(docBase, docBase.getMapper().map(lTekstiDto, LokalisoituTeksti.class), tagi);
-//        }
-//    }
+    public static void addLokalisoituteksti(AmosaaDokumenttiBase docBase, LokalisoituTekstiDto lTeksti, String tagi) {
+        addLokalisoituteksti(docBase, lTeksti, tagi, null);
+    }
 
-//    public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTeksti lTeksti, String tagi) {
-//        if (lTeksti != null && lTeksti.getTeksti() != null && lTeksti.getTeksti() != null) {
-//            String teksti = lTeksti.getTeksti();
-//            teksti = "<" + tagi + ">" + unescapeHtml5(teksti) + "</" + tagi + ">";
-//
-//            Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(teksti));
-//            Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
-//
-//            docBase.getBodyElement().appendChild(docBase.getDocument().importNode(node, true));
-//        }
-//    }
+    public static void addLokalisoituteksti(AmosaaDokumenttiBase docBase, LokalisoituTekstiDto lTeksti, String tagi, Element el) {
+        if (lTeksti != null && lTeksti.getTekstit() != null && lTeksti.getTekstit().get(docBase.getKieli()) != null) {
+            String teksti = lTeksti.getTekstit().get(docBase.getKieli());
+            teksti = "<" + tagi + ">" + unescapeHtml5(teksti) + "</" + tagi + ">";
+
+            Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(teksti));
+            Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
+
+            if (el != null) {
+                el.appendChild(docBase.getDocument().importNode(node, true));
+            } else {
+                docBase.getBodyElement().appendChild(docBase.getDocument().importNode(node, true));
+            }
+        }
+    }
 
     public static void addTeksti(DokumenttiBase docBase, String teksti, String tagi) {
-        addTeksti(docBase, teksti, tagi, docBase.getBodyElement());
+        addTeksti(docBase.getDocument(), teksti, tagi, docBase.getBodyElement());
+    }
+
+    public static void addTeksti(AmosaaDokumenttiBase docBase, String teksti, String tagi) {
+        addTeksti(docBase.getDocument(), teksti, tagi, docBase.getBodyElement());
     }
 
     public static void addTeksti(DokumenttiBase docBase, String teksti, String tagi, Element element) {
-        if (teksti != null) {
+        addTeksti(docBase.getDocument(), teksti, tagi, element);
+    }
 
+    public static void addTeksti(AmosaaDokumenttiBase docBase, String teksti, String tagi, Element element) {
+        addTeksti(docBase.getDocument(), teksti, tagi, element);
+    }
+
+    public static void addTeksti(Document doc, String teksti, String tagi, Element element) {
+        if (teksti != null) {
             teksti = unescapeHtml5(teksti);
             teksti = "<" + tagi + ">" + teksti + "</" + tagi + ">";
 
             Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(teksti));
             Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
 
-            element.appendChild(docBase.getDocument().importNode(node, true));
+            element.appendChild(doc.importNode(node, true));
         }
     }
 
@@ -88,42 +103,28 @@ public class DokumenttiUtils {
         }
     }
 
-//    public static String getTextString(DokumenttiBase docBase, Map<String, String> teksti) {
-//        Kieli kieli = docBase.getKieli();
-//        String result = null;
-//        if (teksti != null) {
-//            result = teksti.get(kieli.toString());
-//        }
-//        return result != null ? result : "";
-//    }
-//
-//    public static String getTextString(Kieli kieli, TekstiPalanen tekstiPalanen) {
-//        if (tekstiPalanen != null
-//                && tekstiPalanen.getTeksti() != null
-//                && tekstiPalanen.getTeksti().containsKey(kieli)
-//                && tekstiPalanen.getTeksti().get(kieli) != null) {
-//            return unescapeHtml5(tekstiPalanen.getTeksti().get(kieli));
-//        } else {
-//            return "";
-//        }
-//    }
-
-//    public static String getTextString(DokumenttiBase docBase, TekstiPalanen tekstiPalanen) {
-//        if (tekstiPalanen != null
-//                && tekstiPalanen.getTeksti() != null
-//                && tekstiPalanen.getTeksti().containsKey(docBase.getKieli())
-//                && tekstiPalanen.getTeksti().get(docBase.getKieli()) != null) {
-//            return unescapeHtml5(tekstiPalanen.getTeksti().get(docBase.getKieli()));
-//        } else {
-//            return "";
-//        }
-//    }
+    public static void addHeader(AmosaaDokumenttiBase docBase, String text) {
+        if (text != null) {
+            Element header = docBase.getDocument().createElement("h" + docBase.getGenerator().getDepth());
+            header.setAttribute("number", docBase.getGenerator().generateNumber());
+            header.appendChild(docBase.getDocument().createTextNode(unescapeHtml5(text)));
+            docBase.getBodyElement().appendChild(header);
+        }
+    }
 
     public static String getTextString(DokumenttiBase docBase, LokalisoituTekstiDto lokalisoituTekstiDto) {
-        if (lokalisoituTekstiDto != null && lokalisoituTekstiDto.getTekstit() != null && docBase.getKieli() != null
-                && lokalisoituTekstiDto.getTekstit().containsKey(docBase.getKieli())
-                && lokalisoituTekstiDto.getTekstit().get(docBase.getKieli()) != null) {
-            return unescapeHtml5(lokalisoituTekstiDto.getTekstit().get(docBase.getKieli()));
+        return getString(lokalisoituTekstiDto, docBase.getKieli());
+    }
+
+    public static String getTextString(AmosaaDokumenttiBase docBase, LokalisoituTekstiDto lokalisoituTekstiDto) {
+        return getString(lokalisoituTekstiDto, docBase.getKieli());
+    }
+
+    private static String getString(LokalisoituTekstiDto lokalisoituTekstiDto, Kieli kieli) {
+        if (lokalisoituTekstiDto != null && lokalisoituTekstiDto.getTekstit() != null && kieli != null
+                && lokalisoituTekstiDto.getTekstit().containsKey(kieli)
+                && lokalisoituTekstiDto.getTekstit().get(kieli) != null) {
+            return unescapeHtml5(lokalisoituTekstiDto.getTekstit().get(kieli));
         } else {
             return "";
         }
@@ -138,15 +139,6 @@ public class DokumenttiUtils {
             return "";
         }
     }
-
-//    public static String getTextString(DokumenttiBase docBase, LokalisoituTeksti lokalisoituTeksti) {
-//        if (lokalisoituTeksti == null || lokalisoituTeksti.getTeksti() == null
-//                || lokalisoituTeksti.getTeksti() == null) {
-//            return "";
-//        } else {
-//            return unescapeHtml5(lokalisoituTeksti.getTeksti());
-//        }
-//    }
 
     public static String unescapeHtml5(String string) {
         return StringEscapeUtils.unescapeHtml4((Jsoup.clean(stripNonValidXMLCharacters(string), ValidHtml.WhitelistType.NORMAL_PDF.getWhitelist())));
@@ -241,5 +233,28 @@ public class DokumenttiUtils {
 
         emphasis.appendChild(docBase.getDocument().importNode(node, true));
         return emphasis;
+    }
+
+    public static String selectLaajuusYksikkoMessage(LaajuusYksikko laajuusYksikko) {
+        switch (laajuusYksikko) {
+            case OPINTOVIIKKO:
+                return "docgen.laajuus.ov";
+            case OPINTOPISTE:
+                return "docgen.laajuus.op";
+            case OSAAMISPISTE:
+                return "docgen.laajuus.osp";
+            case KURSSI:
+                return "docgen.laajuus.kurssi";
+            case TUNTI:
+                return "docgen.laajuus.tunti";
+            case VIIKKO:
+                return "docgen.laajuus.viikkoa";
+            case VUOSIVIIKKOTUNTI:
+                return "docgen.laajuus.vuosiviikkotunti";
+            case VUOSI:
+                return "docgen.laajuus.vuosi";
+            default:
+                return "docgen.laajuus.op"; // palautetaan 'op', joka oli default ennen laajuusyksikön tuloa
+        }
     }
 }

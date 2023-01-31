@@ -5,7 +5,7 @@ import fi.vm.sade.eperusteet.pdf.domain.amosaa.enums.JotpaTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.amosaa.enums.OpsTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.CachedPerusteBaseDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.utils.domain.utils.Tila;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

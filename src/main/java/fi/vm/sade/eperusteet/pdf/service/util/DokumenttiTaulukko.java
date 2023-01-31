@@ -1,8 +1,11 @@
 package fi.vm.sade.eperusteet.pdf.service.util;
 
+import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaDokumenttiBase;
+import fi.vm.sade.eperusteet.pdf.service.eperusteet.DokumenttiBase;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
@@ -13,8 +16,15 @@ import java.util.Arrays;
  */
 public class DokumenttiTaulukko {
 
+    public static final String TABLE_HEADER_BGCOLOR = "#d4e3f4";
     private String otsikko;
     private ArrayList<DokumenttiRivi> rivit = new ArrayList<>();
+
+    private ArrayList<String> otsikkoSarakkeet = new ArrayList<>();
+
+    public void addOtsikkoSarake(String sarake) {
+        otsikkoSarakkeet.add(sarake);
+    }
 
     public void addOtsikko(String otsikko) {
         this.otsikko = otsikko;
@@ -37,6 +47,39 @@ public class DokumenttiTaulukko {
             Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
             docBase.getBodyElement().appendChild(docBase.getDocument().importNode(node, true));
         }
+    }
+
+    public void addToDokumentti(AmosaaDokumenttiBase docBase) {
+        if (rivit.size() > 0) {
+            Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(this.toString()));
+            Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
+            docBase.getBodyElement().appendChild(docBase.getDocument().importNode(node, true));
+        }
+    }
+
+    //Amosaan käyttämä
+    public static void addRow(AmosaaDokumenttiBase docBase, Element taulukko, String teksti, boolean header) {
+        Element tr = docBase.getDocument().createElement("tr");
+        taulukko.appendChild(tr);
+        if (header) {
+            tr.setAttribute("bgcolor", TABLE_HEADER_BGCOLOR);
+        }
+
+        if (header) {
+            Element th = docBase.getDocument().createElement("th");
+            th.appendChild(newBoldElement(docBase.getDocument(), teksti));
+            tr.appendChild(th);
+        } else {
+            Element td = docBase.getDocument().createElement("td");
+            td.appendChild(newBoldElement(docBase.getDocument(), teksti));
+            tr.appendChild(td);
+        }
+    }
+
+    public static Element newBoldElement(Document doc, String teksti) {
+        Element strong = doc.createElement("strong");
+        strong.appendChild(doc.createTextNode(teksti));
+        return strong;
     }
 
     @Override

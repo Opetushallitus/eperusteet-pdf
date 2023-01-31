@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.pdf.service.impl;
+package fi.vm.sade.eperusteet.pdf.service;
 
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.repository.DokumenttiRepository;

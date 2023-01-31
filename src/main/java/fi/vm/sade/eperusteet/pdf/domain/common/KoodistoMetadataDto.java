@@ -1,16 +1,14 @@
-package fi.vm.sade.eperusteet.pdf.dto.amosaa.koodisto;
+package fi.vm.sade.eperusteet.pdf.domain.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class KoodistoMetadataDto {
     private String nimi;
     private String kieli;

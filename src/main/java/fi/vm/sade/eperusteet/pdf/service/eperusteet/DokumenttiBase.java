@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.pdf.service.util;
+package fi.vm.sade.eperusteet.pdf.service.eperusteet;
 
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;

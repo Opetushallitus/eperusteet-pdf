@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.external;
 
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.koodisto.KoodistoKoodiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.pdf.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -82,8 +83,26 @@ public class KoodistoClientImpl implements KoodistoClient {
             return null;
         }
         RestTemplate restTemplate = new RestTemplate();
-        String url = koodistoServiceUrl + KOODISTO_API + koodistoUri + "/koodi/" + koodiUri + (versio != null ? "?koodistoVersio=" + versio.toString() : "");
-        ResponseEntity<KoodistoKoodiDto> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, KoodistoKoodiDto.class);
-        return response.getBody();
+        String url = koodistoServiceUrl + KOODISTO_API + koodistoUri + "/koodi/" + koodiUri + (versio != null ? "?koodistoVersio=" + versio : "");
+        try {
+            ResponseEntity<KoodistoKoodiDto> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, KoodistoKoodiDto.class);
+            return response.getBody();
+        } catch (RestClientException ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public KoodistoKoodiDto getByUri(String uri) {
+        String[] splitted = uri.split("_");
+        if (splitted.length < 2) {
+            return null;
+        } else if (splitted.length == 2) {
+            return get(splitted[0], uri);
+        } else if (splitted[0].startsWith("paikallinen_tutkinnonosa")) {
+            return null; // FIXME
+        } else {
+            return null;
+        }
     }
 }

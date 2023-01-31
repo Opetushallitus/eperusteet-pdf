@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti;
 
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KoulutusOsanKoulutustyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KoulutusOsanTyyppi;

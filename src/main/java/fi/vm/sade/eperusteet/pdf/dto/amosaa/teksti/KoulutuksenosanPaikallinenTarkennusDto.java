@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import java.util.ArrayList;
 import java.util.List;
 

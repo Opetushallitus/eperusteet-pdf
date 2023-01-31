@@ -5,6 +5,7 @@ import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.service.exception.DokumenttiException;
+import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiTyyppi;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ public interface DokumenttiService {
 
 //    @PreAuthorize("hasPermission(#id, 'peruste', 'LUKU')")
     @Transactional
-    Dokumentti createDtoFor(long id, Kieli kieli, Integer revision) throws JsonProcessingException;
+    Dokumentti createDtoFor(long id, Kieli kieli, Integer revision, DokumenttiTyyppi tyyppi) throws JsonProcessingException;
 
     @PreAuthorize("permitAll()")
     byte[] get(Long id, Integer revision, Kieli kieli);

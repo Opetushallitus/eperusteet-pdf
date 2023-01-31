@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.domain.amosaa;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.utils.domain.utils.Kieli;
 import lombok.Getter;
 import org.hibernate.annotations.Cache;
@@ -129,7 +129,7 @@ public class LokalisoituTeksti implements Serializable {
         if (tekstiDto == null) {
             return null;
         }
-        return of(tekstiDto.getTekstit());
+        return of((LokalisoituTekstiDto) tekstiDto.getTekstit());
     }
 
     public static LokalisoituTeksti of(JsonNode node) {

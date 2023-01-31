@@ -1,22 +1,16 @@
-package fi.vm.sade.eperusteet.pdf.service.impl;
+package fi.vm.sade.eperusteet.pdf.service;
 
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.repository.DokumenttiRepository;
-import fi.vm.sade.eperusteet.pdf.service.DokumenttiNewBuilderService;
-import fi.vm.sade.eperusteet.pdf.service.DokumenttiService;
-import fi.vm.sade.eperusteet.pdf.service.DokumenttiStateService;
-import fi.vm.sade.eperusteet.pdf.service.PdfGenerationService;
+import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaDokumenttiBuilderService;
+import fi.vm.sade.eperusteet.pdf.service.eperusteet.EperusteetDokumenttiBuilderService;
+import fi.vm.sade.eperusteet.pdf.service.eperusteet.EperusteetPdfService;
 import fi.vm.sade.eperusteet.pdf.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiTyyppi;
-import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils;
-import fi.vm.sade.eperusteet.pdf.utils.LocalizedMessagesService;
-import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.pdfbox.preflight.ValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -25,12 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -47,16 +36,16 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     private DokumenttiStateService dokumenttiStateService;
 
     @Autowired
-    private LocalizedMessagesService messages;
-
-    @Autowired
     EperusteetService eperusteetService;
 
     @Autowired
-    PdfGenerationService pdfGenerationService;
+    EperusteetPdfService pdfGenerationService;
 
     @Autowired
-    private DokumenttiNewBuilderService newBuilder;
+    EperusteetDokumenttiBuilderService eperusteetDokumenttiBuilderService;
+
+    @Autowired
+    AmosaaDokumenttiBuilderService amosaaDokumenttiBuilderService;
 
     @Value("classpath:docgen/fop.xconf")
     private Resource fopConfig;
@@ -67,11 +56,11 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional
-    public Dokumentti createDtoFor(long id, Kieli kieli, Integer revision) {
+    public Dokumentti createDtoFor(long id, Kieli kieli, Integer revision, DokumenttiTyyppi tyyppi) {
         Dokumentti dokumentti = new Dokumentti();
         dokumentti.setSisaltoId(id);
         dokumentti.setTila(DokumenttiTila.EI_OLE);
-        dokumentti.setTyyppi(DokumenttiTyyppi.PERUSTE);
+        dokumentti.setTyyppi(tyyppi);
         dokumentti.setKieli(kieli);
         dokumentti.setRevision(revision);
         dokumentti.setAloitusaika(new Date());
@@ -85,9 +74,15 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         updateTila(dokumentti, DokumenttiTila.LUODAAN);
 
         try {
-            //TODO: haetaan opintopolusta toistaiseksi testidataa
-            PerusteKaikkiDto perusteData = eperusteetService.getPerusteKaikkiDtoTemp(dokumentti.getSisaltoId(), dokumentti.getRevision());
-            dokumentti.setData(generateFor(dokumentti, perusteData));
+            if (dokumentti.getTyyppi().equals(DokumenttiTyyppi.PERUSTE)) {
+                dokumentti.setData(eperusteetDokumenttiBuilderService.generatePdf(dokumentti));
+            } else if (dokumentti.getTyyppi().equals(DokumenttiTyyppi.OPS)) {
+                dokumentti.setData(amosaaDokumenttiBuilderService.generatePdf(dokumentti));
+            } else if (dokumentti.getTyyppi().equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA) ){
+
+            } else {
+                // TODO: poikkeus
+            }
             dokumentti.setTila(DokumenttiTila.VALMIS);
             dokumentti.setValmistumisaika(new Date());
             dokumenttiRepository.save(dokumentti);
@@ -104,8 +99,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     public void setStarted(Dokumentti dto) {
         dto.setAloitusaika(new Date());
         dto.setTila(DokumenttiTila.JONOSSA);
-        Dokumentti test = dokumenttiStateService.save(dto);
-        boolean te = false;
+        dokumenttiStateService.save(dto);
     }
 
     @Override
@@ -115,21 +109,21 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         dokumenttiStateService.save(dto);
     }
 
-    private byte[] generateFor(Dokumentti dokumentti, PerusteKaikkiDto perusteData) throws ParserConfigurationException, IOException, TransformerException, SAXException {
-        Kieli kieli = dokumentti.getKieli();
-        byte[] toReturn = null;
-        ValidationResult result;
-
-        DokumenttiMetaDto meta = DokumenttiMetaDto.builder()
-                .title(DokumenttiUtils.getTextString(dokumentti.getKieli(), perusteData.getNimi()))
-                .build();
-
-        log.info("Luodaan dokumenttia (" + dokumentti.getSisaltoId() + ", " + dokumentti.getTyyppi() + ", " + kieli + ") perusteelle.");
-        Document doc = newBuilder.generateXML(perusteData, dokumentti);
-
-        meta.setSubject(messages.translate("docgen.meta.subject.peruste", kieli));
-        toReturn = pdfGenerationService.xhtml2pdf(doc, meta);
-
+//    private byte[] generateFor(Dokumentti dokumentti) throws ParserConfigurationException, IOException, TransformerException, SAXException {
+//        Kieli kieli = dokumentti.getKieli();
+//        byte[] toReturn = null;
+//        ValidationResult result;
+//
+//        DokumenttiMetaDto meta = DokumenttiMetaDto.builder()
+//                .title(DokumenttiUtils.getTextString(dokumentti.getKieli(), perusteData.getNimi()))
+//                .build();
+//
+//        log.info("Luodaan dokumenttia (" + dokumentti.getSisaltoId() + ", " + dokumentti.getTyyppi() + ", " + kieli + ") perusteelle.");
+//        Document doc = newBuilder.generateXML(dokumentti);
+//
+////        meta.setSubject(messages.translate("docgen.meta.subject.peruste", kieli));
+//        toReturn = pdfGenerationService.xhtml2pdf(doc, meta);
+//
 //        switch (version) {
 //            case UUSI:
 //                Document doc = newBuilder.generateXML(perusteData, dokumentti);
@@ -147,8 +141,8 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 //            default:
 //                break;
 //        }
-        return toReturn;
-    }
+//        return toReturn;
+//    }
 
     @Override
     @Transactional(readOnly = true)
