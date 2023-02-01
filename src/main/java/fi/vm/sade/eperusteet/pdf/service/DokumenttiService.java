@@ -15,7 +15,7 @@ public interface DokumenttiService {
     void setStarted(@P("dto") Dokumentti dto);
 
 //    @PreAuthorize("hasPermission(#dto.perusteId, 'peruste', 'LUKU')")
-    void generateWithDto(@P("dto") Dokumentti dto) throws DokumenttiException, JsonProcessingException;
+    void generateWithDto(@P("dto") Dokumentti dto, Long ktId) throws DokumenttiException, JsonProcessingException;
 
     void updateTila(Dokumentti dto, DokumenttiTila tila);
 

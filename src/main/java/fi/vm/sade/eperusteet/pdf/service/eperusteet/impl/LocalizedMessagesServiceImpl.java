@@ -27,7 +27,7 @@ public class LocalizedMessagesServiceImpl implements LocalizedMessagesService {
     @Override
     public String translate(String key, Kieli kieli) {
 
-//         Koitetaan hakea lokalisointipalvelimelta käänös
+        // Koitetaan hakea lokalisointipalvelimelta käänös
         LokalisointiDto valueDto = lokalisointiService.get(key, kieli.toString());
         if (valueDto != null) {
             return valueDto.getValue();

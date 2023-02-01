@@ -2,28 +2,22 @@ package fi.vm.sade.eperusteet.pdf.service.amosaa.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
-import fi.vm.sade.eperusteet.pdf.domain.amosaa.enums.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.ops.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.ArvioinninKohdeDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.ArvioinninKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.ArviointiDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KotoKielitaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoLaajaAlainenOsaaminenDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoLaajaAlaisenOsaamisenAlueDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KotoOpintoDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KotoTaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.MuodostumisSaantoDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.OsaamisenTavoiteDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.OsaamistasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.OsaamistasonKriteeriDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.RakenneModuuliDto;
@@ -43,16 +37,13 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.OmaTutkinnonosaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.OpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SuorituspolkuDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TekstiosaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TutkinnonosaDto;
 import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaDokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaDokumenttiBuilderService;
 import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaPdfService;
 import fi.vm.sade.eperusteet.pdf.service.external.AmosaaService;
-import fi.vm.sade.eperusteet.pdf.service.external.AmosaaServiceImpl;
 import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClient;
 import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiRivi;
@@ -91,7 +82,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -114,7 +104,6 @@ import static fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils.addHeader;
 import static fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils.addLokalisoituteksti;
 import static fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils.addTeksti;
 import static fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils.getTextString;
-import static fi.vm.sade.eperusteet.pdf.service.util.DokumenttiUtils.selectLaajuusYksikkoMessage;
 
 @Service
 public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuilderService {
@@ -158,7 +147,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 //    private ArviointiasteikkoService arviointiasteikkoService;
 
     @Override
-    public byte[] generatePdf(Dokumentti dokumentti) throws ParserConfigurationException, IOException, SAXException, TransformerException {
+    public byte[] generatePdf(Dokumentti dokumentti, Long ktId) throws ParserConfigurationException, IOException, SAXException, TransformerException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -189,13 +178,12 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         docBase.setKieli(dokumentti.getKieli());
         docBase.setDokumentti(dokumentti);
 
-        OpetussuunnitelmaDto ops = amosaaService.getOpetussuunnitelma(1L, dokumentti.getSisaltoId());
-//        docBase.setOpetussuunnitelma(ops);
+        OpetussuunnitelmaDto ops = amosaaService.getOpetussuunnitelmaTemp(ktId, dokumentti.getSisaltoId());
+        docBase.setOpetussuunnitelma(ops);
 
         if (ops.getPeruste() != null) {
-//            eperusteetService.getPerusteKaikkiDtoTemp(dokumentti.getSisaltoId(), dokumentti.getRevision());
-//            PerusteKaikkiDto perusteKaikkiDto = eperusteetService.getPerusteKaikkiDtoTemp(ops.getPeruste().getPerusteId(), 2);
-//            docBase.setPeruste(perusteKaikkiDto);
+            PerusteKaikkiDto perusteKaikkiDto = amosaaService.getPerusteKaikkiDtoTemp(ops.getPeruste().getId());
+            docBase.setPeruste(perusteKaikkiDto);
         }
 
         // Kansilehti & Infosivu

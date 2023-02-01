@@ -30,7 +30,7 @@ public class EperusteetServiceImpl implements EperusteetService {
     private RestTemplate restTemplate = new RestTemplate();
 
     @Override
-    public PerusteKaikkiDto getPerusteKaikkiDto(Long id, Integer revision) throws JsonProcessingException {
+    public PerusteKaikkiDto getPerusteKaikkiDto(Long id, Integer revision) {
         try {
             ResponseEntity<String> response = restTemplate.exchange(eperusteetServiceUrl + EPERUSTEET_API + id + "/kaikki?rev={rev}",
                     HttpMethod.GET,
@@ -42,17 +42,6 @@ public class EperusteetServiceImpl implements EperusteetService {
             // TODO: käsittele poikkeus
             return null;
         }
-    }
-
-    @Override
-    public PerusteKaikkiDto getPerusteKaikkiDtoTemp(Long id, Integer revision) throws JsonProcessingException {
-        // haetaan opintopolusta peruste
-        String tempDevUrl = "https://eperusteet.testiopintopolku.fi/eperusteet-service/api/perusteet/2499640/kaikki";
-        ResponseEntity<String> response = restTemplate.exchange(tempDevUrl,
-                HttpMethod.GET,
-                httpEntity,
-                String.class);
-        return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
     }
 
     @Override
@@ -81,5 +70,17 @@ public class EperusteetServiceImpl implements EperusteetService {
             // TODO: käsittele poikkeus
             return null;
         }
+    }
+
+    // TODO: remove temp funktio
+    @Override
+    public PerusteKaikkiDto getPerusteKaikkiDtoTemp(Long id, Integer revision) throws JsonProcessingException {
+        // haetaan opintopolusta peruste
+        String tempDevUrl = "https://eperusteet.testiopintopolku.fi/eperusteet-service/api/perusteet/2499640/kaikki";
+        ResponseEntity<String> response = restTemplate.exchange(tempDevUrl,
+                HttpMethod.GET,
+                httpEntity,
+                String.class);
+        return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
     }
 }

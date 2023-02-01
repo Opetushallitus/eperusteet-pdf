@@ -4,13 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaDokumenttiService;
-import fi.vm.sade.eperusteet.pdf.service.eperusteet.DokumenttiOldDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiService;
+import fi.vm.sade.eperusteet.pdf.service.eperusteet.DokumenttiOldDto;
 import fi.vm.sade.eperusteet.pdf.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiTyyppi;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +32,6 @@ public class PdfResource {
     @Autowired
     DokumenttiService dokumenttiService;
 
-    @Autowired
-    AmosaaDokumenttiService amosaaDokumenttiService;
-
-    ModelMapper mapper = new ModelMapper();
-
     @GetMapping(path = "/generate/eperusteet/{id}/{revision}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DokumenttiOldDto> generateEperusteetPdf(@PathVariable("id") Long id,
                                                                   @PathVariable("revision") Integer revision) throws JsonProcessingException, DokumenttiException {
@@ -47,7 +40,8 @@ public class PdfResource {
 
         if (createDtoFor != null && createDtoFor.getTila() != DokumenttiTila.EPAONNISTUI) {
             dokumenttiService.setStarted(createDtoFor);
-            dokumenttiService.generateWithDto(createDtoFor);
+            dokumenttiService.generateWithDto(createDtoFor, null);
+            LOG.info("PDF generated");
         }
         return new ResponseEntity<>(tempOldMapper(createDtoFor), HttpStatus.ACCEPTED);
     }
@@ -57,11 +51,12 @@ public class PdfResource {
                                                               @PathVariable("ktId") Long ktId,
                                                               @PathVariable("revision") Integer revision) throws JsonProcessingException, DokumenttiException {
 
-        Dokumentti createDtoFor = amosaaDokumenttiService.createDtoFor(id, Kieli.FI, revision, DokumenttiTyyppi.OPS);
+        Dokumentti createDtoFor = dokumenttiService.createDtoFor(id, Kieli.FI, revision, DokumenttiTyyppi.OPS);
 
         if (createDtoFor != null && createDtoFor.getTila() != DokumenttiTila.EPAONNISTUI) {
             dokumenttiService.setStarted(createDtoFor);
-            dokumenttiService.generateWithDto(createDtoFor);
+            dokumenttiService.generateWithDto(createDtoFor, ktId);
+            LOG.info("PDF generated");
         }
         return new ResponseEntity<>(tempOldMapper(createDtoFor), HttpStatus.ACCEPTED);
     }

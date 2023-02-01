@@ -184,7 +184,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         docBase.setKieli(dokumentti.getKieli());
 
         //TODO: haetaan opintopolusta toistaiseksi testidataa
-        PerusteKaikkiDto perusteData = eperusteetService.getPerusteKaikkiDtoTemp(dokumentti.getSisaltoId(), dokumentti.getRevision());
+        PerusteKaikkiDto perusteData = eperusteetService.getPerusteKaikkiDto(dokumentti.getSisaltoId(), dokumentti.getRevision());
 
         docBase.setPeruste(perusteData);
         docBase.setKvLiiteJulkinenDto(eperusteetService.getKvLiite(perusteData.getId()));
@@ -199,11 +199,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 .title(DokumenttiUtils.getTextString(dokumentti.getKieli(), perusteData.getNimi()))
                 .build();
 
-        log.info("Luodaan dokumenttia (" + dokumentti.getSisaltoId() + ", " + dokumentti.getTyyppi() + ", " + dokumentti.getKieli() + ") perusteelle.");
-        meta.setSubject(messages.translate("docgen.meta.subject.peruste", dokumentti.getKieli()));
-        return pdfGenerationService.xhtml2pdf(doc, meta);
-
-//        switch (version) {
+        //        switch (version) {
 //            case UUSI:
 //                Document doc = newBuilder.generateXML(perusteData, dokumentti);
 //
@@ -221,7 +217,9 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 //                break;
 //        }
 
-//        return doc;
+        log.info("Luodaan dokumenttia (" + dokumentti.getSisaltoId() + ", " + dokumentti.getTyyppi() + ", " + dokumentti.getKieli() + ") perusteelle.");
+        meta.setSubject(messages.translate("docgen.meta.subject.peruste", dokumentti.getKieli()));
+        return pdfGenerationService.xhtml2pdf(doc, meta);
     }
 
     private void addDokumentti(DokumenttiPeruste docBase) {

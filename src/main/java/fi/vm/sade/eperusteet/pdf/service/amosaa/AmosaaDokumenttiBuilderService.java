@@ -9,6 +9,6 @@ import java.io.IOException;
 
 public interface AmosaaDokumenttiBuilderService {
 
-    byte[] generatePdf(Dokumentti dokumentti)
+    byte[] generatePdf(Dokumentti dokumentti, Long ktId)
             throws ParserConfigurationException, IOException, SAXException, TransformerException;
 }
