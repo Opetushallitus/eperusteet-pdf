@@ -27,7 +27,7 @@ import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KoulutusDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.MuutosmaaraysDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
-import fi.vm.sade.eperusteet.pdf.utils.PerusteIdentifiable;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.PerusteIdentifiable;
 import fi.vm.sade.eperusteet.pdf.utils.PerusteUtils;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

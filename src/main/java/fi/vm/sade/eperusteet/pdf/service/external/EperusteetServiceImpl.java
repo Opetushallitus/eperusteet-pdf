@@ -32,7 +32,7 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public PerusteKaikkiDto getPerusteKaikkiDto(Long id, Integer revision) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(eperusteetServiceUrl + EPERUSTEET_API + id + "/kaikki?rev={rev}",
+            ResponseEntity<String> response = restTemplate.exchange(eperusteetServiceUrl + EPERUSTEET_API + id + "/kaikki?rev={revision}",
                     HttpMethod.GET,
                     httpEntity,
                     String.class,

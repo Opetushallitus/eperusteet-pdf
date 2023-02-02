@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *
  * FIXME: tutkintonimike, osaamisala ja tutkinnon osa käyttämään KoodiDto:ta
  */
 @Data

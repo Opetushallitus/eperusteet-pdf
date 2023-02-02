@@ -6,8 +6,9 @@ import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.repository.DokumenttiRepository;
 import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaDokumenttiBuilderService;
 import fi.vm.sade.eperusteet.pdf.service.eperusteet.EperusteetDokumenttiBuilderService;
-import fi.vm.sade.eperusteet.pdf.service.exception.DokumenttiException;
-import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
+import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.service.ylops.YlopsDokumenttiBuilderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +39,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Autowired
     AmosaaDokumenttiBuilderService amosaaDokumenttiBuilderService;
+
+    @Autowired
+    YlopsDokumenttiBuilderService ylopsDokumenttiBuilderService;
 
     @Value("classpath:docgen/fop.xconf")
     private Resource fopConfig;
@@ -71,7 +75,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             } else if (dokumentti.getTyyppi().equals(DokumenttiTyyppi.OPS)) {
                 dokumentti.setData(amosaaDokumenttiBuilderService.generatePdf(dokumentti, ktId));
             } else if (dokumentti.getTyyppi().equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA) ){
-
+                dokumentti.setData(ylopsDokumenttiBuilderService.generatePdf(dokumentti));
             } else {
                 // TODO: poikkeus
             }

@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.service.external;
 
 import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoKoodiDto;
-import fi.vm.sade.eperusteet.pdf.service.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +48,8 @@ public class KoodistoClientImpl implements KoodistoClient {
     @Autowired
     HttpEntity httpEntity;
 
+    private RestTemplate restTemplate = new RestTemplate();
+
     @Override
     public List<KoodistoKoodiDto> getAll(String koodisto) {
         return self.getAll(koodisto, false);
@@ -56,7 +58,6 @@ public class KoodistoClientImpl implements KoodistoClient {
     @Override
     @Cacheable(value = "koodistot", key = "#p0 + #p1")
     public List<KoodistoKoodiDto> getAll(String koodisto, boolean onlyValidKoodis) {
-        RestTemplate restTemplate = new RestTemplate();
         String url = koodistoServiceUrl + KOODISTO_API + koodisto + "/koodi?onlyValidKoodis=" + onlyValidKoodis;
         try {
             ResponseEntity<KoodistoKoodiDto[]> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, KoodistoKoodiDto[].class);

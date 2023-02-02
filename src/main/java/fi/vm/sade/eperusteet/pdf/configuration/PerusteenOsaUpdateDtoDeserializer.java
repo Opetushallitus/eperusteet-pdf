@@ -16,7 +16,6 @@
 package fi.vm.sade.eperusteet.pdf.configuration;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -35,8 +34,7 @@ public class PerusteenOsaUpdateDtoDeserializer extends StdDeserializer<Perusteen
     }
 
     @Override
-    public PerusteenOsaUpdateDto deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException,
-        JsonProcessingException {
+    public PerusteenOsaUpdateDto deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         final TreeNode tree = jp.readValueAsTree();
         final ObjectCodec codec = jp.getCodec();
         PerusteenOsaUpdateDto dto = new PerusteenOsaUpdateDto();

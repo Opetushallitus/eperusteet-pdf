@@ -1,0 +1,21 @@
+package fi.vm.sade.eperusteet.pdf.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class NotExistsException extends ServiceException {
+
+    public NotExistsException() {
+        super("Ei löytynyt");
+    }
+
+    public NotExistsException(String message) {
+        super(message);
+    }
+
+    public NotExistsException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+}

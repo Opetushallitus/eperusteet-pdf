@@ -5,9 +5,9 @@ import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiService;
-import fi.vm.sade.eperusteet.pdf.service.eperusteet.DokumenttiOldDto;
-import fi.vm.sade.eperusteet.pdf.service.exception.DokumenttiException;
-import fi.vm.sade.eperusteet.pdf.service.util.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiOldDto;
+import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
+import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTyyppi;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +60,25 @@ public class PdfResource {
         }
         return new ResponseEntity<>(tempOldMapper(createDtoFor), HttpStatus.ACCEPTED);
     }
+
+    @GetMapping(path = "/generate/ylops/{id}/{revision}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DokumenttiOldDto> generateYlopsPdf(@PathVariable("id") Long id,
+                                                             @PathVariable("revision") Integer revision) throws JsonProcessingException, DokumenttiException {
+
+        Dokumentti createDtoFor = dokumenttiService.createDtoFor(id, Kieli.FI, revision, DokumenttiTyyppi.TOTEUTUSSUUNNITELMA);
+
+        if (createDtoFor != null && createDtoFor.getTila() != DokumenttiTila.EPAONNISTUI) {
+            dokumenttiService.setStarted(createDtoFor);
+            dokumenttiService.generateWithDto(createDtoFor, null);
+            LOG.info("PDF generated");
+        }
+        return new ResponseEntity<>(tempOldMapper(createDtoFor), HttpStatus.ACCEPTED);
+    }
+
+
+
+
+
 
     @GetMapping(path = "/fetch/{perusteId}/{kieli}/{revision}", produces = "application/pdf")
     @ResponseBody

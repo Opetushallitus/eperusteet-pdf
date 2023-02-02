@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class AmosaaServiceImpl implements AmosaaService{
+public class AmosaaServiceImpl implements AmosaaService {
 
     private static final String AMOSAA_API = "/api/amosaa/";
     private static final String AMOSAA_EXTERNAL_API = "/api/external/";

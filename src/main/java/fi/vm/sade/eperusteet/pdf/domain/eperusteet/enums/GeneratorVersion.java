@@ -2,9 +2,6 @@ package fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-/**
- * @author isaul
- */
 public enum GeneratorVersion {
     VANHA("vanha"),
     UUSI("uusi"),

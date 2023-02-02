@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 import java.util.Set;
 
-/**
- * @author nkala
- */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
