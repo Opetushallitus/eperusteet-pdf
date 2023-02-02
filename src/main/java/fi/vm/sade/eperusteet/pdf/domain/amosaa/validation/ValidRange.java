@@ -15,8 +15,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Validaattori arvoalueelle
- *
- *
  * {@code @ValidRange(low = 10, high = 42) private Integer arvo;}
  * {@code @ValidRange(low = 10, high = 42) private Long arvo;}
  * {@code @ValidRange(low = 10, high = 42) private String arvo;}

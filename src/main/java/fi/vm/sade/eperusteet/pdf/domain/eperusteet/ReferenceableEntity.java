@@ -5,24 +5,16 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Reference;
 import java.io.Serializable;
 import java.util.function.Predicate;
 
-/**
- * Rajapinnan toteuttava entity on "viitattavissa" ja sillä pitää olla yksikäsitteinen avain.
- *
- * @author mikkom
- */
+/* Rajapinnan toteuttava entity on "viitattavissa" ja sillä pitää olla yksikäsitteinen avain.*/
 public interface ReferenceableEntity {
 
     /**
      * Määrittää mitä entiteetin arvoa käytetään referenssinä.
-     *
-     * @return reference
      */
     Reference getReference();
 
     /**
      * Palauttaa viitattavissa olevan entityn yksikäsitteisen avaimen. Avain pitää olla mahdollista muuttaa merkkijonoksi (järkevä toString-methodi vaaditaan).
-     *
-     * @return id
      */
     Serializable getId();
 

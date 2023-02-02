@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.opas;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKevytDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;

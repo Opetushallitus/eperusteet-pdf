@@ -17,7 +17,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.text.Normalizer;
 import java.util.Collections;
@@ -34,7 +33,6 @@ import java.util.stream.Collectors;
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @Immutable
-@Table(name = "lokalisoituteksti")
 public class LokalisoituTeksti implements Serializable {
 
     @Id

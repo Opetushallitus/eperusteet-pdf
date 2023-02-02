@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.RakenneModuuliRooli;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

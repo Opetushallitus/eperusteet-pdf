@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste;
 
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.LaajuusYksikko;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

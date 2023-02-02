@@ -2,7 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.pdf.domain.amosaa.enums.OpintokokonaisuusTyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.LaajuusYksikko;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.LaajuusYksikko;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

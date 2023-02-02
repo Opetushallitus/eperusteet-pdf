@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti;
 
-import fi.vm.sade.eperusteet.pdf.domain.amosaa.enums.TutkinnonosaTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.TutkinnonOsaTyyppi;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class TutkinnonOsaKevytDto {
-    private TutkinnonosaTyyppi tyyppi;
+    private TutkinnonOsaTyyppi tyyppi;
 }

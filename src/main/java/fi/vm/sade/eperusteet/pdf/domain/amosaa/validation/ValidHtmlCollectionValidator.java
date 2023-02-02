@@ -7,9 +7,6 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Collection;
 
-/**
- * @author mikkom
- */
 public class ValidHtmlCollectionValidator extends ValidHtmlValidatorBase implements
         ConstraintValidator<ValidHtml, Collection<LokalisoituTeksti>> {
     @Override

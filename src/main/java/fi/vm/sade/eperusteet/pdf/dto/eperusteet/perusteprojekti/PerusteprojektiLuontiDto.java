@@ -1,12 +1,12 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.perusteprojekti;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.KoulutustyyppiToteutus;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.LaajuusYksikko;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutustyyppiToteutus;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.LaajuusYksikko;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.ProjektiTila;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteAikatauluDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

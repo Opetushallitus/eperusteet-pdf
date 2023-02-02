@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet;
 
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.MuokkausTapahtuma;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.NavigationType;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.MuokkausTapahtuma;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.NavigationType;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

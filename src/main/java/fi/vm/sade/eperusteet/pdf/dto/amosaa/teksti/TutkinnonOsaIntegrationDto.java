@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti;
 
-import fi.vm.sade.eperusteet.pdf.domain.amosaa.enums.TutkinnonosaTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.TutkinnonOsaTyyppi;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TutkinnonOsaIntegrationDto {
     private Long id;
-    private TutkinnonosaTyyppi tyyppi;
+    private TutkinnonOsaTyyppi tyyppi;
     private OmaTutkinnonosaIntegrationDto omatutkinnonosa;
 }

@@ -1,14 +1,14 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.TutkinnonOsaTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.TutkinnonOsaTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KevytTekstiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArviointiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;

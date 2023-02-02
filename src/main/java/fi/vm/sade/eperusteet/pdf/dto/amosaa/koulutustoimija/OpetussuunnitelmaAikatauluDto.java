@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija;
 
-import fi.vm.sade.eperusteet.pdf.domain.amosaa.enums.AikatauluTapahtuma;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.AikatauluTapahtuma;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

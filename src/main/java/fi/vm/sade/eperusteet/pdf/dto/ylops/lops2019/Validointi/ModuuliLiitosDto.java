@@ -1,0 +1,17 @@
+package fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Validointi;
+
+import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OpintojaksoBaseDto;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ModuuliLiitosDto {
+    String moduuliKoodiUri;
+    List<Lops2019OpintojaksoBaseDto> opintojaksot;
+}

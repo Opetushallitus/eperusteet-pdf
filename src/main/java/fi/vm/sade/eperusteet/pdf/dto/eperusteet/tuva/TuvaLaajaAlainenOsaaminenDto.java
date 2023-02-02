@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.NavigationType;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.NavigationType;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;

@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet;
 
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.validointi.Validointi;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 

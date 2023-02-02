@@ -10,9 +10,6 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * @author jhyoty
- */
 @Embeddable
 public class Teksti implements Serializable {
 

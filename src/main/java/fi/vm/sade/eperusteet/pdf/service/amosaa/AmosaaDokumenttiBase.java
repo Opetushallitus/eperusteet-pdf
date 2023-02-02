@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.amosaa;
 
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.PerusteKaikkiDto;

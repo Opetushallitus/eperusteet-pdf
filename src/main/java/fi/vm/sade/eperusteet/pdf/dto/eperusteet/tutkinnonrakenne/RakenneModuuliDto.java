@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne;
 
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.RakenneModuuliRooli;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.RakenneModuuliRooli;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.VersionedDto;
 import lombok.AllArgsConstructor;

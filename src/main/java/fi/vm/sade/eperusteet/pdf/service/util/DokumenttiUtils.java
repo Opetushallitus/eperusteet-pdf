@@ -2,9 +2,9 @@ package fi.vm.sade.eperusteet.pdf.service.util;
 
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.ValidHtml;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.LaajuusYksikko;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.LaajuusYksikko;
 import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaDokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.service.eperusteet.DokumenttiBase;
 import org.apache.commons.lang3.StringEscapeUtils;

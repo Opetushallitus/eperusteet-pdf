@@ -2,6 +2,8 @@ package fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.LaajuusYksikko;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Suoritustapakoodi;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

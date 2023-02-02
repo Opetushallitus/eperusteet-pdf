@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteTila;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteTila;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ReferenceableDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.digi.OsaamiskokonaisuusDto;
@@ -13,7 +14,6 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.digi.OsaamiskokonaisuusPaaAlueDt
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.TuvaLaajaAlainenOsaaminenDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoKielitaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoOpintoDto;

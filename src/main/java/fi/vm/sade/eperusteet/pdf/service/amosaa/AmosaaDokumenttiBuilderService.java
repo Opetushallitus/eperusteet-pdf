@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.amosaa;
 
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;

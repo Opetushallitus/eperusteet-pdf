@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.util;
 
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.LaajuusYksikko;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.LaajuusYksikko;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteJulkinenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.SuoritustapaLaajaDto;
