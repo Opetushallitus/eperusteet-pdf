@@ -6,8 +6,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
 
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -15,7 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.text.Normalizer;
 import java.util.Collections;
@@ -28,10 +25,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @Immutable
-@Table(name = "tekstipalanen")
 public class TekstiPalanen implements Serializable {
 
     @Id
@@ -40,7 +34,6 @@ public class TekstiPalanen implements Serializable {
 
     @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
     @Immutable
-    @CollectionTable(name = "tekstipalanen_teksti")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<LokalisoituTeksti> teksti;
 

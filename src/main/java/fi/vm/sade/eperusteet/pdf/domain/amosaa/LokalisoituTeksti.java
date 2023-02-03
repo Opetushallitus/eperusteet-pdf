@@ -8,14 +8,9 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
 
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.text.Normalizer;
@@ -30,22 +25,16 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Entity
-@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-@Immutable
 public class LokalisoituTeksti implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Getter
-    @Column(updatable = false)
     private UUID tunniste;
 
     @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
     @Immutable
-    @CollectionTable(name = "lokalisoituteksti_teksti")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Teksti> teksti = new HashSet<>();
 
