@@ -31,7 +31,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.SuoritustapaLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TermiDto;
+import fi.vm.sade.eperusteet.pdf.dto.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TutkintonimikeKoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.Ammattitaitovaatimukset2019Dto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.Ammattitaitovaatimus2019Dto;
@@ -501,7 +501,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                     if (docBase.getPeruste() != null && docBase.getPeruste().getId() != null) {
                         TermiDto termi = eperusteetService.getTermi(docBase.getPeruste().getId(), avain);
 
-                        if (termi != null && termi.isAlaviite() && termi.getSelitys() != null) {
+                        if (termi != null && termi.getAlaviite() && termi.getSelitys() != null) {
                             element.setAttribute("number", String.valueOf(noteNumber));
 
                             LokalisoituTekstiDto tekstiDto = termi.getSelitys();

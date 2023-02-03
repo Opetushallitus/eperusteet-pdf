@@ -3,8 +3,8 @@ package fi.vm.sade.eperusteet.pdf.service.external;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
+import fi.vm.sade.eperusteet.pdf.dto.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.ops.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.PerusteKaikkiDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,10 +34,12 @@ public class AmosaaServiceImpl implements AmosaaService {
     @Override
     public OpetussuunnitelmaDto getOpetussuunnitelma(Long ktId, Long opsId) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_EXTERNAL_API  + "opetussuunnitelma/" + ktId + "/" + opsId,
+            ResponseEntity<String> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_EXTERNAL_API  + "opetussuunnitelma/{ktId}/{opsId}",
                     HttpMethod.GET,
                     httpEntity,
-                    String.class);
+                    String.class,
+                    ktId,
+                    opsId);
             return objectMapper.readValue(response.getBody(), OpetussuunnitelmaDto.class);
         }  catch (Exception e) {
             // TODO: käsittele poikkeus
@@ -48,10 +50,11 @@ public class AmosaaServiceImpl implements AmosaaService {
     @Override
     public PerusteKaikkiDto getPerusteKaikkiDto(Long id) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_PERUSTEET_API + id + "/kaikki",
+            ResponseEntity<String> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_PERUSTEET_API + "{id}/kaikki",
                     HttpMethod.GET,
                     httpEntity,
-                    String.class);
+                    String.class,
+                    id);
             return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
         } catch (Exception e) {
             // TODO: käsittele poikkeus
@@ -62,10 +65,12 @@ public class AmosaaServiceImpl implements AmosaaService {
     @Override
     public TermiDto getTermi(Long ktId, String avain) {
         try {
-            ResponseEntity<TermiDto> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_API  + "koulutustoimijat/" + ktId + "/termisto/" + avain,
+            ResponseEntity<TermiDto> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_API  + "koulutustoimijat/{ktId}/termisto/{avain}",
                     HttpMethod.GET,
                     httpEntity,
-                    TermiDto.class);
+                    TermiDto.class,
+                    ktId,
+                    avain);
             return response.getBody();
         }  catch (Exception e) {
             // TODO: käsittele poikkeus

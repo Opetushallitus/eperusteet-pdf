@@ -1,8 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.service.external;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import fi.vm.sade.eperusteet.pdf.dto.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.ops.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.PerusteKaikkiDto;
 
 public interface AmosaaService {

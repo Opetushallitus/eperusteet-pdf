@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.pdf.dto.amosaa.ops;
+package fi.vm.sade.eperusteet.pdf.dto;
 
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class TermiDto {
     private Long id;
     private String avain;
-    private Boolean alaviite;
     private LokalisoituTekstiDto termi;
     private LokalisoituTekstiDto selitys;
+    private Boolean alaviite;
 }

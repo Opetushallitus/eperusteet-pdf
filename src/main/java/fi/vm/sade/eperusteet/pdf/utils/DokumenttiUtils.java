@@ -1,15 +1,14 @@
 package fi.vm.sade.eperusteet.pdf.utils;
 
+import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.ValidHtml;
-import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.LaajuusYksikko;
-import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiDto;
-import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiPeruste;
-import fi.vm.sade.eperusteet.pdf.dto.dokumentti.AmosaaDokumenttiBase;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiAmosaa;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
-import fi.vm.sade.eperusteet.pdf.dto.dokumentti.YlopsDokumenttiBase;
+import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiDto;
+import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.pdfbox.preflight.PreflightDocument;
@@ -39,11 +38,11 @@ import java.util.Date;
 public class DokumenttiUtils {
     private static final int MAX_TIME_IN_MINUTES = 5;
 
-    public static void addLokalisoituteksti(AmosaaDokumenttiBase docBase, LokalisoituTekstiDto lTeksti, String tagi) {
+    public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTekstiDto lTeksti, String tagi) {
         addLokalisoituteksti(docBase, lTeksti, tagi, null);
     }
 
-    public static void addLokalisoituteksti(AmosaaDokumenttiBase docBase, LokalisoituTekstiDto lTeksti, String tagi, Element el) {
+    public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTekstiDto lTeksti, String tagi, Element el) {
         if (lTeksti != null && lTeksti.getTekstit() != null && lTeksti.getTekstit().get(docBase.getKieli()) != null) {
             String teksti = lTeksti.getTekstit().get(docBase.getKieli());
             teksti = "<" + tagi + ">" + unescapeHtml5(teksti) + "</" + tagi + ">";
@@ -63,7 +62,7 @@ public class DokumenttiUtils {
         addTeksti(docBase.getDocument(), teksti, tagi, docBase.getBodyElement());
     }
 
-    public static void addTeksti(AmosaaDokumenttiBase docBase, String teksti, String tagi) {
+    public static void addTeksti(DokumenttiAmosaa docBase, String teksti, String tagi) {
         addTeksti(docBase.getDocument(), teksti, tagi, docBase.getBodyElement());
     }
 
@@ -71,7 +70,7 @@ public class DokumenttiUtils {
         addTeksti(docBase.getDocument(), teksti, tagi, element);
     }
 
-    public static void addTeksti(AmosaaDokumenttiBase docBase, String teksti, String tagi, Element element) {
+    public static void addTeksti(DokumenttiAmosaa docBase, String teksti, String tagi, Element element) {
         addTeksti(docBase.getDocument(), teksti, tagi, element);
     }
 
@@ -93,20 +92,10 @@ public class DokumenttiUtils {
             teksti = unescapeHtml5(teksti);
             return "<" + tagi + ">" + teksti + "</" + tagi + ">";
         }
-
         return "<" + tagi + "></" + tagi + ">";
     }
 
-    public static void addHeader(DokumenttiPeruste docBase, String text) {
-        if (text != null) {
-            Element header = docBase.getDocument().createElement("h" + docBase.getGenerator().getDepth());
-            header.setAttribute("number", docBase.getGenerator().generateNumber());
-            header.appendChild(docBase.getDocument().createTextNode(unescapeHtml5(text)));
-            docBase.getBodyElement().appendChild(header);
-        }
-    }
-
-    public static void addHeader(AmosaaDokumenttiBase docBase, String text) {
+    public static void addHeader(DokumenttiBase docBase, String text) {
         if (text != null) {
             Element header = docBase.getDocument().createElement("h" + docBase.getGenerator().getDepth());
             header.setAttribute("number", docBase.getGenerator().generateNumber());
@@ -119,11 +108,11 @@ public class DokumenttiUtils {
         return getString(lokalisoituTekstiDto, docBase.getKieli());
     }
 
-    public static String getTextString(AmosaaDokumenttiBase docBase, LokalisoituTekstiDto lokalisoituTekstiDto) {
+    public static String getTextString(DokumenttiAmosaa docBase, LokalisoituTekstiDto lokalisoituTekstiDto) {
         return getString(lokalisoituTekstiDto, docBase.getKieli());
     }
 
-    public static String getTextString(YlopsDokumenttiBase docBase, LokalisoituTekstiDto lokalisoituTekstiDto) {
+    public static String getTextString(DokumenttiYlops docBase, LokalisoituTekstiDto lokalisoituTekstiDto) {
         return getString(lokalisoituTekstiDto, docBase.getKieli());
     }
 

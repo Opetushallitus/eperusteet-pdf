@@ -2,10 +2,10 @@ package fi.vm.sade.eperusteet.pdf.dto.dokumentti;
 
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.LaajuusYksikko;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteJulkinenDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.SuoritustapaLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.AIPEOpetuksenSisaltoDto;
-import fi.vm.sade.eperusteet.pdf.utils.CharapterNumberGenerator;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,10 +14,10 @@ import java.util.Set;
 @Getter
 @Setter
 public class DokumenttiPeruste extends DokumenttiBase {
-    CharapterNumberGenerator generator;
     PerusteenOsaViiteDto sisalto;
     AIPEOpetuksenSisaltoDto aipeOpetuksenSisalto;
     KVLiiteJulkinenDto kvLiiteJulkinenDto;
+    PerusteKaikkiDto peruste;
 
     public LaajuusYksikko getLaajuusYksikko() {
         Set<SuoritustapaLaajaDto> suoritustavat = this.getPeruste().getSuoritustavat();

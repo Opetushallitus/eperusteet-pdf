@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteJulkinenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TermiDto;
+import fi.vm.sade.eperusteet.pdf.dto.TermiDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -32,11 +32,15 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public PerusteKaikkiDto getPerusteKaikkiDto(Long id, Integer revision) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(eperusteetServiceUrl + EPERUSTEET_API + id + "/kaikki?rev={revision}",
+            String url = eperusteetServiceUrl + EPERUSTEET_API + id + "/kaikki";
+            if (revision != null) {
+                url = url.concat("?rev=" + revision);
+            }
+
+            ResponseEntity<String> response = restTemplate.exchange(url,
                     HttpMethod.GET,
                     httpEntity,
-                    String.class,
-                    revision);
+                    String.class);
             return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
         } catch (Exception e) {
             // TODO: käsittele poikkeus
@@ -47,10 +51,11 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public KVLiiteJulkinenDto getKvLiite(Long id) {
         try {
-            ResponseEntity<KVLiiteJulkinenDto> response = restTemplate.exchange(eperusteetServiceUrl + EPERUSTEET_API + id + "/kvliite",
+            ResponseEntity<KVLiiteJulkinenDto> response = restTemplate.exchange(eperusteetServiceUrl + EPERUSTEET_API + "{id}/kvliite",
                     HttpMethod.GET,
                     httpEntity,
-                    KVLiiteJulkinenDto.class);
+                    KVLiiteJulkinenDto.class,
+                    id);
             return response.getBody();
         } catch (Exception e) {
             // TODO: käsittele poikkeus
@@ -61,10 +66,12 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public TermiDto getTermi(Long id, String avain) {
         try {
-            ResponseEntity<TermiDto> response = restTemplate.exchange(eperusteetServiceUrl + EPERUSTEET_API + id + "/termisto/" + avain,
+            ResponseEntity<TermiDto> response = restTemplate.exchange(eperusteetServiceUrl + EPERUSTEET_API + "{id}/termisto/{avain}",
                     HttpMethod.GET,
                     httpEntity,
-                    TermiDto.class);
+                    TermiDto.class,
+                    id,
+                    avain);
             return response.getBody();
         }  catch (Exception e) {
             // TODO: käsittele poikkeus

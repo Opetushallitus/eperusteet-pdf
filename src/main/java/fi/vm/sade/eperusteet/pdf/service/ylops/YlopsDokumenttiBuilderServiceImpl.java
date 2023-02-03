@@ -1,9 +1,15 @@
 package fi.vm.sade.eperusteet.pdf.service.ylops;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
 import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.TermiDto;
+import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.TemplateTyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.dokumentti.YlopsDokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.service.PdfService;
@@ -16,14 +22,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.util.Base64;
 
@@ -49,9 +63,6 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
 //    private OrganisaatioService organisaatioService;
 //
 //    @Autowired
-//    private YleisetOsuudetService yleisetOsuudetService;
-//
-//    @Autowired
 //    private PerusopetusService perusopetusService;
 //
 //    @Autowired
@@ -59,6 +70,9 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
 //
 //    @Autowired
 //    private Lops2019DokumenttiService lops2019DokumenttiService;
+
+//    @Autowired
+//    private YleisetOsuudetService yleisetOsuudetService;
 
     @Autowired
     private EperusteetService eperusteetService;
@@ -71,6 +85,8 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
 
     @Autowired
     private YlopsService ylopsService;
+
+    private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 
     @Override
     public byte[] generatePdf(Dokumentti dokumentti) throws TransformerException, IOException, SAXException, ParserConfigurationException, NullPointerException, DokumenttiException {
@@ -97,7 +113,7 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
         rootElement.appendChild(bodyElement);
 
         // Apuluokka datan säilömiseen generoinin ajaksi
-        YlopsDokumenttiBase docBase = new YlopsDokumenttiBase();
+        DokumenttiYlops docBase = new DokumenttiYlops();
         docBase.setDocument(doc);
         docBase.setHeadElement(headElement);
         docBase.setBodyElement(bodyElement);
@@ -110,39 +126,39 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
         // Kansilehti & Infosivu
 //        addMetaPages(docBase);
 
-//        // Sisältöelementit
+        // Sisältöelementit
 //        yleisetOsuudetService.addYleisetOsuudet(docBase);
-//
-//        if (ops.getKoulutustyyppi() != null) {
+
+        if (ops.getKoulutustyyppi() != null) {
 //            PerusteDto perusteDto = eperusteetService.getPeruste(ops.getPerusteenDiaarinumero());
 //            if (perusteDto == null) {
 //                throw new DokumenttiException("Peruste puuttuu", new Throwable());
 //            }
 //            docBase.setPerusteDto(perusteDto);
-//
-//            // Perusopetus
-//            if (KoulutusTyyppi.PERUSOPETUS.equals(ops.getKoulutustyyppi())) {
+
+            // Perusopetus
+            if (KoulutusTyyppi.PERUSOPETUS.equals(ops.getKoulutustyyppi())) {
 //                perusopetusService.addVuosiluokkakokonaisuudet(docBase);
-//            }
-//
-//            // Lukio
-//            if (KoulutustyyppiToteutus.LOPS2019.equals(ops.getToteutus())) {
+            }
+
+            // Lukio
+            if (KoulutustyyppiToteutus.LOPS2019.equals(ops.getToteutus())) {
 //                lops2019DokumenttiService.addLops2019Sisalto(docBase);
-//            }
-//            else if (KoulutusTyyppi.LUKIOKOULUTUS.equals(ops.getKoulutustyyppi())) {
+            }
+            else if (KoulutusTyyppi.LUKIOKOULUTUS.equals(ops.getKoulutustyyppi())) {
 //                lukioService.addOppimistavoitteetJaOpetuksenKeskeisetSisallot(docBase);
-//            }
-//        }
+            }
+        }
 //
 //        // Liitteet
 //        yleisetOsuudetService.addLiitteet(docBase);
 
         // Alaviitteet
-//        buildFootnotes(docBase);
+        buildFootnotes(docBase);
 
         // Kuvat
         try {
-//            buildImages(docBase);
+            buildImages(docBase);
         }
         catch (HttpMessageNotReadableException ex) {
             LOG.error(ex.getLocalizedMessage());
@@ -274,43 +290,43 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
 //        docBase.getHeadElement().appendChild(koulutEl);
 //    }
 //
-//    private void buildFootnotes(YlopsDokumenttiBase docBase) {
-//        XPathFactory xPathfactory = XPathFactory.newInstance();
-//        XPath xpath = xPathfactory.newXPath();
-//        try {
-//            XPathExpression expression = xpath.compile("//abbr");
-//            NodeList list = (NodeList) expression.evaluate(docBase.getDocument(), XPathConstants.NODESET);
-//
-//            int noteNumber = 1;
-//            for (int i = 0; i < list.getLength(); i++) {
-//                Element element = (Element) list.item(i);
-//                Node node = list.item(i);
-//                if (node.getAttributes() != null & node.getAttributes().getNamedItem("data-viite") != null) {
-//                    String avain = node.getAttributes().getNamedItem("data-viite").getNodeValue();
-//
-//                    if (docBase.getOps() != null && docBase.getOps().getId() != null && StringUtils.hasText(avain)) {
-//                        TermiDto termiDto = termistoService.getTermi(docBase.getOps().getId(), avain);
-//
-//                        if (termiDto != null && termiDto.isAlaviite() && termiDto.getSelitys() != null) {
-//                            element.setAttribute("number", String.valueOf(noteNumber));
-//
-//                            LokalisoituTekstiDto tekstiDto = termiDto.getSelitys();
-//                            String selitys = getTextString(docBase, tekstiDto)
-//                                    .replaceAll("<[^>]+>", ""); // Tällä hetkellä tuetaan vain tekstiä
-//                            element.setAttribute("text", selitys);
-//                            noteNumber++;
-//                        }
-//                    }
-//                }
-//            }
-//        } catch (XPathExpressionException e) {
-//            LOG.error(e.getLocalizedMessage());
-//        }
-//    }
+    private void buildFootnotes(DokumenttiYlops docBase) {
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        XPath xpath = xPathfactory.newXPath();
+        try {
+            XPathExpression expression = xpath.compile("//abbr");
+            NodeList list = (NodeList) expression.evaluate(docBase.getDocument(), XPathConstants.NODESET);
 
-//    private void buildImages(YlopsDokumenttiBase docBase) {
-//        XPathFactory xPathfactory = XPathFactory.newInstance();
-//        XPath xpath = xPathfactory.newXPath();
+            int noteNumber = 1;
+            for (int i = 0; i < list.getLength(); i++) {
+                Element element = (Element) list.item(i);
+                Node node = list.item(i);
+                if (node.getAttributes() != null & node.getAttributes().getNamedItem("data-viite") != null) {
+                    String avain = node.getAttributes().getNamedItem("data-viite").getNodeValue();
+
+                    if (docBase.getOps() != null && docBase.getOps().getId() != null && StringUtils.hasText(avain)) {
+                        TermiDto termiDto = getTermi(docBase.getOps().getId(), avain);
+
+                        if (termiDto != null && termiDto.getAlaviite() && termiDto.getSelitys() != null) {
+                            element.setAttribute("number", String.valueOf(noteNumber));
+
+                            LokalisoituTekstiDto tekstiDto = termiDto.getSelitys();
+                            String selitys = getTextString(docBase, tekstiDto)
+                                    .replaceAll("<[^>]+>", ""); // Tällä hetkellä tuetaan vain tekstiä
+                            element.setAttribute("text", selitys);
+                            noteNumber++;
+                        }
+                    }
+                }
+            }
+        } catch (XPathExpressionException e) {
+            LOG.error(e.getLocalizedMessage());
+        }
+    }
+
+    private void buildImages(DokumenttiYlops docBase) {
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        XPath xpath = xPathfactory.newXPath();
 //        try {
 //            XPathExpression expression = xpath.compile("//img");
 //            NodeList list = (NodeList) expression.evaluate(docBase.getDocument(), XPathConstants.NODESET);
@@ -383,9 +399,9 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
 //        } catch (XPathExpressionException | IOException | NotExistsException e) {
 //            LOG.error(e.getLocalizedMessage());
 //        }
-//    }
+    }
 
-    private void buildKuva(YlopsDokumenttiBase docBase, Kuvatyyppi tyyppi) {
+    private void buildKuva(DokumenttiYlops docBase, Kuvatyyppi tyyppi) {
         Dokumentti dokumentti = docBase.getDokumentti();
 
         byte[] kuva = ylopsService.getDokumenttiKuva(dokumentti.getSisaltoId(), tyyppi, dokumentti.getKieli());
@@ -402,5 +418,15 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
 
         element.appendChild(img);
         head.appendChild(element);
+    }
+
+    private TermiDto getTermi(Long opsId, String avain) {
+        TermiDto termiDto = ylopsService.getTermi(opsId, avain);
+
+        if (termiDto == null) {
+            LOG.info("Termiä ei löytynyt ylopsista. Etsitään eperusteista.");
+            termiDto = eperusteetService.getTermi(opsId, avain);
+        }
+        return termiDto;
     }
 }

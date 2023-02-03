@@ -44,7 +44,7 @@ public class DokumenttiTaulukko {
         }
     }
 
-    public void addToDokumentti(AmosaaDokumenttiBase docBase) {
+    public void addToDokumentti(DokumenttiAmosaa docBase) {
         if (rivit.size() > 0) {
             Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(this.toString()));
             Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
@@ -53,7 +53,7 @@ public class DokumenttiTaulukko {
     }
 
     //Amosaan käyttämä
-    public static void addRow(AmosaaDokumenttiBase docBase, Element taulukko, String teksti, boolean header) {
+    public static void addRow(DokumenttiAmosaa docBase, Element taulukko, String teksti, boolean header) {
         Element tr = docBase.getDocument().createElement("tr");
         taulukko.appendChild(tr);
         if (header) {
