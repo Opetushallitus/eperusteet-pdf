@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.ohje;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.KoulutustoimijaBaseDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

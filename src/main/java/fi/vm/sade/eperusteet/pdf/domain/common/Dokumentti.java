@@ -1,8 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.domain.common;
 
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.DokumenttiTila;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTila;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.domain.eperusteet;
 
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import lombok.Getter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;

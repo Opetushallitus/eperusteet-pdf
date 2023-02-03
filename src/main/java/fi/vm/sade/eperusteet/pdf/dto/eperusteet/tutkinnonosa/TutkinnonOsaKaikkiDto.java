@@ -2,8 +2,8 @@ package fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.TutkinnonOsaTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KevytTekstiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArviointiDto;
@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -83,7 +83,7 @@ public class TutkinnonOsaKaikkiDto extends PerusteenOsaDto {
                 { // Kohdealueettomat
                     for (Ammattitaitovaatimus2019Dto va : ammattitaitovaatimukset2019.getVaatimukset()) {
                         String str = LokalisoituTekstiDto.getOrDefault(va.getVaatimus(), kieli, null);
-                        if (!StringUtils.isEmpty(str)) {
+                        if (!ObjectUtils.isEmpty(str)) {
                             root.append("<dd style=\"display: list-item;\">").append(str).append("</dd>");
                         }
                     }
@@ -111,7 +111,7 @@ public class TutkinnonOsaKaikkiDto extends PerusteenOsaDto {
 
                         for (Ammattitaitovaatimus2019Dto va : ka.getVaatimukset()) {
                             String str = LokalisoituTekstiDto.getOrDefault(va.getVaatimus(), kieli, null);
-                            if (!StringUtils.isEmpty(str)) {
+                            if (!ObjectUtils.isEmpty(str)) {
                                 root.append("<dd style=\"display: list-item;\">").append(str).append("</dd>");
                             }
                         }

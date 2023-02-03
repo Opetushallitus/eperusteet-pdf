@@ -3,7 +3,7 @@ package fi.vm.sade.eperusteet.pdf.dto.ylops.perustedto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import lombok.Getter;
 
 import java.util.EnumMap;

@@ -2,7 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import fi.vm.sade.eperusteet.pdf.domain.amosaa.enums.SisaltoTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.CachedPerusteKevytDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

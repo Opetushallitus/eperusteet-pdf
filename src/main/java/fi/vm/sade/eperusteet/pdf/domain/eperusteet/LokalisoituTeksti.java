@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.domain.eperusteet;
 
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

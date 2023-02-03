@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fi.vm.sade.eperusteet.pdf.domain.amosaa.enums.SisaltoTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoKielitaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoLaajaAlainenOsaaminenDto;

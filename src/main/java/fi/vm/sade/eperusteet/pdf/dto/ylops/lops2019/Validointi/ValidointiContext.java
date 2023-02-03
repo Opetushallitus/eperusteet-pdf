@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Validointi;
 
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

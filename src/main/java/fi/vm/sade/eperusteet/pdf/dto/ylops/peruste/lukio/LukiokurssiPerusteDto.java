@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lukio;
 
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteenLukiokurssiTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.KurssiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.PerusteTekstiOsaDto;
 import lombok.AllArgsConstructor;

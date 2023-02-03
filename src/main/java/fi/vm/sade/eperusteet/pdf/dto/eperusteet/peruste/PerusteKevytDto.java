@@ -3,7 +3,7 @@ package fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteTila;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteTyyppi;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,13 +1,15 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet;
 
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.ProjektiTila;
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.NavigationType;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.ProjektiTila;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.ValidointiKategoria;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.ValidointiStatusType;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.validointi.Validointi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.NavigationNodeDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.NavigationType;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.perusteprojekti.PerusteprojektiListausDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

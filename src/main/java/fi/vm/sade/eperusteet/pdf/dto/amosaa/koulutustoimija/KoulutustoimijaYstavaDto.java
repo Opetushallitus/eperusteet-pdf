@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija;
 
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.YstavaStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

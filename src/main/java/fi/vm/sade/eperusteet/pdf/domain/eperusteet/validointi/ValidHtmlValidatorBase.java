@@ -2,8 +2,8 @@ package fi.vm.sade.eperusteet.pdf.domain.eperusteet.validointi;
 
 import com.google.common.base.CharMatcher;
 import fi.vm.sade.eperusteet.pdf.domain.common.ValidHtml;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.TekstiPalanen;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Jsoup;

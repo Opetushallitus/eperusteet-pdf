@@ -1,8 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste;
 
+import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.JulkaisuTila;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.kayttaja.KayttajanTietoDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

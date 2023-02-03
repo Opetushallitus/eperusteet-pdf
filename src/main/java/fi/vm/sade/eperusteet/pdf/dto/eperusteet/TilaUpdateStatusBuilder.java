@@ -1,9 +1,11 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet;
 
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Suoritustapakoodi;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.validointi.Validointi;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.ValidointiKategoria;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.ValidointiStatusType;
+import fi.vm.sade.eperusteet.pdf.domain.eperusteet.validointi.Validointi;
 
 import java.util.Collections;
 import java.util.List;

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteTila;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.PerusteenOsaTunniste;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ReferenceableDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.digi.OsaamiskokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.digi.OsaamiskokonaisuusPaaAlueDto;

@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.kayttaja;
 
-import fi.vm.sade.eperusteet.pdf.domain.amosaa.enums.KayttajaoikeusTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.Reference;
 import lombok.AllArgsConstructor;
 import lombok.Data;

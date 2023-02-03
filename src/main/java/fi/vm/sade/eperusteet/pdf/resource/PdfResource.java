@@ -2,12 +2,12 @@ package fi.vm.sade.eperusteet.pdf.resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.DokumenttiTila;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.service.DokumenttiService;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTila;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiOldDto;
 import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
-import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.service.DokumenttiService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

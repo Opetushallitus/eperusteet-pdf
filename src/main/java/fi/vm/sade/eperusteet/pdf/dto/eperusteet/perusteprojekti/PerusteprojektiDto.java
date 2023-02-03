@@ -1,10 +1,10 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.perusteprojekti;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.ProjektiKuvaus;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.ProjektiTila;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Reference;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.ProjektiKuvaus;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.ProjektiTila;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Reference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

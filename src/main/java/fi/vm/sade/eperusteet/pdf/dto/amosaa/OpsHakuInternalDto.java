@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa;
 
-import fi.vm.sade.eperusteet.pdf.domain.amosaa.enums.OpsTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.OpsTyyppi;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

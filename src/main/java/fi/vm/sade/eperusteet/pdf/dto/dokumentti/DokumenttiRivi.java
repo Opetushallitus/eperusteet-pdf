@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.dokumentti;
 
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiRiviTyyppi;
 import lombok.Getter;
 import lombok.Setter;
 

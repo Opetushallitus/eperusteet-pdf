@@ -1,7 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
 import fi.vm.sade.eperusteet.pdf.dto.LokalisointiDto;
-import fi.vm.sade.eperusteet.pdf.service.LokalisointiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

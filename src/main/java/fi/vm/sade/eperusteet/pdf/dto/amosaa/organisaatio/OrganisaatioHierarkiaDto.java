@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.amosaa.organisaatio;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.OrganisaatioStatus;
 import fi.vm.sade.eperusteet.utils.domain.utils.Kieli;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

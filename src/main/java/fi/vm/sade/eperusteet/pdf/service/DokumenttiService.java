@@ -2,10 +2,10 @@ package fi.vm.sade.eperusteet.pdf.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.DokumenttiTila;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTila;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
-import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTyyppi;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
