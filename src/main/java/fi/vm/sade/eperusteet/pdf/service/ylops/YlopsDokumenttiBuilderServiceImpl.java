@@ -7,19 +7,16 @@ import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.TemplateTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
-import fi.vm.sade.eperusteet.pdf.service.PdfService;
 import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.external.YlopsService;
 import fi.vm.sade.eperusteet.pdf.utils.LocalizedMessagesService;
-import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -43,10 +40,10 @@ import java.util.Base64;
 
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
 
+@Slf4j
+@Profile("!test")
 @Service
 public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilderService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(YlopsDokumenttiBuilderServiceImpl.class);
 
     private static final float COMPRESSION_LEVEL = 0.9f;
 
@@ -78,9 +75,6 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
     private EperusteetService eperusteetService;
 
     @Autowired
-    private PdfService pdfService;
-
-    @Autowired
     private LocalizedMessagesService messages;
 
     @Autowired
@@ -89,7 +83,7 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
     private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 
     @Override
-    public byte[] generatePdf(Dokumentti dokumentti) throws TransformerException, IOException, SAXException, ParserConfigurationException, NullPointerException, DokumenttiException {
+    public Document generateXML(Dokumentti dokumentti, OpetussuunnitelmaDto ops) throws TransformerException, IOException, SAXException, ParserConfigurationException, NullPointerException, DokumenttiException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -119,8 +113,6 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
         docBase.setBodyElement(bodyElement);
         docBase.setKieli(dokumentti.getKieli());
         docBase.setDokumentti(dokumentti);
-
-        OpetussuunnitelmaDto ops = ylopsService.getOpetussuunnitelmaTemp(dokumentti.getSisaltoId());
         docBase.setOps(ops);
 
         // Kansilehti & Infosivu
@@ -149,8 +141,8 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
 //                lukioService.addOppimistavoitteetJaOpetuksenKeskeisetSisallot(docBase);
             }
         }
-//
-//        // Liitteet
+
+        // Liitteet
 //        yleisetOsuudetService.addLiitteet(docBase);
 
         // Alaviitteet
@@ -161,22 +153,14 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
             buildImages(docBase);
         }
         catch (HttpMessageNotReadableException ex) {
-            LOG.error(ex.getLocalizedMessage());
+            log.error(ex.getLocalizedMessage());
         }
 
         buildKuva(docBase, Kuvatyyppi.kansikuva);
         buildKuva(docBase, Kuvatyyppi.ylatunniste);
         buildKuva(docBase, Kuvatyyppi.alatunniste);
 
-        LOG.info("Generate PDF (opsId=" + docBase.getOps().getId() + ")");
-
-        DokumenttiMetaDto meta = DokumenttiMetaDto.builder()
-                .title(getTextString(docBase, ops.getNimi()))
-                .subject(messages.translate("docgen.meta.subject.ops", dokumentti.getKieli()))
-                .build();
-
-        // PDF luonti XHTML dokumentista
-        return pdfService.xhtml2pdf(doc, meta, TemplateTyyppi.YLOPS);
+        return doc;
     }
 
 //    private void addMetaPages(YlopsDokumenttiBase docBase) {
@@ -320,7 +304,7 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
                 }
             }
         } catch (XPathExpressionException e) {
-            LOG.error(e.getLocalizedMessage());
+            log.error(e.getLocalizedMessage());
         }
     }
 
@@ -424,7 +408,7 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
         TermiDto termiDto = ylopsService.getTermi(opsId, avain);
 
         if (termiDto == null) {
-            LOG.info("Termiä ei löytynyt ylopsista. Etsitään eperusteista.");
+            log.info("Termiä ei löytynyt ylopsista. Etsitään eperusteista.");
             termiDto = eperusteetService.getTermi(opsId, avain);
         }
         return termiDto;

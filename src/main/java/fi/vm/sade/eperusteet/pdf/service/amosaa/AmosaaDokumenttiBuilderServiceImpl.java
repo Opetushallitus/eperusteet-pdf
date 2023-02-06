@@ -50,9 +50,11 @@ import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClient;
 import fi.vm.sade.eperusteet.pdf.utils.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -104,17 +106,17 @@ import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addLokalisoituteks
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addTeksti;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
 
+@Slf4j
+@Profile("!test")
 @Service
 public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuilderService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AmosaaDokumenttiBuilderServiceImpl.class);
 
     private static final float COMPRESSION_LEVEL = 0.9f;
     private static final DecimalFormat df2 = new DecimalFormat("0.##");
 
 //    @Autowired
 //    private LiiteService liiteService;
-//
+
 //    @Autowired
 //    private SisaltoviiteRepository tkvRepository;
 
@@ -138,7 +140,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
     private KoodistoClient koodistoClient;
 
     @Autowired
-    AmosaaService amosaaService;
+    private AmosaaService amosaaService;
 
     private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 
@@ -146,7 +148,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 //    private ArviointiasteikkoService arviointiasteikkoService;
 
     @Override
-    public byte[] generatePdf(Dokumentti dokumentti, Long ktId) throws ParserConfigurationException, IOException, SAXException, TransformerException {
+    public Document generateXML(Dokumentti dokumentti, Long ktId, OpetussuunnitelmaDto ops) throws ParserConfigurationException, IOException, SAXException, TransformerException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -176,8 +178,6 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         docBase.setBodyElement(bodyElement);
         docBase.setKieli(dokumentti.getKieli());
         docBase.setDokumentti(dokumentti);
-
-        OpetussuunnitelmaDto ops = amosaaService.getOpetussuunnitelmaTemp(ktId, dokumentti.getSisaltoId());
         docBase.setOpetussuunnitelma(ops);
 
         if (ops.getPeruste() != null) {
@@ -201,14 +201,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 //        buildYlatunniste(docBase);
 //        buildAlatunniste(docBase);
 
-        DokumenttiMetaDto meta = DokumenttiMetaDto.builder()
-                .title(getTextString(docBase, ops.getNimi()))
-                .subject(messages.translate("docgen.meta.subject.ops", dokumentti.getKieli()))
-                .build();
-
-        // PDF luonti XHTML dokumentista
-        LOG.info("Generate PDF (opsId=" + docBase.getOpetussuunnitelma().getId() + ")");
-        return pdfService.xhtml2pdf(doc, meta, TemplateTyyppi.AMOSAA);
+        return doc;
     }
 
     private void addMetaPages(DokumenttiAmosaa docBase) {
@@ -1390,7 +1383,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 }
             }
         } catch (XPathExpressionException e) {
-            LOG.error(e.getLocalizedMessage());
+            log.error(e.getLocalizedMessage());
         }
     }
 
@@ -1453,7 +1446,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             }
 
         } catch (XPathExpressionException | IOException | NullPointerException e) {
-            LOG.error(e.getLocalizedMessage());
+            log.error(e.getLocalizedMessage());
         }
     }
 

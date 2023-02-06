@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.pdf.utils;
 import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.ValidHtml;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.LaajuusYksikko;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiAmosaa;
@@ -37,6 +38,16 @@ import java.util.Date;
 
 public class DokumenttiUtils {
     private static final int MAX_TIME_IN_MINUTES = 5;
+
+    public static String selectSubjectTranslationKey(DokumenttiTyyppi tyyppi) {
+        if (tyyppi.equals(DokumenttiTyyppi.PERUSTE)) {
+            return "docgen.meta.subject.peruste";
+        } else if (tyyppi.equals(DokumenttiTyyppi.OPS) || tyyppi.equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
+            return "docgen.meta.subject.ops";
+        } else {
+            return "docgen.meta.subject.kvliite";
+        }
+    }
 
     public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTekstiDto lTeksti, String tagi) {
         addLokalisoituteksti(docBase, lTeksti, tagi, null);

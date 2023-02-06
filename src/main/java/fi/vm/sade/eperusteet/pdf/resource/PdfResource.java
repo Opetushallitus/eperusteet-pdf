@@ -1,16 +1,13 @@
 package fi.vm.sade.eperusteet.pdf.resource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiOldDto;
 import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,57 +19,54 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController()
 @RequestMapping({"/api/pdf"})
 @RequiredArgsConstructor
 public class PdfResource {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PdfResource.class);
 
     @Autowired
     DokumenttiService dokumenttiService;
 
     @GetMapping(path = "/generate/eperusteet/{id}/{revision}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DokumenttiOldDto> generateEperusteetPdf(@PathVariable("id") Long id,
-                                                                  @PathVariable("revision") Integer revision) throws JsonProcessingException, DokumenttiException {
+                                                                  @PathVariable("revision") Integer revision) throws DokumenttiException {
 
-        Dokumentti createDtoFor = dokumenttiService.createDtoFor(id, Kieli.FI, revision, DokumenttiTyyppi.PERUSTE);
+        Dokumentti dokumentti = dokumenttiService.getDto(id, Kieli.FI, revision, DokumenttiTyyppi.PERUSTE);
+        dokumentti = dokumenttiService.generate(dokumentti, null);
 
-        if (createDtoFor != null && createDtoFor.getTila() != DokumenttiTila.EPAONNISTUI) {
-            dokumenttiService.setStarted(createDtoFor);
-            dokumenttiService.generateWithDto(createDtoFor, null);
-            LOG.info("PDF generated");
-        }
-        return new ResponseEntity<>(tempOldMapper(createDtoFor), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(tempOldMapper(dokumentti), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping(path = "/generate/kvliite/{id}/{revision}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DokumenttiOldDto> generateKVLiitePdf(@PathVariable("id") Long id,
+                                                               @PathVariable("revision") Integer revision) throws DokumenttiException {
+
+        Dokumentti dokumentti = dokumenttiService.getDto(id, Kieli.FI, revision, DokumenttiTyyppi.KVLIITE);
+        dokumentti = dokumenttiService.generate(dokumentti, null);
+
+        return new ResponseEntity<>(tempOldMapper(dokumentti), HttpStatus.ACCEPTED);
     }
 
     @GetMapping(path = "/generate/amosaa/{id}/{ktId}/{revision}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DokumenttiOldDto> generateAmosaaPdf(@PathVariable("id") Long id,
                                                               @PathVariable("ktId") Long ktId,
-                                                              @PathVariable("revision") Integer revision) throws JsonProcessingException, DokumenttiException {
+                                                              @PathVariable("revision") Integer revision) throws DokumenttiException {
 
-        Dokumentti createDtoFor = dokumenttiService.createDtoFor(id, Kieli.FI, revision, DokumenttiTyyppi.OPS);
+        Dokumentti dokumentti = dokumenttiService.getDto(id, Kieli.FI, revision, DokumenttiTyyppi.OPS);
+        dokumentti = dokumenttiService.generate(dokumentti, ktId);
 
-        if (createDtoFor != null && createDtoFor.getTila() != DokumenttiTila.EPAONNISTUI) {
-            dokumenttiService.setStarted(createDtoFor);
-            dokumenttiService.generateWithDto(createDtoFor, ktId);
-            LOG.info("PDF generated");
-        }
-        return new ResponseEntity<>(tempOldMapper(createDtoFor), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(tempOldMapper(dokumentti), HttpStatus.ACCEPTED);
     }
 
     @GetMapping(path = "/generate/ylops/{id}/{revision}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DokumenttiOldDto> generateYlopsPdf(@PathVariable("id") Long id,
-                                                             @PathVariable("revision") Integer revision) throws JsonProcessingException, DokumenttiException {
+                                                             @PathVariable("revision") Integer revision) throws DokumenttiException {
 
-        Dokumentti createDtoFor = dokumenttiService.createDtoFor(id, Kieli.FI, revision, DokumenttiTyyppi.TOTEUTUSSUUNNITELMA);
+        Dokumentti dokumentti = dokumenttiService.getDto(id, Kieli.FI, revision, DokumenttiTyyppi.TOTEUTUSSUUNNITELMA);
+        dokumentti = dokumenttiService.generate(dokumentti, null);
 
-        if (createDtoFor != null && createDtoFor.getTila() != DokumenttiTila.EPAONNISTUI) {
-            dokumenttiService.setStarted(createDtoFor);
-            dokumenttiService.generateWithDto(createDtoFor, null);
-            LOG.info("PDF generated");
-        }
-        return new ResponseEntity<>(tempOldMapper(createDtoFor), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(tempOldMapper(dokumentti), HttpStatus.ACCEPTED);
     }
 
 
@@ -88,7 +82,7 @@ public class PdfResource {
         // TODO: kesken
         byte[] pdfdata = dokumenttiService.get(perusteId, revision, kieli);
         if (pdfdata == null || pdfdata.length == 0) {
-            LOG.error("Got null or empty data from service");
+            log.error("Got null or empty data from service");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         HttpHeaders headers = new HttpHeaders();

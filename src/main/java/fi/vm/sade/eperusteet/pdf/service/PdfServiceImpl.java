@@ -50,7 +50,7 @@ public class PdfServiceImpl implements PdfService {
     private Resource ylopsTemplate;
 
     @Value("classpath:docgen/xhtml-to-xslfo-amosaa.xsl")
-    Resource amosaaTemplate;
+    private Resource amosaaTemplate;
 
     @Value("classpath:docgen/kvliite.xsl")
     private Resource kvLiiteTemplate;

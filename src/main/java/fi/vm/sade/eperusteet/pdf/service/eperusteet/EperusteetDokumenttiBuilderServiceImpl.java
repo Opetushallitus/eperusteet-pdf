@@ -12,7 +12,6 @@ import fi.vm.sade.eperusteet.pdf.domain.common.enums.LaajuusYksikko;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.TavoiteAlueTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.TemplateTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.TutkinnonOsaTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiPeruste;
@@ -64,9 +63,7 @@ import fi.vm.sade.eperusteet.pdf.service.PdfService;
 import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClient;
 import fi.vm.sade.eperusteet.pdf.utils.CharapterNumberGenerator;
-import fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils;
 import fi.vm.sade.eperusteet.pdf.utils.LocalizedMessagesService;
-import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,14 +118,14 @@ import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.newItalicElement;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.tagTeksti;
 
 @Slf4j
-@Service
 @Profile("!test")
+@Service
 public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumenttiBuilderService {
 
     private static final float COMPRESSION_LEVEL = 0.9f;
 
     @Autowired
-    EperusteetService eperusteetService;
+    private EperusteetService eperusteetService;
 
     @Autowired
     private LocalizedMessagesService messages;
@@ -137,7 +134,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     private KoodistoClient koodistoService;
 
     @Autowired
-    PdfService pdfService;
+    private PdfService pdfService;
 
 //    @Autowired
 //    private TutkintonimikeKoodiRepository tutkintonimikeKoodiRepository;
@@ -152,7 +149,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 //    private PerusteService perusteService;
 
     @Override
-    public byte[] generatePdf(Dokumentti dokumentti) throws ParserConfigurationException, IOException, TransformerException, SAXException {
+    public Document generateXML(Dokumentti dokumentti, PerusteKaikkiDto perusteData) throws ParserConfigurationException, IOException, TransformerException, SAXException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         Document doc = docBuilder.newDocument();
@@ -182,10 +179,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         docBase.setBodyElement(bodyElement);
         docBase.setGenerator(new CharapterNumberGenerator());
         docBase.setKieli(dokumentti.getKieli());
-
-        //TODO: haetaan opintopolusta toistaiseksi testidataa
-        PerusteKaikkiDto perusteData = eperusteetService.getPerusteKaikkiDtoTemp(dokumentti.getSisaltoId(), dokumentti.getRevision());
-
         docBase.setPeruste(perusteData);
         docBase.setKvLiiteJulkinenDto(eperusteetService.getKvLiite(perusteData.getId()));
         docBase.setDokumentti(dokumentti);
@@ -195,31 +188,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         // Tästä aloitetaan varsinaisen dokumentin muodostus
         addDokumentti(docBase);
 
-        DokumenttiMetaDto meta = DokumenttiMetaDto.builder()
-                .title(DokumenttiUtils.getTextString(dokumentti.getKieli(), perusteData.getNimi()))
-                .build();
-
-        //        switch (version) {
-//            case UUSI:
-//                Document doc = newBuilder.generateXML(perusteData, dokumentti);
-//
-//                meta.setSubject(messages.translate("docgen.meta.subject.peruste", kieli));
-//                toReturn = pdfGenerationService.xhtml2pdf(doc, meta);
-//
-//                break;
-//            case KVLIITE:
-//                doc = kvLiiteBuilderService.generateXML(perusteData, kieli);
-//
-//                meta.setSubject(messages.translate("docgen.meta.subject.kvliite", kieli));
-//                toReturn = pdfGenerationService.xhtml2pdf(doc, version, meta);
-//                break;
-//            default:
-//                break;
-//        }
-
-        log.info("Luodaan dokumenttia (" + dokumentti.getSisaltoId() + ", " + dokumentti.getTyyppi() + ", " + dokumentti.getKieli() + ") perusteelle.");
-        meta.setSubject(messages.translate("docgen.meta.subject.peruste", dokumentti.getKieli()));
-        return pdfService.xhtml2pdf(doc, meta, TemplateTyyppi.PERUSTE);
+        return doc;
     }
 
     private void addDokumentti(DokumenttiPeruste docBase) {
@@ -229,19 +198,19 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         // Aipe sisältö
         addAipeSisalto(docBase);
 
-//        // Tutkinnon muodostuminen
+        // Tutkinnon muodostuminen
         addTutkinnonMuodostuminen(docBase);
 
-//        // Tutkinnonosat
+        // Tutkinnonosat
         addTutkinnonosat(docBase);
 
-//        // Tekstikappaleet
+        // Tekstikappaleet
         addPerusteenOsat(docBase);
 
-//        // Alaviitteet
+        // Alaviitteet
         addFootnotes(docBase);
 
-//        // Kuvat
+        // Kuvat
         buildImages(docBase);
     }
 
@@ -1315,7 +1284,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                         });
                         alueEl.appendChild(alueListaEl);
                     }
-
                 });
             }
         }
@@ -1325,7 +1293,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         if (valmaTelmaSisalto == null) {
             return;
         }
-
         addValmaOsaamistavoitteet(docBase, valmaTelmaSisalto);
         addValmaArviointi(docBase, valmaTelmaSisalto);
     }
