@@ -8,7 +8,7 @@ import fi.vm.sade.eperusteet.pdf.domain.common.enums.Tila;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Tyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.eperusteet.annotation.Identifiable;
 import fi.vm.sade.eperusteet.pdf.domain.ylops.OpsIdentifiable;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.KoodistoDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste;
+package fi.vm.sade.eperusteet.pdf.dto.common;
 
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OsaamistasoDto {
+public class TermiDto {
     private Long id;
-    private LokalisoituTekstiDto otsikko;
-    private KoodiDto koodi;
+    private String avain;
+    private LokalisoituTekstiDto termi;
+    private LokalisoituTekstiDto selitys;
+    private Boolean alaviite;
 }

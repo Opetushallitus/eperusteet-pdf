@@ -19,6 +19,7 @@ import org.apache.pdfbox.preflight.parser.PreflightParser;
 import org.apache.pdfbox.preflight.utils.ByteArrayDataSource;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -34,7 +35,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class DokumenttiUtils {
     private static final int MAX_TIME_IN_MINUTES = 5;
@@ -145,6 +149,31 @@ public class DokumenttiUtils {
         } else {
             return "";
         }
+    }
+
+    public static void addList(DokumenttiBase docBase, Collection<LokalisoituTekstiDto> tekstit) {
+        addStringList(docBase, tekstit.stream()
+                .filter(Objects::nonNull)
+                .map(kuvaus -> getTextString(docBase, kuvaus))
+                .collect(Collectors.toList()));
+    }
+
+    public static void addStringList(DokumenttiBase docBase, Collection<String> tekstit) {
+        Element ul = docBase.getDocument().createElement("ul");
+        tekstit.stream()
+                .filter(str -> !StringUtils.isEmpty(str))
+                .forEach(str -> {
+                    Element li = docBase.getDocument().createElement("li");
+                    Document doc = new W3CDom().fromJsoup(Jsoup.parse(str));
+                    Node node = doc.getDocumentElement().getChildNodes().item(1).getFirstChild();
+                    li.appendChild(docBase.getDocument().importNode(node, true));
+                    ul.appendChild(li);
+                });
+        docBase.getBodyElement().appendChild(ul);
+    }
+
+    public static void addPlaceholder(DokumenttiBase docBase) {
+        docBase.getBodyElement().appendChild(docBase.getDocument().createElement("br"));
     }
 
     public static String unescapeHtml5(String string) {

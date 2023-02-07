@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
-import fi.vm.sade.eperusteet.pdf.dto.LokalisointiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisointiDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface LokalisointiService {

@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.domain.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.koodisto.KoodistoDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +16,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
 public class KoodistoKoodiDto {
+    private Long id;
     private String koodiUri;
     private String koodiArvo;
     private String versio;

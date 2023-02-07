@@ -2,10 +2,10 @@ package fi.vm.sade.eperusteet.pdf.service.external;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.TermiDto;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaKevytDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiKappaleViiteDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 public class YlopsServiceImpl implements YlopsService {
 
-    private static final String YLOPS_API = "/api/ylops/";
+    private static final String API = "/api/";
     private static final String YLOPS_EXTERNAL_API = "/api/external/";
     private static final String YLOPS_PERUSTEET_API = "/api/perusteet/";
 
@@ -38,7 +38,7 @@ public class YlopsServiceImpl implements YlopsService {
     @Override
     public OpetussuunnitelmaDto getOpetussuunnitelma(Long opsId) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + YLOPS_API + "opetussuunnitelmat/{opsId}",
+            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API + "opetussuunnitelmat/{opsId}",
                     HttpMethod.GET,
                     httpEntity,
                     String.class,
@@ -53,7 +53,7 @@ public class YlopsServiceImpl implements YlopsService {
     @Override
     public List<TekstiKappaleViiteDto.Matala> getTekstiKappaleViiteOriginals(Long opsId, Long viiteId) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + YLOPS_API + "opetussuunnitelmat/{opsId}/tekstit/{viiteId}/alkuperaiset",
+            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API + "opetussuunnitelmat/{opsId}/tekstit/{viiteId}/alkuperaiset",
                     HttpMethod.GET,
                     httpEntity,
                     String.class,
@@ -69,7 +69,7 @@ public class YlopsServiceImpl implements YlopsService {
     @Override
     public TekstiKappaleViiteDto getLops2019PerusteTekstikappale(Long opsId, Long tekstikappaleId) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + YLOPS_API + "opetussuunnitelmat/{opsId}/peruste/tekstikappaleet/{tekstikappaleId}",
+            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API + "opetussuunnitelmat/{opsId}/peruste/tekstikappaleet/{tekstikappaleId}",
                     HttpMethod.GET,
                     httpEntity,
                     String.class,
@@ -83,15 +83,14 @@ public class YlopsServiceImpl implements YlopsService {
     }
 
     @Override
-    public TermiDto getTermi(Long opsId, String avain) {
+    public OrganisaatioDto getOrganisaatio(String oid) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + YLOPS_API + "opetussuunnitelmat/{opsId}/termi/{avain}",
+            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API + "ulkopuoliset/organisaatiot/{oid}",
                     HttpMethod.GET,
                     httpEntity,
                     String.class,
-                    opsId,
-                    avain);
-            return objectMapper.readValue(response.getBody(), TermiDto.class);
+                    oid);
+            return objectMapper.readValue(response.getBody(), OrganisaatioDto.class);
         }  catch (Exception e) {
             // TODO: käsittele poikkeus
             return null;
@@ -101,7 +100,7 @@ public class YlopsServiceImpl implements YlopsService {
     @Override
     public byte[] getDokumenttiLiite(Long opsId, Kuvatyyppi tiedostonimi) {
         try {
-            ResponseEntity<byte[]> response = restTemplate.exchange(ylopsServiceUrl + YLOPS_API + "opetussuunnitelmat/{opsId}/kuvat/{tiedostonimi}",
+            ResponseEntity<byte[]> response = restTemplate.exchange(ylopsServiceUrl + API + "opetussuunnitelmat/{opsId}/kuvat/{tiedostonimi}",
                     HttpMethod.GET,
                     httpEntity,
                     byte[].class,
@@ -114,22 +113,9 @@ public class YlopsServiceImpl implements YlopsService {
         }
     }
 
-    @Override
-    public byte[] getDokumenttiKuva(Long opsId, Kuvatyyppi tyyppi, Kieli kieli) {
-        try {
-            ResponseEntity<byte[]> response = restTemplate.exchange(ylopsServiceUrl + YLOPS_API + "dokumentit/kuva?opsId={opsId}?tyyppi={tyyppi}?kieli={kieli}",
-                    HttpMethod.GET,
-                    httpEntity,
-                    byte[].class,
-                    opsId,
-                    tyyppi.toString(),
-                    kieli.toString());
-            return response.getBody();
-        }  catch (Exception e) {
-            // TODO: käsittele poikkeus
-            return null;
-        }
-    }
+
+
+
 
 
 
@@ -137,13 +123,13 @@ public class YlopsServiceImpl implements YlopsService {
 
     // TODO: remove temp funktio
     @Override
-    public OpetussuunnitelmaDto getOpetussuunnitelmaTemp(Long opsId) {
+    public OpetussuunnitelmaKevytDto getOpetussuunnitelmaTemp(Long opsId) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + YLOPS_API  + "opetussuunnitelmat/" + opsId,
+            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API  + "opetussuunnitelmat/" + opsId,
                     HttpMethod.GET,
                     httpEntity,
                     String.class);
-            return objectMapper.readValue(response.getBody(), OpetussuunnitelmaDto.class);
+            return objectMapper.readValue(response.getBody(), OpetussuunnitelmaKevytDto.class);
         }  catch (Exception e) {
             // TODO: käsittele poikkeus
             return null;

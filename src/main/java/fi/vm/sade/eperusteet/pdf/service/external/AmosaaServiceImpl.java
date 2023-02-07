@@ -3,9 +3,11 @@ package fi.vm.sade.eperusteet.pdf.service.external;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
-import fi.vm.sade.eperusteet.pdf.dto.TermiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.PerusteenOsaDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -13,6 +15,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AmosaaServiceImpl implements AmosaaService {
@@ -63,20 +69,44 @@ public class AmosaaServiceImpl implements AmosaaService {
     }
 
     @Override
-    public TermiDto getTermi(Long ktId, String avain) {
+    public PerusteenOsaDto getPerusteenOsa(Long perusteId, Long perusteenosaId) {
         try {
-            ResponseEntity<TermiDto> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_API  + "koulutustoimijat/{ktId}/termisto/{avain}",
+            ResponseEntity<PerusteenOsaDto> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_PERUSTEET_API  + "{perusteId}/perusteenosa/{perusteenosaId}",
                     HttpMethod.GET,
                     httpEntity,
-                    TermiDto.class,
-                    ktId,
-                    avain);
+                    PerusteenOsaDto.class,
+                    perusteId,
+                    perusteenosaId);
             return response.getBody();
         }  catch (Exception e) {
             // TODO: käsittele poikkeus
             return null;
         }
     }
+
+    @Override
+    public List<SisaltoViiteDto> getSisaltoviitteenTyypilla(Long ktId, Long opsId, SisaltoTyyppi tyyppi) {
+        try {
+            ResponseEntity<SisaltoViiteDto[]> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_API  + "koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/sisaltoviitteet/{tyyppi}",
+                    HttpMethod.GET,
+                    httpEntity,
+                    SisaltoViiteDto[].class,
+                    ktId,
+                    opsId,
+                    tyyppi);
+            return Arrays.asList(Objects.requireNonNull(response.getBody()));
+        }  catch (Exception e) {
+            // TODO: käsittele poikkeus
+            return null;
+        }
+    }
+
+
+
+
+
+
+
 
     // TODO: remove temp funktio
     @Override

@@ -7,7 +7,7 @@ import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Tila;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Tyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.KoodistoDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -6,16 +6,18 @@ import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.common.enums.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Suoritustapakoodi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.TemplateTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.TutkinnonOsaTyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.TermiDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.ArvioinninKohdeDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.ArvioinninKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.ArviointiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoLaajaAlainenOsaaminenDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoLaajaAlaisenOsaamisenAlueDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.MuodostumisSaantoDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.OsaamisenTavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.OsaamistasonKriteeriDto;
@@ -30,9 +32,9 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimuksenKohdeD
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimuksenKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimusDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimusKohdealueetDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KotoKielitaitotasoDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KotoOpintoDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KotoTaitotasoDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoKielitaitotasoDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoOpintoDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoTaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KotoTaitotasoLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.OmaTutkinnonosaDto;
@@ -41,18 +43,20 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SuorituspolkuDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TekstiosaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TutkinnonosaDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.OsaamistasoDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiAmosaa;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiRivi;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTaulukko;
+import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import fi.vm.sade.eperusteet.pdf.service.PdfService;
 import fi.vm.sade.eperusteet.pdf.service.external.AmosaaService;
+import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
 import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClient;
 import fi.vm.sade.eperusteet.pdf.utils.LocalizedMessagesService;
-import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -80,13 +84,11 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
@@ -111,27 +113,13 @@ import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
 @Service
 public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuilderService {
 
-    private static final float COMPRESSION_LEVEL = 0.9f;
     private static final DecimalFormat df2 = new DecimalFormat("0.##");
-
-//    @Autowired
-//    private LiiteService liiteService;
-
-//    @Autowired
-//    private SisaltoviiteRepository tkvRepository;
 
     @Autowired
     private PdfService pdfService;
 
-
-//    @Autowired
-//    private TermistoService termistoService;
-
     @Autowired
     private EperusteetService eperusteetService;
-
-//    @Autowired
-//    private SisaltoViiteService svService;
 
     @Autowired
     private LocalizedMessagesService messages;
@@ -142,10 +130,16 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
     @Autowired
     private AmosaaService amosaaService;
 
-    private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
+    @Autowired
+    private DokumenttiUtilService dokumenttiUtilService;
+
+    @Autowired
+    private CommonExternalService commonExternalService;
 
 //    @Autowired
-//    private ArviointiasteikkoService arviointiasteikkoService;
+//    private SisaltoviiteRepository tkvRepository;
+
+    private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 
     @Override
     public Document generateXML(Dokumentti dokumentti, Long ktId, OpetussuunnitelmaDto ops) throws ParserConfigurationException, IOException, SAXException, TransformerException {
@@ -195,11 +189,10 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         buildFootnotes(docBase);
 
         // Kuvat
-        buildImages(docBase);
-        // TODO: enable
-//        buildKansilehti(docBase);
-//        buildYlatunniste(docBase);
-//        buildAlatunniste(docBase);
+        dokumenttiUtilService.buildImages(docBase, dokumentti.getSisaltoId(), dokumentti.getTyyppi());
+        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.kansikuva, dokumentti.getTyyppi(), ktId);
+        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.ylatunniste, dokumentti.getTyyppi(), ktId);
+        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.alatunniste, dokumentti.getTyyppi(), ktId);
 
         return doc;
     }
@@ -939,49 +932,46 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
                 // TODO: fix
                 // Arviointi
-//                if (perusteenTutkinnonosa.getArviointi() != null) {
-//                    addTeksti(docBase, messages.translate("docgen.arviointi", docBase.getKieli()), "h5");
-//                    ArviointiDto arviointiDto = perusteenTutkinnonosa.getArviointi();
-//
-//                    arviointiDto.getArvioinninKohdealueet().forEach(arvioinninKohdealueDto -> {
-//                        ArvioinninKohdealueDto arvioinninKohdealue = objectMapper.convertValue(arvioinninKohdealueDto, ArvioinninKohdealueDto.class);
-//
-//                        for (int i = 0; i < arvioinninKohdealue.getArvioinninKohteet().size(); i++) {
-//                            ArvioinninKohdeDto arvioinninKohde = arvioinninKohdealue.getArvioinninKohteet().get(i);
-//                            ArvioinninKohdeDto arvioinninKohdeDto = arvioinninKohdealueDto.getArvioinninKohteet().get(i);
-//                            Reference arviointiasteikkoRef = arvioinninKohdeDto.getArviointiasteikko();
-//                            if (arviointiasteikkoRef != null) {
-//                                Long arviointiasteikkoId = arviointiasteikkoRef.getIdLong();
-//                                ArviointiasteikkoDto dto = arviointiasteikkoService.get(arviointiasteikkoId);
-//                                ArviointiasteikkoDto arviointiasteikko = objectMapper.convertValue(dto, ArviointiasteikkoDto.class);
-//
+                if (perusteenTutkinnonosa.getArviointi() != null) {
+                    addTeksti(docBase, messages.translate("docgen.arviointi", docBase.getKieli()), "h5");
+                    ArviointiDto arviointiDto = perusteenTutkinnonosa.getArviointi();
+
+                    arviointiDto.getArvioinninKohdealueet().forEach(arvioinninKohdealueDto -> {
+                        ArvioinninKohdealueDto arvioinninKohdealue = objectMapper.convertValue(arvioinninKohdealueDto, ArvioinninKohdealueDto.class);
+
+                        for (int i = 0; i < arvioinninKohdealue.getArvioinninKohteet().size(); i++) {
+                            ArvioinninKohdeDto arvioinninKohde = arvioinninKohdealue.getArvioinninKohteet().get(i);
+                            ArvioinninKohdeDto arvioinninKohdeDto = arvioinninKohdealueDto.getArvioinninKohteet().get(i);
+                            Reference arviointiasteikkoRef = arvioinninKohdeDto.getArviointiasteikko();
+                            if (arviointiasteikkoRef != null) {
+                                Long arviointiasteikkoId = arviointiasteikkoRef.getIdLong();
+                                ArviointiAsteikkoDto arviointiasteikko = eperusteetService.getArviointiasteikko(arviointiasteikkoId);
+                                // TODO: korjaa referenssi
 //                                arvioinninKohde.setArviointiasteikko(arviointiasteikko);
-//
-//                                Set<OsaamistasonKriteeriDto> osaamistasonKriteerit = arvioinninKohdeDto.getOsaamistasonKriteerit().stream()
-//                                        .sorted(Comparator.comparing(osaamistasonKriteeriDto -> osaamistasonKriteeriDto.getOsaamistaso().getIdLong()))
-//                                        .map(osaamistasonKriteeriDto -> {
-//                                            Optional<OsaamistasoDto> optOsaamistaso = arviointiasteikko.getOsaamistasot().stream()
-//                                                    .filter(o -> o.getId().equals(osaamistasonKriteeriDto.getOsaamistaso().getIdLong()))
-//                                                    .findFirst();
-//
-//                                            OsaamistasonKriteeriDto osaamistasonKriteeri = objectMapper.convertValue(osaamistasonKriteeriDto, OsaamistasonKriteeriDto.class);
-//
-//                                            if (optOsaamistaso.isPresent()) {
-//                                                OsaamistasoDto osaamistaso = optOsaamistaso.get();
+
+                                Set<OsaamistasonKriteeriDto> osaamistasonKriteerit = arvioinninKohdeDto.getOsaamistasonKriteerit().stream()
+                                        .sorted(Comparator.comparing(osaamistasonKriteeriDto -> osaamistasonKriteeriDto.getOsaamistaso().getIdLong()))
+                                        .map(osaamistasonKriteeriDto -> {
+                                            Optional<OsaamistasoDto> optOsaamistaso = arviointiasteikko.getOsaamistasot().stream()
+                                                    .filter(o -> o.getId().equals(osaamistasonKriteeriDto.getOsaamistaso().getIdLong()))
+                                                    .findFirst();
+
+                                            OsaamistasonKriteeriDto osaamistasonKriteeri = objectMapper.convertValue(osaamistasonKriteeriDto, OsaamistasonKriteeriDto.class);
+
+                                            if (optOsaamistaso.isPresent()) {
+                                                OsaamistasoDto osaamistaso = optOsaamistaso.get();
+                                                // TODO: korjaa referenssi
 //                                                osaamistasonKriteeri.setOsaamistaso(osaamistaso);
-//                                            }
-//
-//                                            return osaamistasonKriteeri;
-//                                        })
-//                                        .collect(Collectors.toSet());
-//
-//                                arvioinninKohde.setOsaamistasonKriteerit(osaamistasonKriteerit);
-//                            }
-//                        }
-//
-//                        addArvioinninKohdealue(docBase, arvioinninKohdealue);
-//                    });
-//                }
+                                            }
+                                            return osaamistasonKriteeri;
+                                        }).collect(Collectors.toSet());
+
+                                arvioinninKohde.setOsaamistasonKriteerit(osaamistasonKriteerit);
+                            }
+                        }
+                        addArvioinninKohdealue(docBase, arvioinninKohdealue);
+                    });
+                }
 
                 // Ammattitaidon osoittamistavat
                 if (perusteenTutkinnonosa.getAmmattitaidonOsoittamistavat() != null) {
@@ -1047,7 +1037,6 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         OpintokokonaisuusDto opintokokonaisuus = lapsi.getOpintokokonaisuus();
 
         addTeksti(docBase, getTextString(docBase, opintokokonaisuus.getKuvaus()), "div");
-
         addTeksti(docBase, messages.translate("docgen.opetuksen-tavoitteet.title", docBase.getKieli()), "h5");
 
         if (opintokokonaisuus.getTavoitteidenKuvaus() != null) {
@@ -1068,7 +1057,6 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
         addTeksti(docBase, messages.translate("docgen.keskeiset-sisallot.title", docBase.getKieli()), "h5");
         addTeksti(docBase, getTextString(docBase, opintokokonaisuus.getKeskeisetSisallot()), "div");
-
         addTeksti(docBase, messages.translate("docgen.arviointi.title", docBase.getKieli()), "h5");
 
         if (opintokokonaisuus.getArvioinninKuvaus() != null) {
@@ -1159,9 +1147,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
     }
 
     private void addKotoLaajaAlainenOsaaminen(DokumenttiAmosaa docBase, SisaltoViiteDto lapsi) {
-        KotoLaajaAlainenOsaaminenDto perusteenOsaDto = new KotoLaajaAlainenOsaaminenDto(); // temp
-        // TODO: fix haku
-//        KotoLaajaAlainenOsaaminenDto perusteenOsaDto = (KotoLaajaAlainenOsaaminenDto) eperusteetService.getPerusteenOsa(docBase.getOpetussuunnitelma().getPeruste().getId(), lapsi.getPerusteenOsaId());
+        KotoLaajaAlainenOsaaminenDto perusteenOsaDto = (KotoLaajaAlainenOsaaminenDto) amosaaService.getPerusteenOsa(docBase.getOpetussuunnitelma().getPeruste().getId(), lapsi.getPerusteenOsaId());
         addTeksti(docBase, getTextString(docBase, perusteenOsaDto.getYleiskuvaus()), "div");
 
         perusteenOsaDto.getOsaamisAlueet().forEach(osaamisalue -> {
@@ -1173,55 +1159,49 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         addTeksti(docBase, getTextString(docBase, lapsi.getKotoLaajaAlainenOsaaminen().getTeksti()), "div");
     }
 
-    private void addKotoKielitaitotaso(DokumenttiAmosaa docBase, SisaltoViiteDto lapsi) {
-        KotoKielitaitotasoDto perusteenOsaDto = new KotoKielitaitotasoDto(); // temp
-        // TODO: fix haku
-//        KotoKielitaitotasoDto perusteenOsaDto = (KotoKielitaitotasoDto) eperusteetService.getPerusteenOsa(docBase.getOpetussuunnitelma().getPeruste().getId(), lapsi.getPerusteenOsaId());
-        addTeksti(docBase, getTextString(docBase, perusteenOsaDto.getKuvaus()), "div");
-
-        Map<String, KotoTaitotasoDto> taitotasoMap = lapsi.getKotoKielitaitotaso().getTaitotasot().stream()
-                .collect(Collectors.toMap((KotoTaitotasoDto::getKoodiUri), (taitotaso -> taitotaso)));
-        addKotoTaitotasot(docBase, taitotasoMap, perusteenOsaDto.getTaitotasot(), "docgen.tavoitteet.title");
-
-        addKotoTaitotasoLaajaAlaisetOsaamiset(docBase, lapsi.getKotoKielitaitotaso().getLaajaAlaisetOsaamiset());
-    }
-
-    private void addKotoOpinto(DokumenttiAmosaa docBase, SisaltoViiteDto lapsi) {
-        KotoOpintoDto perusteenOsaDto = new KotoOpintoDto(); // temp
-        // TODO: fix haku
-//        KotoOpintoDto perusteenOsaDto = (KotoOpintoDto) eperusteetService.getPerusteenOsa(docBase.getOpetussuunnitelma().getPeruste().getId(), lapsi.getPerusteenOsaId());
-        addTeksti(docBase, getTextString(docBase, perusteenOsaDto.getKuvaus()), "div");
-
-        Map<String, KotoTaitotasoDto> taitotasoMap = lapsi.getKotoOpinto().getTaitotasot().stream()
-                .collect(Collectors.toMap(KotoTaitotasoDto::getKoodiUri, taitotaso -> taitotaso));
-        addKotoTaitotasot(docBase, taitotasoMap, perusteenOsaDto.getTaitotasot(), "docgen.tavoitteet-ja-sisallot.title");
-
-        addKotoTaitotasoLaajaAlaisetOsaamiset(docBase, lapsi.getKotoOpinto().getLaajaAlaisetOsaamiset());
-    }
+    // TODO: korjaa
+//    private void addKotoKielitaitotaso(DokumenttiAmosaa docBase, SisaltoViiteDto lapsi) {
+//        KotoKielitaitotasoDto perusteenOsaDto = (KotoKielitaitotasoDto) amosaaService.getPerusteenOsa(docBase.getOpetussuunnitelma().getPeruste().getId(), lapsi.getPerusteenOsaId());
+//        addTeksti(docBase, getTextString(docBase, perusteenOsaDto.getKuvaus()), "div");
+//
+//        Map<String, KotoTaitotasoDto> taitotasoMap = lapsi.getKotoKielitaitotaso().getTaitotasot().stream()
+//                .collect(Collectors.toMap((KotoTaitotasoDto::getKoodiUri), (taitotaso -> taitotaso)));
+//        addKotoTaitotasot(docBase, taitotasoMap, perusteenOsaDto.getTaitotasot(), "docgen.tavoitteet.title");
+//
+//        addKotoTaitotasoLaajaAlaisetOsaamiset(docBase, lapsi.getKotoKielitaitotaso().getLaajaAlaisetOsaamiset());
+//    }
+//
+//    private void addKotoOpinto(DokumenttiAmosaa docBase, SisaltoViiteDto lapsi) {
+//        KotoOpintoDto perusteenOsaDto = (KotoOpintoDto) amosaaService.getPerusteenOsa(docBase.getOpetussuunnitelma().getPeruste().getId(), lapsi.getPerusteenOsaId());
+//        addTeksti(docBase, getTextString(docBase, perusteenOsaDto.getKuvaus()), "div");
+//
+//        Map<String, KotoTaitotasoDto> taitotasoMap = lapsi.getKotoOpinto().getTaitotasot().stream()
+//                .collect(Collectors.toMap(KotoTaitotasoDto::getKoodiUri, taitotaso -> taitotaso));
+//        addKotoTaitotasot(docBase, taitotasoMap, perusteenOsaDto.getTaitotasot(), "docgen.tavoitteet-ja-sisallot.title");
+//
+//        addKotoTaitotasoLaajaAlaisetOsaamiset(docBase, lapsi.getKotoOpinto().getLaajaAlaisetOsaamiset());
+//    }
 
     private void addKotoTaitotasoLaajaAlaisetOsaamiset(DokumenttiAmosaa docBase, List<KotoTaitotasoLaajaAlainenOsaaminenDto> laajaAlaisetOsaamiset) {
-        List<SisaltoViiteDto> laajaAlaisetViitteet = new ArrayList<>(); // temp
-        // TODO: fix haku
-//        List<SisaltoViiteDto> laajaAlaisetViitteet = svService.getSisaltoviitteet(docBase.getOpetussuunnitelma().getKoulutustoimija().getId(), docBase.getOpetussuunnitelma().getId(), SisaltoTyyppi.KOTO_LAAJAALAINENOSAAMINEN);
+        List<SisaltoViiteDto> laajaAlaisetViitteet = amosaaService.getSisaltoviitteenTyypilla(docBase.getOpetussuunnitelma().getKoulutustoimija().getId(), docBase.getOpetussuunnitelma().getId(), SisaltoTyyppi.KOTO_LAAJAALAINENOSAAMINEN);
+        Map<String, KotoLaajaAlaisenOsaamisenAlueDto> perusteenLaot = laajaAlaisetViitteet.stream()
+                .map(laoViite -> amosaaService.getPerusteenOsa(docBase.getOpetussuunnitelma().getPeruste().getId(), laoViite.getPerusteenOsaId()))
+                .map(perusteenOsaDto -> ((KotoLaajaAlainenOsaaminenDto) perusteenOsaDto))
+                .map(KotoLaajaAlainenOsaaminenDto::getOsaamisAlueet)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toMap((lao -> lao.getKoodi().getUri()), (lao -> lao)));
 
-//        Map<String, KotoLaajaAlaisenOsaamisenAlueDto> perusteenLaot = laajaAlaisetViitteet.stream()
-//                .map(laoViite -> eperusteetService.getPerusteenOsa(docBase.getOpetussuunnitelma().getPeruste().getId(), laoViite.getPerusteenOsaId()))
-//                .map(perusteenOsaDto -> ((KotoLaajaAlainenOsaaminenDto) perusteenOsaDto))
-//                .map(KotoLaajaAlainenOsaaminenDto::getOsaamisAlueet)
-//                .flatMap(Collection::stream)
-//                .collect(Collectors.toMap((lao -> lao.getKoodi().getUri()), (lao -> lao)));
-//
-//        if (!laajaAlaisetOsaamiset.isEmpty()) {
-//            addTeksti(docBase, messages.translate("docgen.laaja-alainen-osaaminen.title", docBase.getKieli()), "h5");
-//        }
-//
-//        laajaAlaisetOsaamiset.forEach(lao -> {
-//            KotoLaajaAlaisenOsaamisenAlueDto perusteenLao = perusteenLaot.get(lao.getKoodiUri());
-//            addTeksti(docBase, getTextString(docBase, new LokalisoituTekstiDto(perusteenLao.getKoodi().getNimi())), "h6");
-//            addTeksti(docBase, getTextString(docBase, perusteenLao.getKuvaus()), "div");
-//
-//            addTeksti(docBase, getTextString(docBase, lao.getTeksti()), "div");
-//        });
+        if (!laajaAlaisetOsaamiset.isEmpty()) {
+            addTeksti(docBase, messages.translate("docgen.laaja-alainen-osaaminen.title", docBase.getKieli()), "h5");
+        }
+
+        laajaAlaisetOsaamiset.forEach(lao -> {
+            KotoLaajaAlaisenOsaamisenAlueDto perusteenLao = perusteenLaot.get(lao.getKoodiUri());
+            addTeksti(docBase, getTextString(docBase, new LokalisoituTekstiDto(perusteenLao.getKoodi().getNimi())), "h6");
+            addTeksti(docBase, getTextString(docBase, perusteenLao.getKuvaus()), "div");
+
+            addTeksti(docBase, getTextString(docBase, lao.getTeksti()), "div");
+        });
     }
 
     private void addKotoTaitotasot(DokumenttiAmosaa docBase, Map<String, KotoTaitotasoDto> taitotasoMap, List<KotoTaitotasoDto> taitotasot, String tavoiteTitle) {
@@ -1369,7 +1349,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                     String avain = node.getAttributes().getNamedItem("data-viite").getNodeValue();
 
                     if (docBase.getOpetussuunnitelma() != null && docBase.getOpetussuunnitelma().getId() != null) {
-                        TermiDto termiDto = amosaaService.getTermi(docBase.getOpetussuunnitelma().getKoulutustoimija().getId(), avain);
+                        TermiDto termiDto = commonExternalService.getTermi(docBase.getOpetussuunnitelma().getKoulutustoimija().getId(), avain, docBase.getDokumentti().getTyyppi());
 
                         if (termiDto != null && termiDto.getAlaviite() != null && termiDto.getAlaviite() && termiDto.getSelitys() != null) {
                             element.setAttribute("number", String.valueOf(noteNumber));
@@ -1386,120 +1366,4 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             log.error(e.getLocalizedMessage());
         }
     }
-
-    private void buildImages(DokumenttiAmosaa docBase) {
-        XPathFactory xPathfactory = XPathFactory.newInstance();
-        XPath xpath = xPathfactory.newXPath();
-        try {
-            XPathExpression expression = xpath.compile("//img");
-            NodeList list = (NodeList) expression.evaluate(docBase.getDocument(), XPathConstants.NODESET);
-
-            for (int i = 0; i < list.getLength(); i++) {
-                Element element = (Element) list.item(i);
-                String id = element.getAttribute("data-uid");
-
-                if (ObjectUtils.isEmpty(id)) {
-                    continue;
-                }
-
-                UUID uuid = UUID.fromString(id);
-
-                // Ladataan kuvan data muistiin
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                // TODO: service ei toteutettu vielä
-//                liiteService.export(docBase.getOpetussuunnitelma().getId(), uuid, byteArrayOutputStream);
-
-                // Tehdään muistissa olevasta datasta kuva
-                InputStream in = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-                BufferedImage bufferedImage = ImageIO.read(in);
-
-                int width = bufferedImage.getWidth();
-                int height = bufferedImage.getHeight();
-
-                // Muutetaan kaikkien kuvien väriavaruus RGB:ksi jotta PDF/A validointi menee läpi
-                // Asetetaan lisäksi läpinäkyvien kuvien taustaksi valkoinen väri
-                BufferedImage tempImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
-                        BufferedImage.TYPE_3BYTE_BGR);
-                tempImage.getGraphics().setColor(new Color(255, 255, 255, 0));
-                tempImage.getGraphics().fillRect(0, 0, width, height);
-                tempImage.getGraphics().drawImage(bufferedImage, 0, 0, null);
-                bufferedImage = tempImage;
-
-                ImageWriter jpgWriter = ImageIO.getImageWritersByFormatName("jpg").next();
-                ImageWriteParam jpgWriteParam = jpgWriter.getDefaultWriteParam();
-                jpgWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-                jpgWriteParam.setCompressionQuality(COMPRESSION_LEVEL);
-
-                // Muunnetaan kuva base64 enkoodatuksi
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                MemoryCacheImageOutputStream imageStream = new MemoryCacheImageOutputStream(out);
-                jpgWriter.setOutput(imageStream);
-                IIOImage outputImage = new IIOImage(bufferedImage, null, null);
-                jpgWriter.write(null, outputImage, jpgWriteParam);
-                jpgWriter.dispose();
-                String base64 = Base64.getEncoder().encodeToString(out.toByteArray());
-
-                // Lisätään bas64 kuva img elementtiin
-                element.setAttribute("width", String.valueOf(width));
-                element.setAttribute("height", String.valueOf(height));
-                element.setAttribute("src", "data:image/jpg;base64," + base64);
-            }
-
-        } catch (XPathExpressionException | IOException | NullPointerException e) {
-            log.error(e.getLocalizedMessage());
-        }
-    }
-
-    //TODO: kansilehti ja tunnisteet
-//    private void buildKansilehti(AmosaaDokumenttiBase docBase) {
-//        Element head = docBase.getHeadElement();
-//        Element kansikuva = docBase.getDocument().createElement("kansikuva");
-//        Element kuva = docBase.getDocument().createElement("img");
-//
-//
-//        byte[] image = docBase.getDokumentti().getKansikuva();
-//        if (image == null) {
-//            return;
-//        }
-//
-//        String base64 = Base64.getEncoder().encodeToString(image);
-//        kuva.setAttribute("src", "data:image/jpg;base64," + base64);
-//
-//        kansikuva.appendChild(kuva);
-//        head.appendChild(kansikuva);
-//    }
-//
-//    private void buildYlatunniste(AmosaaDokumenttiBase docBase) {
-//        Element head = docBase.getHeadElement();
-//        Element ylatunniste = docBase.getDocument().createElement("ylatunniste");
-//        Element kuva = docBase.getDocument().createElement("img");
-//
-//        byte[] image = docBase.getDokumentti().getYlatunniste();
-//        if (image == null) {
-//            return;
-//        }
-//
-//        String base64 = Base64.getEncoder().encodeToString(image);
-//        kuva.setAttribute("src", "data:image/jpg;base64," + base64);
-//
-//        ylatunniste.appendChild(kuva);
-//        head.appendChild(ylatunniste);
-//    }
-//
-//    private void buildAlatunniste(AmosaaDokumenttiBase docBase) {
-//        Element head = docBase.getHeadElement();
-//        Element alatunniste = docBase.getDocument().createElement("alatunniste");
-//        Element kuva = docBase.getDocument().createElement("img");
-//
-//        byte[] image = docBase.getDokumentti().getAlatunniste();
-//        if (image == null) {
-//            return;
-//        }
-//
-//        String base64 = Base64.getEncoder().encodeToString(image);
-//        kuva.setAttribute("src", "data:image/jpg;base64," + base64);
-//
-//        alatunniste.appendChild(kuva);
-//        head.appendChild(alatunniste);
-//    }
 }

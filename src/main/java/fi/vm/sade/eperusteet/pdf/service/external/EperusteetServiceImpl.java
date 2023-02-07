@@ -3,7 +3,7 @@ package fi.vm.sade.eperusteet.pdf.service.external;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
-import fi.vm.sade.eperusteet.pdf.dto.TermiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteJulkinenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,14 +64,13 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
-    public TermiDto getTermi(Long id, String avain) {
+    public ArviointiAsteikkoDto getArviointiasteikko(Long id) {
         try {
-            ResponseEntity<TermiDto> response = restTemplate.exchange(eperusteetServiceUrl + EPERUSTEET_API + "{id}/termisto/{avain}",
+            ResponseEntity<ArviointiAsteikkoDto> response = restTemplate.exchange(eperusteetServiceUrl + EPERUSTEET_API + "arviointiasteikot/{id}",
                     HttpMethod.GET,
                     httpEntity,
-                    TermiDto.class,
-                    id,
-                    avain);
+                    ArviointiAsteikkoDto.class,
+                    id);
             return response.getBody();
         }  catch (Exception e) {
             // TODO: käsittele poikkeus

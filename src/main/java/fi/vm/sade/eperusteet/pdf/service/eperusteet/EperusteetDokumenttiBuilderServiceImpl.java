@@ -13,7 +13,7 @@ import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.TavoiteAlueTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.TutkinnonOsaTyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.TermiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiPeruste;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiRivi;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTaulukko;
@@ -59,7 +59,8 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.LaajaalainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OpetuksenTavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TaiteenalaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TekstiOsaDto;
-import fi.vm.sade.eperusteet.pdf.service.PdfService;
+import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
+import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
 import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClient;
 import fi.vm.sade.eperusteet.pdf.utils.CharapterNumberGenerator;
@@ -75,32 +76,19 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.MemoryCacheImageOutputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -108,7 +96,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.TreeSet;
-import java.util.UUID;
 
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeader;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addTeksti;
@@ -122,8 +109,6 @@ import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.tagTeksti;
 @Service
 public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumenttiBuilderService {
 
-    private static final float COMPRESSION_LEVEL = 0.9f;
-
     @Autowired
     private EperusteetService eperusteetService;
 
@@ -134,22 +119,13 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     private KoodistoClient koodistoService;
 
     @Autowired
-    private PdfService pdfService;
+    private DokumenttiUtilService dokumenttiUtilService;
 
-//    @Autowired
-//    private TutkintonimikeKoodiRepository tutkintonimikeKoodiRepository;
-//
-//    @Autowired
-//    private LiiteService liiteService;
-//
-//    @Autowired
-//    private TermistoRepository termistoRepository;
-//
-//    @Autowired
-//    private PerusteService perusteService;
+    @Autowired
+    private CommonExternalService commonExternalService;
 
     @Override
-    public Document generateXML(Dokumentti dokumentti, PerusteKaikkiDto perusteData) throws ParserConfigurationException, IOException, TransformerException, SAXException {
+    public Document generateXML(Dokumentti dokumentti, PerusteKaikkiDto perusteData) throws ParserConfigurationException, IOException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         Document doc = docBuilder.newDocument();
@@ -186,32 +162,16 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         docBase.setAipeOpetuksenSisalto(perusteData.getAipeOpetuksenPerusteenSisalto());
 
         // Tästä aloitetaan varsinaisen dokumentin muodostus
-        addDokumentti(docBase);
+        addMetaPages(docBase); // Kansilehti & Infosivu
+        addAipeSisalto(docBase);
+        addTutkinnonMuodostuminen(docBase);
+        addTutkinnonosat(docBase);
+        addPerusteenOsat(docBase); // Tekstikappaleet
+        addFootnotes(docBase);
+        // Kuvat
+        dokumenttiUtilService.buildImages(docBase, dokumentti.getSisaltoId(), dokumentti.getTyyppi());
 
         return doc;
-    }
-
-    private void addDokumentti(DokumenttiPeruste docBase) {
-        // Kansilehti & Infosivu
-        addMetaPages(docBase);
-
-        // Aipe sisältö
-        addAipeSisalto(docBase);
-
-        // Tutkinnon muodostuminen
-        addTutkinnonMuodostuminen(docBase);
-
-        // Tutkinnonosat
-        addTutkinnonosat(docBase);
-
-        // Tekstikappaleet
-        addPerusteenOsat(docBase);
-
-        // Alaviitteet
-        addFootnotes(docBase);
-
-        // Kuvat
-        buildImages(docBase);
     }
 
     private void addMetaPages(DokumenttiPeruste docBase) {
@@ -468,14 +428,13 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                     String avain = node.getAttributes().getNamedItem("data-viite").getNodeValue();
 
                     if (docBase.getPeruste() != null && docBase.getPeruste().getId() != null) {
-                        TermiDto termi = eperusteetService.getTermi(docBase.getPeruste().getId(), avain);
+                        TermiDto termi = commonExternalService.getTermi(docBase.getPeruste().getId(), avain, docBase.getDokumentti().getTyyppi());
 
                         if (termi != null && termi.getAlaviite() && termi.getSelitys() != null) {
                             element.setAttribute("number", String.valueOf(noteNumber));
 
                             LokalisoituTekstiDto tekstiDto = termi.getSelitys();
-                            String selitys = getTextString(docBase, tekstiDto)
-                                    .replaceAll("<(?!\\/?(a)(>|\\s))[^<]+?>", "");
+                            String selitys = getTextString(docBase, tekstiDto).replaceAll("<(?!\\/?(a)(>|\\s))[^<]+?>", "");
                             addTeksti(docBase, selitys, "attrfootnote", element);
                             noteNumber++;
                         }
@@ -880,7 +839,9 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         addTaiteenalaSisalto(docBase, taiteenala.getYhteisetOpinnot(), "docgen.taiteenala.yhteiset-opinnot");
     }
 
-    private void addOpintokokonaisuus(DokumenttiPeruste docBase, OpintokokonaisuusDto opintokokonaisuus, PerusteenOsaDto po,
+    private void addOpintokokonaisuus(DokumenttiPeruste docBase,
+                                      OpintokokonaisuusDto opintokokonaisuus,
+                                      PerusteenOsaDto po,
                                       PerusteenOsaViiteDto lapsi) {
         // Nimi
         KoodiDto nimiKoodiDto = opintokokonaisuus.getNimiKoodi();
@@ -1865,7 +1826,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     }
 
     private String getLaajuusSuffiksi(final BigDecimal laajuus, final LaajuusYksikko yksikko, final Kieli kieli) {
-        StringBuilder laajuusBuilder = new StringBuilder("");
+        StringBuilder laajuusBuilder = new StringBuilder();
         if (laajuus != null) {
             laajuusBuilder.append(", ");
             laajuusBuilder.append(laajuus.stripTrailingZeros().toPlainString());
@@ -1887,7 +1848,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     }
 
     private String getLaajuusSuffiksi(final BigDecimal laajuus, final BigDecimal laajuusMaksimi, final LaajuusYksikko yksikko, final Kieli kieli) {
-        StringBuilder laajuusBuilder = new StringBuilder("");
+        StringBuilder laajuusBuilder = new StringBuilder();
         if (laajuus != null) {
             laajuusBuilder.append(", ");
             laajuusBuilder.append(laajuus.stripTrailingZeros().toPlainString());
@@ -1948,15 +1909,15 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         MuodostumisSaantoDto.Koko koko = saanto.getKoko();
         Integer min = koko.getMinimi();
         Integer max = koko.getMaksimi();
-        StringBuilder kokoBuilder = new StringBuilder("");
+        StringBuilder kokoBuilder = new StringBuilder();
         if (min != null) {
-            kokoBuilder.append(min.toString());
+            kokoBuilder.append(min);
         }
         if (min != null && max != null && !min.equals(max)) {
             kokoBuilder.append("-");
         }
         if (max != null && !max.equals(min)) {
-            kokoBuilder.append(max.toString());
+            kokoBuilder.append(max);
         }
 
         String yks = messages.translate("docgen.koko.kpl", kieli);
@@ -1973,15 +1934,15 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         MuodostumisSaantoDto.Laajuus laajuus = saanto.getLaajuus();
         Integer min = laajuus.getMinimi();
         Integer max = laajuus.getMaksimi();
-        StringBuilder laajuusBuilder = new StringBuilder("");
+        StringBuilder laajuusBuilder = new StringBuilder();
         if (min != null) {
-            laajuusBuilder.append(min.toString());
+            laajuusBuilder.append(min);
         }
         if (min != null && max != null && !min.equals(max)) {
             laajuusBuilder.append("-");
         }
         if (max != null && !max.equals(min)) {
-            laajuusBuilder.append(max.toString());
+            laajuusBuilder.append(max);
         }
 
         String yks = messages.translate("docgen.laajuus.ov", kieli);
@@ -1992,69 +1953,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         laajuusBuilder.append(" ");
         laajuusBuilder.append(yks);
         return laajuusBuilder.toString();
-    }
-
-    private void buildImages(DokumenttiPeruste docBase) {
-        XPathFactory xPathfactory = XPathFactory.newInstance();
-        XPath xpath = xPathfactory.newXPath();
-        try {
-            XPathExpression expression = xpath.compile("//img");
-            NodeList list = (NodeList) expression.evaluate(docBase.getDocument(), XPathConstants.NODESET);
-
-            for (int i = 0; i < list.getLength(); i++) {
-                Element element = (Element) list.item(i);
-                String id = element.getAttribute("data-uid");
-
-                if (ObjectUtils.isEmpty(id)) {
-                    continue;
-                }
-
-                UUID uuid = UUID.fromString(id);
-
-                // Ladataan kuvan data muistiin
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                // TODO: service ei toteutettu vielä
-//                liiteService.export(docBase.getPeruste().getId(), uuid, byteArrayOutputStream);
-
-                // Tehdään muistissa olevasta datasta kuva
-                InputStream in = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-                BufferedImage bufferedImage = ImageIO.read(in);
-
-                int width = bufferedImage.getWidth();
-                int height = bufferedImage.getHeight();
-
-                // Muutetaan kaikkien kuvien väriavaruus RGB:ksi jotta PDF/A validointi menee läpi
-                // Asetetaan lisäksi läpinäkyvien kuvien taustaksi valkoinen väri
-                BufferedImage tempImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
-                        BufferedImage.TYPE_3BYTE_BGR);
-                tempImage.getGraphics().setColor(new Color(255, 255, 255, 0));
-                tempImage.getGraphics().fillRect(0, 0, width, height);
-                tempImage.getGraphics().drawImage(bufferedImage, 0, 0, null);
-                bufferedImage = tempImage;
-
-                ImageWriter jpgWriter = ImageIO.getImageWritersByFormatName("jpg").next();
-                ImageWriteParam jpgWriteParam = jpgWriter.getDefaultWriteParam();
-                jpgWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-                jpgWriteParam.setCompressionQuality(COMPRESSION_LEVEL);
-
-                // Muunnetaan kuva base64 enkoodatuksi
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                MemoryCacheImageOutputStream imageStream = new MemoryCacheImageOutputStream(out);
-                jpgWriter.setOutput(imageStream);
-                IIOImage outputImage = new IIOImage(bufferedImage, null, null);
-                jpgWriter.write(null, outputImage, jpgWriteParam);
-                jpgWriter.dispose();
-                String base64 = Base64.getEncoder().encodeToString(out.toByteArray());
-
-                // Lisätään bas64 kuva img elementtiin
-                element.setAttribute("width", String.valueOf(width));
-                element.setAttribute("height", String.valueOf(height));
-                element.setAttribute("src", "data:image/jpg;base64," + base64);
-            }
-
-        } catch (XPathExpressionException | IOException | NullPointerException e) {
-            log.error(e.getLocalizedMessage());
-        }
     }
 
     private <T> T getOptionalValue(Optional<T> optional) {

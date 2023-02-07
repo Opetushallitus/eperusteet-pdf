@@ -157,27 +157,27 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         //TODO: haetaan opintopolusta toistaiseksi testidataa, korvataan -> getPerusteKaikkiDto()
         PerusteKaikkiDto perusteData = eperusteetService.getPerusteKaikkiDtoTemp(dokumentti.getSisaltoId(), dokumentti.getRevision());
         Document doc = eperusteetDokumenttiBuilderService.generateXML(dokumentti, perusteData);
-        return pdfService.xhtml2pdf(doc, getMetaData(dokumentti, perusteData.getNimi()), TemplateTyyppi.PERUSTE);
+        return pdfService.xhtml2pdf(doc, generateMetaData(dokumentti, perusteData.getNimi()), TemplateTyyppi.PERUSTE);
     }
 
     private byte[] createAmoseePdfData(Dokumentti dokumentti, Long ktId) throws IOException, TransformerException, SAXException, ParserConfigurationException {
         //TODO: haetaan opintopolusta toistaiseksi testidataa, korvataan -> getOpetussuunnitelma()
         OpetussuunnitelmaDto ops = amosaaService.getOpetussuunnitelmaTemp(ktId, dokumentti.getSisaltoId());
         Document doc = amosaaDokumenttiBuilderService.generateXML(dokumentti, ktId, ops);
-        return pdfService.xhtml2pdf(doc, getMetaData(dokumentti, ops.getNimi()), TemplateTyyppi.AMOSAA);
+        return pdfService.xhtml2pdf(doc, generateMetaData(dokumentti, ops.getNimi()), TemplateTyyppi.AMOSAA);
     }
 
     private byte[] createYlopsPdfData(Dokumentti dokumentti) throws IOException, TransformerException, SAXException, ParserConfigurationException, DokumenttiException {
         //TODO: haetaan opintopolusta toistaiseksi testidataa, korvataan -> getOpetussuunnitelma()
-        fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaDto ops = ylopsService.getOpetussuunnitelmaTemp(dokumentti.getSisaltoId());
+        fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaDto ops = ylopsService.getOpetussuunnitelma(dokumentti.getSisaltoId());
         Document doc = ylopsDokumenttiBuilderService.generateXML(dokumentti, ops);
-        return pdfService.xhtml2pdf(doc, getMetaData(dokumentti, ops.getNimi()), TemplateTyyppi.YLOPS);
+        return pdfService.xhtml2pdf(doc, generateMetaData(dokumentti, ops.getNimi()), TemplateTyyppi.YLOPS);
     }
 
     private byte[] createEperusteetKVLiitePdfData(Dokumentti dokumentti) throws IOException, TransformerException, SAXException, ParserConfigurationException {
         PerusteKaikkiDto perusteData = eperusteetService.getPerusteKaikkiDtoTemp(dokumentti.getSisaltoId(), dokumentti.getRevision());
         Document doc = kvLiiteBuilderService.generateXML(perusteData, dokumentti.getKieli());
-        return pdfService.xhtml2pdf(doc, getMetaData(dokumentti, perusteData.getNimi()), TemplateTyyppi.KVLIITE);
+        return pdfService.xhtml2pdf(doc, generateMetaData(dokumentti, perusteData.getNimi()), TemplateTyyppi.KVLIITE);
     }
 
     @Override
@@ -217,16 +217,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         Sort sort = Sort.by(Sort.Direction.DESC, "valmistumisaika");
         List<Dokumentti> documents = dokumenttiRepository.findBySisaltoIdAndRevisionAndKieli(id, revision, kieli, sort);
 
-        // Kvliite ei riipu suoritustavasta
-//            if (GeneratorVersion.KVLIITE.equals(version)) {
-//                documents = dokumenttiRepository.findBySisaltoIdAndRevisionAndKieli(
-//                        id, revision, kieli, sort);
-//            } else {
-//                documents = dokumenttiRepository.findBySisaltoIdAndRevisionAndKieli(
-//                        id, kieli, DokumenttiTila.VALMIS, suoritustapakoodi,
-//                        version != null ? version : GeneratorVersion.UUSI, sort);
-//            }
-
         if (documents.isEmpty()) {
             return null;
         } else {
@@ -234,7 +224,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         }
     }
 
-    private DokumenttiMetaDto getMetaData(Dokumentti dokumentti, LokalisoituTekstiDto nimi) {
+    private DokumenttiMetaDto generateMetaData(Dokumentti dokumentti, LokalisoituTekstiDto nimi) {
         return DokumenttiMetaDto.builder()
                 .title(DokumenttiUtils.getTextString(dokumentti.getKieli(), nimi))
                 .subject(messages.translate(DokumenttiUtils.selectSubjectTranslationKey(dokumentti.getTyyppi()), dokumentti.getKieli()))

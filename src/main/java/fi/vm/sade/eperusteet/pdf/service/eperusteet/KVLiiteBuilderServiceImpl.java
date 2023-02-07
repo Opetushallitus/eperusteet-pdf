@@ -3,6 +3,8 @@ package fi.vm.sade.eperusteet.pdf.service.eperusteet;
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiKVLiite;
+import fi.vm.sade.eperusteet.pdf.dto.common.OsaamistasoDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteJulkinenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteTasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
@@ -10,8 +12,6 @@ import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils;
 import fi.vm.sade.eperusteet.pdf.utils.LocalizedMessagesService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -24,23 +24,19 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.List;
+import java.util.StringJoiner;
 
 @Slf4j
 @Profile("!test")
 @Service
 public class KVLiiteBuilderServiceImpl implements KVLiiteBuilderService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KVLiiteBuilderServiceImpl.class);
-    private static final float COMPRESSION_LEVEL = 0.9f;
-
     @Autowired
     private LocalizedMessagesService messages;
 
     @Autowired
     private EperusteetService eperusteetService;
-
-//    @Autowired
-//    private ArviointiAsteikkoService arviointiAsteikkoService;
 
     @Override
     public Document generateXML(PerusteKaikkiDto peruste, Kieli kieli) throws IOException, ParserConfigurationException {
@@ -444,18 +440,17 @@ public class KVLiiteBuilderServiceImpl implements KVLiiteBuilderService {
             rightTd.appendChild(DokumenttiUtils.newBoldElement(docBase.getDocument(),
                     messages.translate("docgen.kvliite.arviointi-asteikko", docBase.getKieli())));
             if (kvLiiteJulkinenDto.getArvosanaAsteikko() != null) {
-                // TODO: korjaa arviointiAsteikkoService
-//                ArviointiAsteikkoDto arviointiAsteikkoDto = arviointiAsteikkoService.get(kvLiiteJulkinenDto.getArvosanaAsteikko().getIdLong());
-//                StringJoiner joiner = new StringJoiner(" / ");
-//                List<OsaamistasoDto> osaamistasot = arviointiAsteikkoDto.getOsaamistasot();
-//                // EP-1315
-//                if (osaamistasot.size() == 1) {
-//                    joiner.add(messages.translate("docgen.kvliite.kvliiteen-yksiportainen-arviointiasteikko", docBase.getKieli()));
-//                } else {
-//                    osaamistasot.forEach(osaamistasoDto -> joiner
-//                            .add(DokumenttiUtils.getTextString(docBase, osaamistasoDto.getOtsikko())));
-//                }
-//                DokumenttiUtils.addTeksti(docBase, joiner.toString(), "div", rightTd);
+                ArviointiAsteikkoDto arviointiAsteikkoDto = eperusteetService.getArviointiasteikko(kvLiiteJulkinenDto.getArvosanaAsteikko().getIdLong());
+                StringJoiner joiner = new StringJoiner(" / ");
+                List<OsaamistasoDto> osaamistasot = arviointiAsteikkoDto.getOsaamistasot();
+                // EP-1315
+                if (osaamistasot.size() == 1) {
+                    joiner.add(messages.translate("docgen.kvliite.kvliiteen-yksiportainen-arviointiasteikko", docBase.getKieli()));
+                } else {
+                    osaamistasot.forEach(osaamistasoDto -> joiner
+                            .add(DokumenttiUtils.getTextString(docBase, osaamistasoDto.getOtsikko())));
+                }
+                DokumenttiUtils.addTeksti(docBase, joiner.toString(), "div", rightTd);
             }
         }
 
