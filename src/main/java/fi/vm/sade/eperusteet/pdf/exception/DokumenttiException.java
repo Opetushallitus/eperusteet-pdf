@@ -5,4 +5,8 @@ public class DokumenttiException extends Exception {
     public DokumenttiException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public DokumenttiException(String message) {
+        super(message);
+    }
 }

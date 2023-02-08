@@ -5,10 +5,9 @@ import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaKevytDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiKappaleViiteDto;
-import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
+import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -58,7 +57,7 @@ public class YlopsServiceImpl implements YlopsService {
                     opsId);
             return objectMapper.readValue(response.getBody(), OpetussuunnitelmaExportDto.class);
         }  catch (Exception e) {
-            throw new BusinessRuleViolationException("Opetussuunnitelmaa ei saatu haettua.");
+            throw new ServiceException("Opetussuunnitelmaa ei saatu haettua: " + e.getMessage());
         }
     }
 
@@ -73,7 +72,7 @@ public class YlopsServiceImpl implements YlopsService {
                     viiteId);
             return Collections.singletonList(objectMapper.readValue(response.getBody(), TekstiKappaleViiteDto.Matala.class));
         }  catch (Exception e) {
-            throw new BusinessRuleViolationException("Tekstikappaleviitettä ei saatu haettua.");
+            throw new ServiceException("Tekstikappaleviitettä ei saatu haettua: " + e.getMessage());
         }
     }
 
@@ -88,7 +87,7 @@ public class YlopsServiceImpl implements YlopsService {
                     tekstikappaleId);
             return objectMapper.readValue(response.getBody(), TekstiKappaleViiteDto.class);
         }  catch (Exception e) {
-            throw new BusinessRuleViolationException("Perustetekstikappaletta ei saatu haettua.");
+            throw new ServiceException("Perustetekstikappaletta ei saatu haettua: " + e.getMessage());
         }
     }
 
@@ -102,7 +101,7 @@ public class YlopsServiceImpl implements YlopsService {
                     oid);
             return objectMapper.readValue(response.getBody(), OrganisaatioDto.class);
         }  catch (Exception e) {
-            throw new BusinessRuleViolationException("Organisaatiota ei saatu haettua.");
+            throw new ServiceException("Organisaatiota ei saatu haettua: " + e.getMessage());
         }
     }
 
@@ -117,7 +116,7 @@ public class YlopsServiceImpl implements YlopsService {
                     tiedostonimi);
             return response.getBody();
         }  catch (Exception e) {
-            throw new BusinessRuleViolationException("Dokumenttiliitettä ei saatu haettua.");
+            throw new ServiceException("Dokumenttiliitettä ei saatu haettua: " + e.getMessage());
         }
     }
 
@@ -131,16 +130,15 @@ public class YlopsServiceImpl implements YlopsService {
 
     // TODO: remove temp funktio
     @Override
-    public OpetussuunnitelmaKevytDto getOpetussuunnitelmaTemp(Long opsId) {
+    public OpetussuunnitelmaExportDto getOpetussuunnitelmaTemp(Long opsId) {
         try {
             ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API  + "opetussuunnitelmat/" + opsId,
                     HttpMethod.GET,
                     httpEntity,
                     String.class);
-            return objectMapper.readValue(response.getBody(), OpetussuunnitelmaKevytDto.class);
+            return objectMapper.readValue(response.getBody(), OpetussuunnitelmaExportDto.class);
         }  catch (Exception e) {
-            // TODO: käsittele poikkeus
-            return null;
+            throw new ServiceException("Opetussuunnitelmaa ei saatu haettua: " + e.getMessage());
         }
     }
 }

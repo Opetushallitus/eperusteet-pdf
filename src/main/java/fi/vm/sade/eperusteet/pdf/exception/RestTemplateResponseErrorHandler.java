@@ -1,6 +1,5 @@
 package fi.vm.sade.eperusteet.pdf.exception;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
@@ -11,7 +10,6 @@ import java.io.IOException;
 import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
 import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
 
-@Slf4j
 @Component
 public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
 
@@ -23,19 +21,17 @@ public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
     @Override
     public void handleError(ClientHttpResponse httpResponse) throws IOException {
         if (httpResponse.getStatusCode().series() == SERVER_ERROR) {
-            log.error("Remote server error ({}).", httpResponse.getRawStatusCode());
             throw new ServiceException("Remote server error.");
         } else if (httpResponse.getStatusCode().series() == CLIENT_ERROR) {
             if (httpResponse.getStatusCode() == HttpStatus.NOT_FOUND) {
-                log.warn("Ei löytynyt ({}).", httpResponse.getRawStatusCode());
+                throw new ServiceException("Ei löytynyt " + httpResponse.getRawStatusCode());
             } else if (httpResponse.getStatusCode() == HttpStatus.BAD_REQUEST) {
-                log.warn("Virheellinen pyyntö ({}).", httpResponse.getRawStatusCode());
+                throw new ServiceException("Virheellinen pyyntö " + httpResponse.getRawStatusCode());
             } else if (httpResponse.getStatusCode() == HttpStatus.FORBIDDEN) {
-                log.warn("Pyyntö estetty ({}).", httpResponse.getRawStatusCode());
+                throw new ServiceException("Pyyntö estetty " + httpResponse.getRawStatusCode());
             } else if (httpResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                log.warn("Ei oikeuksia ({}).", httpResponse.getRawStatusCode());
+                throw new ServiceException("Ei oikeuksia " + httpResponse.getRawStatusCode());
             }
-            throw new BusinessRuleViolationException("Client error");
         }
     }
 }

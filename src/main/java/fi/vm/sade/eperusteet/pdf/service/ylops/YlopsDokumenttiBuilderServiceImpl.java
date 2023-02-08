@@ -14,15 +14,14 @@ import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
+import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
 import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClientImpl;
 import fi.vm.sade.eperusteet.pdf.service.external.YlopsService;
-import fi.vm.sade.eperusteet.pdf.utils.LocalizedMessagesService;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -147,13 +146,7 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
         buildFootnotes(docBase);
 
         // Kuvat
-        try {
-            dokumenttiUtilService.buildImages(docBase, dokumentti.getSisaltoId(), dokumentti.getTyyppi());
-        }
-        catch (HttpMessageNotReadableException ex) {
-            log.error(ex.getLocalizedMessage());
-        }
-
+        dokumenttiUtilService.buildImages(docBase, dokumentti.getSisaltoId(), dokumentti.getTyyppi());
         dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.kansikuva, dokumentti.getTyyppi(), null);
         dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.ylatunniste, dokumentti.getTyyppi(), null);
         dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.alatunniste, dokumentti.getTyyppi(), null);

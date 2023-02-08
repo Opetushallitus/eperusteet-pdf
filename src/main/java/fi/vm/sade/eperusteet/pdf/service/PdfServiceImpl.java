@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.TemplateTyyppi;
+import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiEventListener;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import org.apache.fop.apps.FOUserAgent;
@@ -59,7 +60,7 @@ public class PdfServiceImpl implements PdfService {
     private Resource config;
 
     @Override
-    public byte[] xhtml2pdf(Document document, DokumenttiMetaDto meta, TemplateTyyppi tyyppi) throws IOException, TransformerException, SAXException {
+    public byte[] xhtml2pdf(Document document, DokumenttiMetaDto meta, TemplateTyyppi tyyppi) throws IOException, TransformerException, SAXException, DokumenttiException {
         return convertDocument2PDF(document, selectTemplate(tyyppi), meta, tyyppi);
     }
 
@@ -165,7 +166,7 @@ public class PdfServiceImpl implements PdfService {
         }
     }
 
-    private File selectTemplate(TemplateTyyppi tyyppi) throws IOException {
+    private File selectTemplate(TemplateTyyppi tyyppi) throws IOException, DokumenttiException {
         if (tyyppi.equals(TemplateTyyppi.PERUSTE)) {
             return eperusteetTemplate.getFile();
         } else if (tyyppi.equals(TemplateTyyppi.AMOSAA)) {
@@ -175,7 +176,7 @@ public class PdfServiceImpl implements PdfService {
         } else if (tyyppi.equals(TemplateTyyppi.KVLIITE)) {
             return kvLiiteTemplate.getFile();
         } else {
-            return null;
+            throw new DokumenttiException("Template-tyyppiä ei ole määritetty.");
         }
     }
 }

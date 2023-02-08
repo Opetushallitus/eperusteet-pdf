@@ -6,8 +6,8 @@ import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
 import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteJulkinenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
-import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
+import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -58,7 +58,7 @@ public class EperusteetServiceImpl implements EperusteetService {
                     String.class);
             return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
         } catch (Exception e) {
-            throw new BusinessRuleViolationException("Perustedataa ei saatu haettua.");
+            throw new ServiceException("Perustedataa ei saatu haettua: " + e.getMessage());
         }
     }
 
@@ -72,7 +72,7 @@ public class EperusteetServiceImpl implements EperusteetService {
                     id);
             return response.getBody();
         } catch (Exception e) {
-            throw new BusinessRuleViolationException("KV-liitettä ei saatu haettua.");
+            throw new ServiceException("KV-liitettä ei saatu haettua: " + e.getMessage());
         }
     }
 
@@ -86,7 +86,7 @@ public class EperusteetServiceImpl implements EperusteetService {
                     id);
             return response.getBody();
         }  catch (Exception e) {
-            throw new BusinessRuleViolationException("Arviointiasteikkoa ei saatu haettua.");
+            throw new ServiceException("Arviointiasteikkoa ei saatu haettua: " + e.getMessage());
         }
     }
 

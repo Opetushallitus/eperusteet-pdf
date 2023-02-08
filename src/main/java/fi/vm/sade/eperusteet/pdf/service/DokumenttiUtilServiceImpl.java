@@ -61,7 +61,14 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
                 UUID uuid = DokumenttiTyyppi.TOTEUTUSSUUNNITELMA.equals(tyyppi) ? ylopsUUIDHandling(id, src) : UUID.fromString(id);
 
                 // Ladataan kuvan data muistiin
-                InputStream in = commonExternalService.getLiitetiedosto(sisaltoId, uuid, tyyppi);
+                InputStream in;
+                try {
+                    in = commonExternalService.getLiitetiedosto(sisaltoId, uuid, tyyppi);
+                }
+                catch (Exception e) {
+                    log.error("Liitettä ei löytynyt, id={}, UUID={}", sisaltoId, uuid);
+                    return;
+                }
 
                 // Tehdään muistissa olevasta datasta kuva
                 BufferedImage bufferedImage = ImageIO.read(in);
@@ -115,7 +122,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
         try {
             kuva = commonExternalService.getDokumenttiKuva(dokumentti.getSisaltoId(), kuvatyyppi, dokumentti.getKieli(), dokumenttiTyyppi, ktId);
         } catch (Exception e) {
-            // kuvaa ei löytynyt, poistutaan
+            log.warn("Kuvaa ei löytynyt, id={}, tyyppi={}", dokumentti.getSisaltoId(), kuvatyyppi);
             return;
         }
 

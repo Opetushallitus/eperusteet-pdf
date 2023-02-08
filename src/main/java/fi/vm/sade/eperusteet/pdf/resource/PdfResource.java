@@ -4,7 +4,6 @@ import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiOldDto;
-import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,43 +29,51 @@ public class PdfResource {
 
     @GetMapping(path = "/generate/eperusteet/{id}/{revision}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DokumenttiOldDto> generateEperusteetPdf(@PathVariable("id") Long id,
-                                                                  @PathVariable("revision") Integer revision) throws DokumenttiException {
-
-        Dokumentti dokumentti = dokumenttiService.getDto(id, Kieli.FI, revision, DokumenttiTyyppi.PERUSTE);
-        dokumentti = dokumenttiService.generate(dokumentti, null);
-
-        return new ResponseEntity<>(tempOldMapper(dokumentti), HttpStatus.ACCEPTED);
+                                                                  @PathVariable("revision") Integer revision) {
+        try {
+            Dokumentti dokumentti = dokumenttiService.getDto(id, Kieli.FI, revision, DokumenttiTyyppi.PERUSTE);
+            dokumentti = dokumenttiService.generate(dokumentti, null);
+            return new ResponseEntity<>(tempOldMapper(dokumentti), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(path = "/generate/kvliite/{id}/{revision}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DokumenttiOldDto> generateKVLiitePdf(@PathVariable("id") Long id,
-                                                               @PathVariable("revision") Integer revision) throws DokumenttiException {
-
-        Dokumentti dokumentti = dokumenttiService.getDto(id, Kieli.FI, revision, DokumenttiTyyppi.KVLIITE);
-        dokumentti = dokumenttiService.generate(dokumentti, null);
-
-        return new ResponseEntity<>(tempOldMapper(dokumentti), HttpStatus.ACCEPTED);
+                                                               @PathVariable("revision") Integer revision) {
+        try {
+            Dokumentti dokumentti = dokumenttiService.getDto(id, Kieli.FI, revision, DokumenttiTyyppi.KVLIITE);
+            dokumentti = dokumenttiService.generate(dokumentti, null);
+            return new ResponseEntity<>(tempOldMapper(dokumentti), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(path = "/generate/amosaa/{id}/{ktId}/{revision}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DokumenttiOldDto> generateAmosaaPdf(@PathVariable("id") Long id,
                                                               @PathVariable("ktId") Long ktId,
-                                                              @PathVariable("revision") Integer revision) throws DokumenttiException {
-
-        Dokumentti dokumentti = dokumenttiService.getDto(id, Kieli.FI, revision, DokumenttiTyyppi.OPS);
-        dokumentti = dokumenttiService.generate(dokumentti, ktId);
-
-        return new ResponseEntity<>(tempOldMapper(dokumentti), HttpStatus.ACCEPTED);
+                                                              @PathVariable("revision") Integer revision) {
+        try {
+            Dokumentti dokumentti = dokumenttiService.getDto(id, Kieli.FI, revision, DokumenttiTyyppi.OPS);
+            dokumentti = dokumenttiService.generate(dokumentti, ktId);
+            return new ResponseEntity<>(tempOldMapper(dokumentti), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(path = "/generate/ylops/{id}/{revision}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DokumenttiOldDto> generateYlopsPdf(@PathVariable("id") Long id,
-                                                             @PathVariable("revision") Integer revision) throws DokumenttiException {
-
-        Dokumentti dokumentti = dokumenttiService.getDto(id, Kieli.FI, revision, DokumenttiTyyppi.TOTEUTUSSUUNNITELMA);
-        dokumentti = dokumenttiService.generate(dokumentti, null);
-
-        return new ResponseEntity<>(tempOldMapper(dokumentti), HttpStatus.ACCEPTED);
+                                                             @PathVariable("revision") Integer revision) {
+        try {
+            Dokumentti dokumentti = dokumenttiService.getDto(id, Kieli.FI, revision, DokumenttiTyyppi.TOTEUTUSSUUNNITELMA);
+            dokumentti = dokumenttiService.generate(dokumentti, null);
+            return new ResponseEntity<>(tempOldMapper(dokumentti), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 

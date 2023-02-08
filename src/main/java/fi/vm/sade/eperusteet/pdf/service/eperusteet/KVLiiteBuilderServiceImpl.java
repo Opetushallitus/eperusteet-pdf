@@ -2,15 +2,15 @@ package fi.vm.sade.eperusteet.pdf.service.eperusteet;
 
 import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiKVLiite;
-import fi.vm.sade.eperusteet.pdf.dto.common.OsaamistasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.OsaamistasoDto;
+import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiKVLiite;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteJulkinenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteTasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils;
-import fi.vm.sade.eperusteet.pdf.utils.LocalizedMessagesService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;

@@ -7,8 +7,8 @@ import fi.vm.sade.eperusteet.pdf.domain.common.enums.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteDto;
-import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
+import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -60,7 +60,7 @@ public class AmosaaServiceImpl implements AmosaaService {
                     opsId);
             return objectMapper.readValue(response.getBody(), OpetussuunnitelmaKaikkiDto.class);
         }  catch (Exception e) {
-            throw new BusinessRuleViolationException("Opetussuunnitelmaa ei saatu haettua.");
+            throw new ServiceException("Opetussuunnitelmaa ei saatu haettua: " + e.getMessage());
         }
     }
 
@@ -74,7 +74,7 @@ public class AmosaaServiceImpl implements AmosaaService {
                     id);
             return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
         } catch (Exception e) {
-            throw new BusinessRuleViolationException("Perustedataa ei saatu haettua.");
+            throw new ServiceException("Perustedataa ei saatu haettua: " + e.getMessage());
         }
     }
 
@@ -89,8 +89,7 @@ public class AmosaaServiceImpl implements AmosaaService {
 //                    perusteenosaId);
 //            return response.getBody();
 //        }  catch (Exception e) {
-//            // TODO: käsittele poikkeus
-//            return null;
+//            throw new ServiceException("Perusteenosaa ei saatu haettua: " + e.getMessage());
 //        }
 //    }
 
@@ -106,7 +105,7 @@ public class AmosaaServiceImpl implements AmosaaService {
                     tyyppi);
             return Arrays.asList(Objects.requireNonNull(response.getBody()));
         }  catch (Exception e) {
-            throw new BusinessRuleViolationException("Sisältöä ei saatu haettua.");
+            throw new ServiceException("Sisältöä ei saatu haettua: " + e.getMessage());
         }
     }
 
@@ -129,8 +128,7 @@ public class AmosaaServiceImpl implements AmosaaService {
                     String.class);
             return objectMapper.readValue(response.getBody(), OpetussuunnitelmaKaikkiDto.class);
         }  catch (Exception e) {
-            // TODO: käsittele poikkeus
-            return null;
+            throw new ServiceException("Opetussuunnitelmaa ei saatu haettua: " + e.getMessage());
         }
     }
 
@@ -139,10 +137,14 @@ public class AmosaaServiceImpl implements AmosaaService {
     public PerusteKaikkiDto getPerusteKaikkiDtoTemp(Long id) throws JsonProcessingException {
         // haetaan opintopolusta peruste
         String tempDevUrl = "https://eperusteet.testiopintopolku.fi/eperusteet-service/api/perusteet/4804100/kaikki";
-        ResponseEntity<String> response = restTemplate.exchange(tempDevUrl,
-                HttpMethod.GET,
-                httpEntity,
-                String.class);
-        return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(tempDevUrl,
+                    HttpMethod.GET,
+                    httpEntity,
+                    String.class);
+            return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
+        } catch (Exception e) {
+            throw new ServiceException("Perustedataa ei saatu haettua: " + e.getMessage());
+        }
     }
 }

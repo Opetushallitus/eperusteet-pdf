@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
+import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,7 +65,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
                     fileName);
             return Objects.requireNonNull(exchange.getBody()).getInputStream();
         }  catch (Exception e) {
-            throw new BusinessRuleViolationException("Liitetiedostoa ei saatu haettua.");
+            throw new ServiceException("Liitetiedostoa ei saatu haettua: " + e.getMessage());
         }
     }
 
@@ -81,7 +82,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
                     kieli);
             return response.getBody();
         }  catch (Exception e) {
-            throw new BusinessRuleViolationException("Dokumenttikuvaa ei saatu haettua.");
+            throw new ServiceException("Dokumenttikuvaa ei saatu haettua: " + e.getMessage());
         }
     }
 
@@ -96,7 +97,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
                     avain);
             return response.getBody();
         }  catch (Exception e) {
-            throw new BusinessRuleViolationException("Termiä ei saatu haettua.");
+            throw new ServiceException("Termiä ei saatu haettua: " + e.getMessage());
         }
     }
 
@@ -108,8 +109,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
         } else if (tyyppi.equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
             return ylopsServiceUrl + "/api/opetussuunnitelmat/{id}/termi/{avain}";
         } else {
-            // TODO: poikkeus
-            return "";
+            throw new BusinessRuleViolationException("Termi-urlin valinta epäonnistui.");
         }
     }
 
@@ -121,8 +121,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
         } else if (tyyppi.equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
             return ylopsServiceUrl + "/api/opetussuunnitelmat/{id}/kuvat/{fileName}";
         } else {
-            // TODO: poikkeus
-            return "";
+            throw new BusinessRuleViolationException("Liitetiedosto-urlin valinta epäonnistui.");
         }
     }
 
@@ -132,8 +131,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
         } else if (tyyppi.equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
             return ylopsServiceUrl + "/api/dokumentit/kuva?opsId={opsId}&tyyppi={tyyppi}&kieli={kieli}";
         } else {
-            // TODO: poikkeus
-            return "";
+            throw new BusinessRuleViolationException("Dokumenttikuva-urlin valinta epäonnistui.");
         }
     }
 }

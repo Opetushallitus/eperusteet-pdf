@@ -9,7 +9,6 @@ import fi.vm.sade.eperusteet.pdf.domain.common.enums.TemplateTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
-import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.repository.DokumenttiRepository;
 import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaDokumenttiBuilderService;
@@ -20,7 +19,6 @@ import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.external.YlopsService;
 import fi.vm.sade.eperusteet.pdf.service.ylops.YlopsDokumenttiBuilderService;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils;
-import fi.vm.sade.eperusteet.pdf.utils.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +91,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             setStarted(dokumentti);
             generateWithDto(dokumentti, ktId);
         } else {
-            throw new BusinessRuleViolationException("PDF-dokumentin luonti on jo käynissä");
+            throw new DokumenttiException("PDF-dokumentin luonti on jo käynnissä.");
         }
         return dokumentti;
     }
@@ -148,34 +146,34 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             log.info("PDF-dokumentti luotu.");
             setFinished(dokumentti, DokumenttiTila.VALMIS);
         } catch (Exception ex) {
-            log.error("PDF-dokumentin luonti epäonnistui.");
+            log.error("PDF-dokumentin luonti epäonnistui ({})", ex.getMessage());
             setFinished(dokumentti, DokumenttiTila.EPAONNISTUI);
             throw new DokumenttiException(ex.getMessage(), ex);
         }
     }
 
-    private byte[] createEperusteetPdfData(Dokumentti dokumentti) throws IOException, TransformerException, SAXException, ParserConfigurationException {
+    private byte[] createEperusteetPdfData(Dokumentti dokumentti) throws IOException, TransformerException, SAXException, ParserConfigurationException, DokumenttiException {
         //TODO: haetaan opintopolusta toistaiseksi testidataa, korvataan -> getPerusteKaikkiDto()
         PerusteKaikkiDto perusteData = eperusteetService.getPerusteKaikkiDtoTemp(dokumentti.getSisaltoId(), dokumentti.getRevision());
         Document doc = eperusteetDokumenttiBuilderService.generateXML(dokumentti, perusteData);
         return pdfService.xhtml2pdf(doc, generateMetaData(dokumentti, perusteData.getNimi()), TemplateTyyppi.PERUSTE);
     }
 
-    private byte[] createAmoseePdfData(Dokumentti dokumentti, Long ktId) throws IOException, TransformerException, SAXException, ParserConfigurationException {
+    private byte[] createAmoseePdfData(Dokumentti dokumentti, Long ktId) throws IOException, TransformerException, SAXException, ParserConfigurationException, DokumenttiException {
         //TODO: haetaan opintopolusta toistaiseksi testidataa, korvataan -> getOpetussuunnitelma()
-        OpetussuunnitelmaKaikkiDto ops = amosaaService.getOpetussuunnitelma(ktId, dokumentti.getSisaltoId());
+        OpetussuunnitelmaKaikkiDto ops = amosaaService.getOpetussuunnitelmaTemp(ktId, dokumentti.getSisaltoId());
         Document doc = amosaaDokumenttiBuilderService.generateXML(dokumentti, ktId, ops);
         return pdfService.xhtml2pdf(doc, generateMetaData(dokumentti, ops.getNimi()), TemplateTyyppi.AMOSAA);
     }
 
     private byte[] createYlopsPdfData(Dokumentti dokumentti) throws IOException, TransformerException, SAXException, ParserConfigurationException, DokumenttiException {
         //TODO: haetaan opintopolusta toistaiseksi testidataa, korvataan -> getOpetussuunnitelma()
-        OpetussuunnitelmaExportDto ops = ylopsService.getOpetussuunnitelma(dokumentti.getSisaltoId());
+        OpetussuunnitelmaExportDto ops = ylopsService.getOpetussuunnitelmaTemp(dokumentti.getSisaltoId());
         Document doc = ylopsDokumenttiBuilderService.generateXML(dokumentti, ops);
         return pdfService.xhtml2pdf(doc, generateMetaData(dokumentti, ops.getNimi()), TemplateTyyppi.YLOPS);
     }
 
-    private byte[] createEperusteetKVLiitePdfData(Dokumentti dokumentti) throws IOException, TransformerException, SAXException, ParserConfigurationException {
+    private byte[] createEperusteetKVLiitePdfData(Dokumentti dokumentti) throws IOException, TransformerException, SAXException, ParserConfigurationException, DokumenttiException {
         PerusteKaikkiDto perusteData = eperusteetService.getPerusteKaikkiDtoTemp(dokumentti.getSisaltoId(), dokumentti.getRevision());
         Document doc = kvLiiteBuilderService.generateXML(perusteData, dokumentti.getKieli());
         return pdfService.xhtml2pdf(doc, generateMetaData(dokumentti, perusteData.getNimi()), TemplateTyyppi.KVLIITE);

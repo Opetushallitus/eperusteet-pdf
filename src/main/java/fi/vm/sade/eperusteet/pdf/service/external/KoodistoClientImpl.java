@@ -1,21 +1,23 @@
 package fi.vm.sade.eperusteet.pdf.service.external;
 
 import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoKoodiDto;
-import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
+import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +50,17 @@ public class KoodistoClientImpl implements KoodistoClient {
     @Autowired
     HttpEntity httpEntity;
 
+    @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
+
     private RestTemplate restTemplate = new RestTemplate();
+
+    @PostConstruct
+    protected void init() {
+        restTemplate = restTemplateBuilder
+                .errorHandler(new RestTemplateResponseErrorHandler())
+                .build();
+    }
 
     @Override
     public List<KoodistoKoodiDto> getAll(String koodisto) {
@@ -63,8 +75,8 @@ public class KoodistoClientImpl implements KoodistoClient {
             ResponseEntity<KoodistoKoodiDto[]> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, KoodistoKoodiDto[].class);
             List<KoodistoKoodiDto> koodistoDtot = List.of(response.getBody());
             return koodistoDtot;
-        } catch (HttpServerErrorException ex) {
-            throw new BusinessRuleViolationException("koodistoa-ei-loytynyt");
+        } catch (Exception ex) {
+            throw new ServiceException("Koodistoa ei löytynyt " + ex.getMessage());
         }
     }
 
