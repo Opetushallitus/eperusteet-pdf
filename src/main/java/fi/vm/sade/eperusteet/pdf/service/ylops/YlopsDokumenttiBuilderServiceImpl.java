@@ -58,12 +58,12 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
 
 //    @Autowired
 //    private PerusopetusService perusopetusService;
-//
+
 //    @Autowired
 //    private LukioService lukioService;
-//
-    @Autowired
-    private Lops2019DokumenttiService lops2019DokumenttiService;
+
+//    @Autowired
+//    private Lops2019DokumenttiService lops2019DokumenttiService;
 
 //    @Autowired
 //    private YleisetOsuudetService yleisetOsuudetService;

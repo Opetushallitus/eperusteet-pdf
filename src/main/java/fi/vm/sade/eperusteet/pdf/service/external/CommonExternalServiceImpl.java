@@ -4,6 +4,7 @@ import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
+import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +64,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
                     fileName);
             return Objects.requireNonNull(exchange.getBody()).getInputStream();
         }  catch (Exception e) {
-            log.error("Liitetiedostoa ei saatu haettua.");
-            return null;
+            throw new BusinessRuleViolationException("Liitetiedostoa ei saatu haettua.");
         }
     }
 
@@ -81,8 +81,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
                     kieli);
             return response.getBody();
         }  catch (Exception e) {
-            log.error("Dokumenttikuvaa ei saatu haettua.");
-            return null;
+            throw new BusinessRuleViolationException("Dokumenttikuvaa ei saatu haettua.");
         }
     }
 
@@ -97,8 +96,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
                     avain);
             return response.getBody();
         }  catch (Exception e) {
-            log.error("Termiä ei saatu haettua.");
-            return null;
+            throw new BusinessRuleViolationException("Termiä ei saatu haettua.");
         }
     }
 

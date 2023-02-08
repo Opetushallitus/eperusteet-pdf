@@ -111,8 +111,11 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
         Element element = docBase.getDocument().createElement(kuvatyyppi.toString());
         Element img = docBase.getDocument().createElement("img");
 
-        byte[] kuva = commonExternalService.getDokumenttiKuva(dokumentti.getSisaltoId(), kuvatyyppi, dokumentti.getKieli(), dokumenttiTyyppi, ktId);
-        if (kuva == null) {
+        byte[] kuva;
+        try {
+            kuva = commonExternalService.getDokumenttiKuva(dokumentti.getSisaltoId(), kuvatyyppi, dokumentti.getKieli(), dokumenttiTyyppi, ktId);
+        } catch (Exception e) {
+            // kuvaa ei löytynyt, poistutaan
             return;
         }
 

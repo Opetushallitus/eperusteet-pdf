@@ -27,14 +27,15 @@ public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
             throw new ServiceException("Remote server error.");
         } else if (httpResponse.getStatusCode().series() == CLIENT_ERROR) {
             if (httpResponse.getStatusCode() == HttpStatus.NOT_FOUND) {
-                log.info("Ei löytynyt ({}).", httpResponse.getRawStatusCode());
+                log.warn("Ei löytynyt ({}).", httpResponse.getRawStatusCode());
             } else if (httpResponse.getStatusCode() == HttpStatus.BAD_REQUEST) {
-                log.info("Virheellinen pyyntö ({}).", httpResponse.getRawStatusCode());
+                log.warn("Virheellinen pyyntö ({}).", httpResponse.getRawStatusCode());
             } else if (httpResponse.getStatusCode() == HttpStatus.FORBIDDEN) {
-                log.info("Pyyntö estetty ({}).", httpResponse.getRawStatusCode());
+                log.warn("Pyyntö estetty ({}).", httpResponse.getRawStatusCode());
             } else if (httpResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                log.info("Ei oikeuksia ({}).", httpResponse.getRawStatusCode());
+                log.warn("Ei oikeuksia ({}).", httpResponse.getRawStatusCode());
             }
+            throw new BusinessRuleViolationException("Client error");
         }
     }
 }
