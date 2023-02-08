@@ -3,18 +3,22 @@ package fi.vm.sade.eperusteet.pdf.service.external;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaKevytDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiKappaleViiteDto;
+import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,29 +28,37 @@ public class YlopsServiceImpl implements YlopsService {
     private static final String API = "/api/";
     private static final String YLOPS_EXTERNAL_API = "/api/external/";
     private static final String YLOPS_PERUSTEET_API = "/api/perusteet/";
+    private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 
     @Value("${fi.vm.sade.eperusteet.pdf.ylops-service:''}")
     private String ylopsServiceUrl;
 
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
+
     @Autowired
     HttpEntity httpEntity;
 
-    private RestTemplate restTemplate = new RestTemplate();
-
-    private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
+    @PostConstruct
+    protected void init() {
+        restTemplate = restTemplateBuilder
+                .errorHandler(new RestTemplateResponseErrorHandler())
+                .build();
+    }
 
     @Override
-    public OpetussuunnitelmaDto getOpetussuunnitelma(Long opsId) {
+    public OpetussuunnitelmaExportDto getOpetussuunnitelma(Long opsId) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API + "opetussuunnitelmat/{opsId}",
+            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + YLOPS_EXTERNAL_API + "opetussuunnitelma/{opsId}",
                     HttpMethod.GET,
                     httpEntity,
                     String.class,
                     opsId);
-            return objectMapper.readValue(response.getBody(), OpetussuunnitelmaDto.class);
+            return objectMapper.readValue(response.getBody(), OpetussuunnitelmaExportDto.class);
         }  catch (Exception e) {
-            // TODO: käsittele poikkeus
-            return null;
+            throw new BusinessRuleViolationException("Opetussuunnitelmaa ei saatu haettua.");
         }
     }
 
@@ -61,8 +73,7 @@ public class YlopsServiceImpl implements YlopsService {
                     viiteId);
             return Collections.singletonList(objectMapper.readValue(response.getBody(), TekstiKappaleViiteDto.Matala.class));
         }  catch (Exception e) {
-            // TODO: käsittele poikkeus
-            return null;
+            throw new BusinessRuleViolationException("Tekstikappaleviitettä ei saatu haettua.");
         }
     }
 
@@ -77,8 +88,7 @@ public class YlopsServiceImpl implements YlopsService {
                     tekstikappaleId);
             return objectMapper.readValue(response.getBody(), TekstiKappaleViiteDto.class);
         }  catch (Exception e) {
-            // TODO: käsittele poikkeus
-            return null;
+            throw new BusinessRuleViolationException("Perustetekstikappaletta ei saatu haettua.");
         }
     }
 
@@ -92,8 +102,7 @@ public class YlopsServiceImpl implements YlopsService {
                     oid);
             return objectMapper.readValue(response.getBody(), OrganisaatioDto.class);
         }  catch (Exception e) {
-            // TODO: käsittele poikkeus
-            return null;
+            throw new BusinessRuleViolationException("Organisaatiota ei saatu haettua.");
         }
     }
 
@@ -108,8 +117,7 @@ public class YlopsServiceImpl implements YlopsService {
                     tiedostonimi);
             return response.getBody();
         }  catch (Exception e) {
-            // TODO: käsittele poikkeus
-            return null;
+            throw new BusinessRuleViolationException("Dokumenttiliitettä ei saatu haettua.");
         }
     }
 

@@ -5,6 +5,7 @@
 //import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusTyyppi;
 //import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
 //import fi.vm.sade.eperusteet.pdf.dto.ylops.KoodiDto;
+//import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 //import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OpintojaksoDto;
 //import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OpintojaksonKeskeinenSisaltoDto;
 //import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OpintojaksonModuuliDto;
@@ -102,7 +103,7 @@
 //            return;
 //        }
 //
-//        OpetussuunnitelmaKevytDto ops = docBase.getOps();
+//        OpetussuunnitelmaExportDto ops = docBase.getOps();
 //
 //        // Opintojaksot
 //        Map<String, List<Lops2019OpintojaksoDto>> opintojaksotMap = new HashMap<>();

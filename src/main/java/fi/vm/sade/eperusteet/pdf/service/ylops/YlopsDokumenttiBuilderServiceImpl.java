@@ -11,8 +11,8 @@ import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
 import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClientImpl;
@@ -62,8 +62,8 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
 //    @Autowired
 //    private LukioService lukioService;
 //
-//    @Autowired
-//    private Lops2019DokumenttiService lops2019DokumenttiService;
+    @Autowired
+    private Lops2019DokumenttiService lops2019DokumenttiService;
 
 //    @Autowired
 //    private YleisetOsuudetService yleisetOsuudetService;
@@ -81,7 +81,7 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
     private CommonExternalService commonExternalService;
 
     @Override
-    public Document generateXML(Dokumentti dokumentti, OpetussuunnitelmaDto ops) throws ParserConfigurationException, NullPointerException {
+    public Document generateXML(Dokumentti dokumentti, OpetussuunnitelmaExportDto ops) throws ParserConfigurationException, NullPointerException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();

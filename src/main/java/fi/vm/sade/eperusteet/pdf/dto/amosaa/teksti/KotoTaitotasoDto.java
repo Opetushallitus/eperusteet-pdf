@@ -17,8 +17,6 @@ public class KotoTaitotasoDto {
     private KoodiDto nimi;
     private LokalisoituTekstiDto tavoiteTarkennus;
     private LokalisoituTekstiDto sisaltoTarkennus;
-
-
     private LokalisoituTekstiDto tavoitteet;
     private LokalisoituTekstiDto kielenkayttotarkoitus;
     private LokalisoituTekstiDto aihealueet;

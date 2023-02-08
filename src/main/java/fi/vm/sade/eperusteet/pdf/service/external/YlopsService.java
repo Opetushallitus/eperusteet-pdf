@@ -1,8 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.service.external;
 
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaKevytDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiKappaleViiteDto;
 
@@ -10,7 +10,7 @@ import java.util.List;
 
 
 public interface YlopsService {
-    OpetussuunnitelmaDto getOpetussuunnitelma(Long opsId);
+    OpetussuunnitelmaExportDto getOpetussuunnitelma(Long opsId);
 
     OrganisaatioDto getOrganisaatio(String oid);
 

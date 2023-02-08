@@ -4,18 +4,21 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.SisaltoTyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.PerusteKaikkiDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.PerusteenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -26,19 +29,28 @@ public class AmosaaServiceImpl implements AmosaaService {
     private static final String AMOSAA_API = "/api/amosaa/";
     private static final String AMOSAA_EXTERNAL_API = "/api/external/";
     private static final String AMOSAA_PERUSTEET_API = "/api/perusteet/";
+    private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 
     @Value("${fi.vm.sade.eperusteet.pdf.amosaa-service:''}")
     private String amosaaServiceUrl;
 
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
+
     @Autowired
     HttpEntity httpEntity;
 
-    private RestTemplate restTemplate = new RestTemplate();
-
-    private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
+    @PostConstruct
+    protected void init() {
+        restTemplate = restTemplateBuilder
+                .errorHandler(new RestTemplateResponseErrorHandler())
+                .build();
+    }
 
     @Override
-    public OpetussuunnitelmaDto getOpetussuunnitelma(Long ktId, Long opsId) {
+    public OpetussuunnitelmaKaikkiDto getOpetussuunnitelma(Long ktId, Long opsId) {
         try {
             ResponseEntity<String> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_EXTERNAL_API  + "opetussuunnitelma/{ktId}/{opsId}",
                     HttpMethod.GET,
@@ -46,10 +58,9 @@ public class AmosaaServiceImpl implements AmosaaService {
                     String.class,
                     ktId,
                     opsId);
-            return objectMapper.readValue(response.getBody(), OpetussuunnitelmaDto.class);
+            return objectMapper.readValue(response.getBody(), OpetussuunnitelmaKaikkiDto.class);
         }  catch (Exception e) {
-            // TODO: käsittele poikkeus
-            return null;
+            throw new BusinessRuleViolationException("Opetussuunnitelmaa ei saatu haettua.");
         }
     }
 
@@ -63,26 +74,25 @@ public class AmosaaServiceImpl implements AmosaaService {
                     id);
             return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
         } catch (Exception e) {
-            // TODO: käsittele poikkeus
-            return null;
+            throw new BusinessRuleViolationException("Perustedataa ei saatu haettua.");
         }
     }
 
-    @Override
-    public PerusteenOsaDto getPerusteenOsa(Long perusteId, Long perusteenosaId) {
-        try {
-            ResponseEntity<PerusteenOsaDto> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_PERUSTEET_API  + "{perusteId}/perusteenosa/{perusteenosaId}",
-                    HttpMethod.GET,
-                    httpEntity,
-                    PerusteenOsaDto.class,
-                    perusteId,
-                    perusteenosaId);
-            return response.getBody();
-        }  catch (Exception e) {
-            // TODO: käsittele poikkeus
-            return null;
-        }
-    }
+//    @Override
+//    public PerusteenOsaDto getPerusteenOsa(Long perusteId, Long perusteenosaId) {
+//        try {
+//            ResponseEntity<PerusteenOsaDto> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_PERUSTEET_API  + "{perusteId}/perusteenosa/{perusteenosaId}",
+//                    HttpMethod.GET,
+//                    httpEntity,
+//                    PerusteenOsaDto.class,
+//                    perusteId,
+//                    perusteenosaId);
+//            return response.getBody();
+//        }  catch (Exception e) {
+//            // TODO: käsittele poikkeus
+//            return null;
+//        }
+//    }
 
     @Override
     public List<SisaltoViiteDto> getSisaltoviitteenTyypilla(Long ktId, Long opsId, SisaltoTyyppi tyyppi) {
@@ -96,8 +106,7 @@ public class AmosaaServiceImpl implements AmosaaService {
                     tyyppi);
             return Arrays.asList(Objects.requireNonNull(response.getBody()));
         }  catch (Exception e) {
-            // TODO: käsittele poikkeus
-            return null;
+            throw new BusinessRuleViolationException("Sisältöä ei saatu haettua.");
         }
     }
 
@@ -110,7 +119,7 @@ public class AmosaaServiceImpl implements AmosaaService {
 
     // TODO: remove temp funktio
     @Override
-    public OpetussuunnitelmaDto getOpetussuunnitelmaTemp(Long ktId, Long opsId) {
+    public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaTemp(Long ktId, Long opsId) {
         // haetaan opintopolusta opetussuunnitelma
         String tempDevUrl = "https://eperusteet.testiopintopolku.fi/eperusteet-amosaa-service/api/julkinen/koulutustoimijat/98276/opetussuunnitelmat/2096885/julkaisu";
         try {
@@ -118,7 +127,7 @@ public class AmosaaServiceImpl implements AmosaaService {
                     HttpMethod.GET,
                     httpEntity,
                     String.class);
-            return objectMapper.readValue(response.getBody(), OpetussuunnitelmaDto.class);
+            return objectMapper.readValue(response.getBody(), OpetussuunnitelmaKaikkiDto.class);
         }  catch (Exception e) {
             // TODO: käsittele poikkeus
             return null;

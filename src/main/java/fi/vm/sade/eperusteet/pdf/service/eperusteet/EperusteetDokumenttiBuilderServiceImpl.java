@@ -476,7 +476,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         Element tbody = docBase.getDocument().createElement("tbody");
         taulukko.appendChild(tbody);
 
-        //TODO: rakenne takaisin
+        //TODO: odottaa rakenteen korjausta
 //        addRakenneOsa(docBase, rakenne, tbody, 0);
 
         docBase.getGenerator().increaseNumber();
@@ -616,7 +616,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             return 0;
         });
 
-        //TODO: fix this piece of...
+        //TODO: vaatii suoritustavan
 //        Optional.ofNullable(docBase.getSisalto())
 //                .map(PerusteenOsaViiteDto::getSuoritustapa)
 //                .map(SuoritustapaDto::getSuoritustapakoodi)
@@ -651,7 +651,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                         osa.getAmmattitaitovaatimukset2019(),
                         osa.getAmmattitaitovaatimuksetLista(),
                         osa.getAmmattitaitovaatimukset());
-                // TODO: fix
+                // TODO: fix referenssi
 //                addGeneerinenArviointi(docBase, osa.getGeneerinenArviointiasteikko());
                 addArviointi(docBase, osa.getArviointi(), tyyppi);
                 addValmatelmaSisalto(docBase, osa.getValmaTelmaSisalto());
@@ -682,7 +682,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         if (parent == null) {
             return;
         }
-//            TODO: fix
+//            TODO: fix lapsipuutos
 //        for (PerusteenOsaViiteDto lapsi : parent.getLapset()) {
 //            PerusteenOsaDto po = lapsi.getPerusteenOsa();
 //            if (po == null) {
@@ -725,7 +725,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         if (parent == null) {
             return;
         }
-//             TODO: fix
+//             TODO: fix lapsipuutos
 //        for (PerusteenOsaViiteDto lapsi : parent.getLapset()) {
 //            PerusteenOsaDto po = lapsi.getPerusteenOsa();
 //            if (po == null) {
@@ -1398,8 +1398,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     private void addArviointi(
             DokumenttiPeruste docBase,
             ArviointiDto arviointi,
-            TutkinnonOsaTyyppi tyyppi
-    ) {
+            TutkinnonOsaTyyppi tyyppi) {
         if (arviointi == null) {
             return;
         }

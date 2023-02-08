@@ -4,21 +4,24 @@ import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
+import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class CommonExternalServiceImpl implements CommonExternalService{
 
@@ -34,10 +37,20 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     private static final String AMOSAA_API = "/api/amosaa/";
     private static final String EPERUSTEET_API = "/api/perusteet/";
 
-    private RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
 
     @Autowired
     HttpEntity httpEntity;
+
+    @PostConstruct
+    protected void init() {
+        restTemplate = restTemplateBuilder
+                .errorHandler(new RestTemplateResponseErrorHandler())
+                .build();
+    }
 
     @Override
     public InputStream getLiitetiedosto(Long id, UUID fileName, DokumenttiTyyppi tyyppi) {
@@ -50,7 +63,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
                     fileName);
             return Objects.requireNonNull(exchange.getBody()).getInputStream();
         }  catch (Exception e) {
-            // TODO: käsittele poikkeus
+            log.error("Liitetiedostoa ei saatu haettua.");
             return null;
         }
     }
@@ -63,16 +76,12 @@ public class CommonExternalServiceImpl implements CommonExternalService{
                     httpEntity,
                     byte[].class,
                     opsId,
+                    opsId,
                     kuvatyyppi,
                     kieli);
             return response.getBody();
-        }  catch (HttpClientErrorException | HttpServerErrorException e) {
-            if (e.getStatusCode().is4xxClientError()) {
-
-            } else if (e.getStatusCode().is5xxServerError()) {
-
-            }
-            // TODO: käsittele poikkeus
+        }  catch (Exception e) {
+            log.error("Dokumenttikuvaa ei saatu haettua.");
             return null;
         }
     }
@@ -88,7 +97,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
                     avain);
             return response.getBody();
         }  catch (Exception e) {
-            // TODO: käsittele poikkeus
+            log.error("Termiä ei saatu haettua.");
             return null;
         }
     }

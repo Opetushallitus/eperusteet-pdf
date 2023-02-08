@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.service.amosaa;
 
 import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -11,6 +11,6 @@ import java.io.IOException;
 
 public interface AmosaaDokumenttiBuilderService {
 
-    Document generateXML(Dokumentti dokumentti, Long ktId, OpetussuunnitelmaDto ops)
+    Document generateXML(Dokumentti dokumentti, Long ktId, OpetussuunnitelmaKaikkiDto ops)
             throws ParserConfigurationException, IOException, SAXException, TransformerException;
 }

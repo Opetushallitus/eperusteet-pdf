@@ -6,8 +6,9 @@ import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.TemplateTyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.repository.DokumenttiRepository;
@@ -162,14 +163,14 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     private byte[] createAmoseePdfData(Dokumentti dokumentti, Long ktId) throws IOException, TransformerException, SAXException, ParserConfigurationException {
         //TODO: haetaan opintopolusta toistaiseksi testidataa, korvataan -> getOpetussuunnitelma()
-        OpetussuunnitelmaDto ops = amosaaService.getOpetussuunnitelmaTemp(ktId, dokumentti.getSisaltoId());
+        OpetussuunnitelmaKaikkiDto ops = amosaaService.getOpetussuunnitelma(ktId, dokumentti.getSisaltoId());
         Document doc = amosaaDokumenttiBuilderService.generateXML(dokumentti, ktId, ops);
         return pdfService.xhtml2pdf(doc, generateMetaData(dokumentti, ops.getNimi()), TemplateTyyppi.AMOSAA);
     }
 
     private byte[] createYlopsPdfData(Dokumentti dokumentti) throws IOException, TransformerException, SAXException, ParserConfigurationException, DokumenttiException {
         //TODO: haetaan opintopolusta toistaiseksi testidataa, korvataan -> getOpetussuunnitelma()
-        fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaDto ops = ylopsService.getOpetussuunnitelma(dokumentti.getSisaltoId());
+        OpetussuunnitelmaExportDto ops = ylopsService.getOpetussuunnitelma(dokumentti.getSisaltoId());
         Document doc = ylopsDokumenttiBuilderService.generateXML(dokumentti, ops);
         return pdfService.xhtml2pdf(doc, generateMetaData(dokumentti, ops.getNimi()), TemplateTyyppi.YLOPS);
     }
