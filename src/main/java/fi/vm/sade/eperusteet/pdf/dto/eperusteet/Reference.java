@@ -3,7 +3,6 @@ package fi.vm.sade.eperusteet.pdf.dto.eperusteet;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.ReferenceableEntity;
 import lombok.Data;
 
 import java.util.UUID;

@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.HenkiloOikeus;
+import fi.vm.sade.eperusteet.pdf.dto.enums.HenkiloOikeus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

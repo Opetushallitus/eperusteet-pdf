@@ -1,16 +1,16 @@
 package fi.vm.sade.eperusteet.pdf.service.ylops;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutustyyppiToteutus;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutustyyppiToteutus;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;

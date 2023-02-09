@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.ops;
 
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.AikatauluTapahtuma;
+import fi.vm.sade.eperusteet.pdf.dto.enums.AikatauluTapahtuma;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

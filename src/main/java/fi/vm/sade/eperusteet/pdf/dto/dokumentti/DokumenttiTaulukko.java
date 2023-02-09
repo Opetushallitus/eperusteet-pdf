@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.dokumentti;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiRiviTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiRiviTyyppi;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
 import org.w3c.dom.Document;

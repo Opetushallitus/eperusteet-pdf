@@ -1,7 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoKielitaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoLaajaAlainenOsaaminenDto;
@@ -12,6 +11,7 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.TuvaLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SuorituspolkuDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TutkinnonosaDto;
+import fi.vm.sade.eperusteet.pdf.dto.enums.SisaltoTyyppi;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

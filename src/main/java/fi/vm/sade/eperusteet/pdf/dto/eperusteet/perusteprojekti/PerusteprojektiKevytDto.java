@@ -1,10 +1,9 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.perusteprojekti;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutustyyppiToteutus;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.ProjektiTila;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.Diaarinumero;
+import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutustyyppiToteutus;
+import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.ProjektiTila;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteBaseDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteVersionDto;
 import lombok.AllArgsConstructor;
@@ -32,15 +31,4 @@ public class PerusteprojektiKevytDto implements Serializable  {
     private Date luotu;
     private PerusteVersionDto globalVersion;
     private PerusteBaseDto peruste;
-
-    public PerusteprojektiKevytDto(Long id, String nimi, Diaarinumero perusteDiaari, Diaarinumero diaarinumero,
-                                   String koulutustyyppi, PerusteTyyppi tyyppi, ProjektiTila tila) {
-        this.id = id;
-        this.nimi = nimi;
-        this.tila = tila;
-        this.perusteendiaarinumero = (perusteDiaari != null) ? perusteDiaari.toString() : null;
-        this.diaarinumero = (diaarinumero != null) ? diaarinumero.toString() : null;
-        this.koulutustyyppi = koulutustyyppi;
-        this.tyyppi = tyyppi;
-    }
 }

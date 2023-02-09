@@ -2,9 +2,9 @@ package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.lukio.osaviitteet;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.NavigationType;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteTila;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteenOsaTunniste;
+import fi.vm.sade.eperusteet.pdf.dto.enums.NavigationType;
+import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteTila;
+import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -1,10 +1,10 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
 import lombok.extern.slf4j.Slf4j;

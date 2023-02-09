@@ -1,9 +1,9 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.liite.LiiteDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
+import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.utils.domain.utils.Kieli;
 import lombok.AllArgsConstructor;
 import lombok.Data;

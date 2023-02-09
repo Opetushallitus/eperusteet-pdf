@@ -2,8 +2,8 @@ package fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusOsanKoulutustyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusOsanTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusOsanKoulutustyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusOsanTyyppi;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -2,7 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.ylops.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Omistussuhde;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Omistussuhde;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.Reference;
 import lombok.AllArgsConstructor;
 import lombok.Data;

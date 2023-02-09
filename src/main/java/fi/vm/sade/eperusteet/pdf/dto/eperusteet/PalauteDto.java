@@ -2,7 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.eperusteet;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.PalauteStatus;
+import fi.vm.sade.eperusteet.pdf.dto.enums.PalauteStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

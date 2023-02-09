@@ -1,0 +1,7 @@
+package fi.vm.sade.eperusteet.pdf.dto.enums;
+
+public enum DokumenttiRiviTyyppi {
+    HEADER,
+    SUBHEADER,
+    DEFAULT
+}

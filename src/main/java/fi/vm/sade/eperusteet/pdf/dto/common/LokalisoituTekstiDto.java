@@ -3,8 +3,7 @@ package fi.vm.sade.eperusteet.pdf.dto.common;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.TekstiPalanen;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
@@ -141,11 +140,6 @@ public class LokalisoituTekstiDto {
         return id == null ? null : new LokalisoituTekstiDto(id, null, emptyMap);
     }
 
-    @SuppressWarnings("DtoClassesNotContainEntities")
-    public static LokalisoituTekstiDto localized(TekstiPalanen palanen) {
-        return palanen == null ? null : new LokalisoituTekstiDto(palanen.getId(), palanen.getTunniste(), palanen.getTeksti());
-    }
-
     public interface LocalizedFunction<F> extends Function<F, LokalisoituTekstiDto> {
         default LocalizedFunction<F> concat(String constant) {
             return from -> this.apply(from).concat(anyKieli -> constant);
@@ -153,11 +147,6 @@ public class LokalisoituTekstiDto {
         default LocalizedFunction<F> concat(LokalisoituTekstiDto dto) {
             return from -> this.apply(from).concat(dto::get);
         }
-    }
-
-    @SuppressWarnings("DtoClassesNotContainEntities")
-    public static<T> LocalizedFunction<T> localized(Function<T,TekstiPalanen> s) {
-        return from -> localized(s.apply(from));
     }
 
     static public void tarkistaLokalisoituTekstiDto(

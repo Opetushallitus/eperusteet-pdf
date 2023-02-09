@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.ylops;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
 import org.w3c.dom.Document;

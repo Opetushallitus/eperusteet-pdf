@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Vuosiluokka;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Vuosiluokka;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ReferenceableDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

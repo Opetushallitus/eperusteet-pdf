@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
 
 public interface DokumenttiStateService {
 

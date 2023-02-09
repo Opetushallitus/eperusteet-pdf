@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.common;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.LaajuusYksikko;
+import fi.vm.sade.eperusteet.pdf.dto.enums.LaajuusYksikko;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

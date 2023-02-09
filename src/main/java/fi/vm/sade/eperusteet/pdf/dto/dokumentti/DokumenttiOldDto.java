@@ -1,18 +1,18 @@
 package fi.vm.sade.eperusteet.pdf.dto.dokumentti;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTila;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiVirhe;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.GeneratorVersion;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTila;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiVirhe;
+import fi.vm.sade.eperusteet.pdf.dto.enums.GeneratorVersion;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Suoritustapakoodi;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-//TODO: luokka vain devausta varten, kunnes kälillä on uusi dto saatavilla
+//TODO: luokka vain devausta varten, kunnes kälillä on uusi dto saatavilla. Poistetaan koko luokka myöhemmin.
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -1,9 +1,9 @@
 package fi.vm.sade.eperusteet.pdf.resource;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiOldDto;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

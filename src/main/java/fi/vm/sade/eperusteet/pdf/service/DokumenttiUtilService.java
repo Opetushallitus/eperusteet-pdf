@@ -1,9 +1,9 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 
 public interface DokumenttiUtilService {
     void buildImages(DokumenttiBase docBase, Long sisaltoId, DokumenttiTyyppi tyyppi);

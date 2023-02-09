@@ -1,8 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.perustedto;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutustyyppiToteutus;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutustyyppiToteutus;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.digi;
 
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.DigitaalinenOsaaminenTaso;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DigitaalinenOsaaminenTaso;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

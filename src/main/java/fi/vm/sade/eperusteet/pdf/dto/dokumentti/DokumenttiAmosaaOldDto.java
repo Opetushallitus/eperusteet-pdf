@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.dokumentti;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+//TODO: luokka vain devausta varten, kunnes kälillä on uusi dto saatavilla. Poistetaan koko luokka myöhemmin.
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DokumenttiAmosaaOldDto {
 //    private Long id;

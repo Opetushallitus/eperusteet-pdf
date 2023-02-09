@@ -1,8 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.OpsTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.QueryDto;
+import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.OpsTyyppi;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

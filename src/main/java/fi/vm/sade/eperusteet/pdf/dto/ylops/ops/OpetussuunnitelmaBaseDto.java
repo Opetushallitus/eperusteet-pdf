@@ -1,14 +1,14 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.ops;
 
-import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutustyyppiToteutus;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Tila;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Tyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.annotation.Identifiable;
-import fi.vm.sade.eperusteet.pdf.domain.ylops.OpsIdentifiable;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutustyyppiToteutus;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Tila;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Tyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.annotation.Identifiable;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.OpsIdentifiable;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

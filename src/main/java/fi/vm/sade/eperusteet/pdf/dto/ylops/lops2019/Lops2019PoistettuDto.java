@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019;
 
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.PoistetunTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.PoistetunTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.Reference;
 import lombok.AllArgsConstructor;
 import lombok.Data;

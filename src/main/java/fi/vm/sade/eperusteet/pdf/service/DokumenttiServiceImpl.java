@@ -1,15 +1,16 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTila;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.TemplateTyyppi;
+import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTila;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.dto.enums.TemplateTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
+import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
 import fi.vm.sade.eperusteet.pdf.repository.DokumenttiRepository;
 import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaDokumenttiBuilderService;
 import fi.vm.sade.eperusteet.pdf.service.eperusteet.EperusteetDokumenttiBuilderService;
@@ -130,17 +131,19 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Transactional
     @Override
     public void generateWithDto(Dokumentti dokumentti, Long ktId) throws DokumenttiException {
-        log.info("Luodaan PDF-dokumenttia (id={}, {}, {})...", dokumentti.getSisaltoId(), dokumentti.getTyyppi(), dokumentti.getKieli());
+        log.info("Luodaan PDF-dokumenttia (id={}, {}, {})", dokumentti.getSisaltoId(), dokumentti.getTyyppi(), dokumentti.getKieli());
 
         try {
-            if (dokumentti.getTyyppi().equals(DokumenttiTyyppi.PERUSTE)) {
+            if (DokumenttiTyyppi.PERUSTE.equals(dokumentti.getTyyppi())) {
                 dokumentti.setData(createEperusteetPdfData(dokumentti));
-            } else if (dokumentti.getTyyppi().equals(DokumenttiTyyppi.OPS)) {
+            } else if (DokumenttiTyyppi.OPS.equals(dokumentti.getTyyppi())) {
                 dokumentti.setData(createAmoseePdfData(dokumentti, ktId));
-            } else if (dokumentti.getTyyppi().equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
+            } else if (DokumenttiTyyppi.TOTEUTUSSUUNNITELMA.equals(dokumentti.getTyyppi())) {
                 dokumentti.setData(createYlopsPdfData(dokumentti));
-            } else {
+            } else if (DokumenttiTyyppi.KVLIITE.equals(dokumentti.getTyyppi())){
                 dokumentti.setData(createEperusteetKVLiitePdfData(dokumentti));
+            } else {
+                throw new ServiceException("Tuntematon dokumenttityyppi");
             }
 
             log.info("PDF-dokumentti luotu.");

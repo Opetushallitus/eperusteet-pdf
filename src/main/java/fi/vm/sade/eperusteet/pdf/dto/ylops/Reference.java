@@ -2,7 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.ylops;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import fi.vm.sade.eperusteet.pdf.domain.eperusteet.ReferenceableEntity;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ReferenceableEntity;
 import lombok.EqualsAndHashCode;
 
 import java.util.UUID;

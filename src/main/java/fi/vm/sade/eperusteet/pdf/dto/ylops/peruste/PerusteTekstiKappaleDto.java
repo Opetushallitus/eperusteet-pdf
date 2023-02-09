@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.peruste;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Tila;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Tila;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.perustedto.PerusteenLokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

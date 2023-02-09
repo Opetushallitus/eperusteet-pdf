@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface LocalizedMessagesService {

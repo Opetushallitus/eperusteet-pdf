@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.common;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.RakenneModuuliRooli;
+import fi.vm.sade.eperusteet.pdf.dto.enums.RakenneModuuliRooli;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.OsaamisalaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.VersionedDto;

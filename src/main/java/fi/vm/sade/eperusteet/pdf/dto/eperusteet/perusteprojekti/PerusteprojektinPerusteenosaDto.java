@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.perusteprojekti;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteTyyppi;
-import fi.vm.sade.eperusteet.pdf.domain.common.enums.ProjektiTila;
+import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.ProjektiTila;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
