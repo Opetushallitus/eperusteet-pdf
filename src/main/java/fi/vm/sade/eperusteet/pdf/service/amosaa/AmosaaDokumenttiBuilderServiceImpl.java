@@ -3,9 +3,6 @@ package fi.vm.sade.eperusteet.pdf.service.amosaa;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
 import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoKoodiDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoMetadataDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Suoritustapakoodi;
@@ -19,11 +16,9 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.ArvioinninKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.ArviointiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoLaajaAlaisenOsaamisenAlueDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.MuodostumisSaantoDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.OsaamisenTavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.OsaamistasonKriteeriDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.PerusteKaikkiDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.SuoritustapaLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.TutkinnonOsaViiteSuppeaDto;
@@ -44,7 +39,12 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SuorituspolkuExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoMetadataDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.MuodostumisSaantoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.OsaamistasoDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiAmosaa;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiRivi;
@@ -1328,12 +1328,12 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                     String avain = node.getAttributes().getNamedItem("data-viite").getNodeValue();
 
                     if (docBase.getOpetussuunnitelma() != null && docBase.getOpetussuunnitelma().getId() != null) {
-                        TermiDto termiDto = commonExternalService.getTermi(docBase.getOpetussuunnitelma().getKoulutustoimija().getId(), avain, docBase.getDokumentti().getTyyppi());
+                        TermiDto termi = dokumenttiUtilService.getTermiFromExternalService(docBase.getOpetussuunnitelma().getKoulutustoimija().getId(), avain, docBase.getDokumentti().getTyyppi());
 
-                        if (termiDto != null && termiDto.getAlaviite() != null && termiDto.getAlaviite() && termiDto.getSelitys() != null) {
+                        if (termi != null && termi.getAlaviite() != null && termi.getAlaviite() && termi.getSelitys() != null) {
                             element.setAttribute("number", String.valueOf(noteNumber));
 
-                            LokalisoituTekstiDto tekstiDto = termiDto.getSelitys();
+                            LokalisoituTekstiDto tekstiDto = termi.getSelitys();
                             String selitys = getTextString(docBase, tekstiDto).replaceAll("<[^>]+>", "");
                             element.setAttribute("text", selitys);
                             noteNumber++;

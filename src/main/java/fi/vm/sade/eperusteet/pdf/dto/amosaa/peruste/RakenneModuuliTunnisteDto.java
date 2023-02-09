@@ -2,6 +2,8 @@ package fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.ops.SuorituspolkuRiviDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.AbstractRakenneOsaDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RakenneModuuliTunnisteDto extends RakenneModuuliDto{
+public class RakenneModuuliTunnisteDto extends RakenneModuuliDto {
 
     private Set<String> koodit;
 

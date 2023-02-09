@@ -2,7 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.CachedPerusteBaseDto;

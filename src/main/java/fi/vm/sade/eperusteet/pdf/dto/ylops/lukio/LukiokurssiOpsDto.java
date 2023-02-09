@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.lukio;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lukio.LukiokurssiPerusteDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiosaDto;
 import lombok.AllArgsConstructor;

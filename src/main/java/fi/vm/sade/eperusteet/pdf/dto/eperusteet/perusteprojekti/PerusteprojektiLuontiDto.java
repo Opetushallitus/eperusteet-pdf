@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.perusteprojekti;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.LaajuusYksikko;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteTyyppi;

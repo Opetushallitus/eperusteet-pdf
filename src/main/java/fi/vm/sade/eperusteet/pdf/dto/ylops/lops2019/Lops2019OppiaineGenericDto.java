@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet.Lops2019OppiaineBaseDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet.moduuli.Lops2019ModuuliBaseDto;
 import lombok.AllArgsConstructor;

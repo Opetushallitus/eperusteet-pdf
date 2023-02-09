@@ -85,7 +85,7 @@ public class EperusteetServiceImpl implements EperusteetService {
                     ArviointiAsteikkoDto.class,
                     id);
             return response.getBody();
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new ServiceException("Arviointiasteikkoa ei saatu haettua: " + e.getMessage());
         }
     }

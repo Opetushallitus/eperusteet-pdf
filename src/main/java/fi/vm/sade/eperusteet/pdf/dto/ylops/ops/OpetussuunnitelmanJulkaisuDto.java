@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.ops;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.JulkaisuTila;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.kayttaja.KayttajanTietoDto;
 import lombok.AllArgsConstructor;

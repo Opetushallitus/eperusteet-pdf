@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti;
 
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.ops.SuorituspolkuRiviJulkinenDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.RakenneModuuliDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

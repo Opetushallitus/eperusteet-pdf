@@ -1,9 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.eperusteet;
 
 import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoKoodiDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoMetadataDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiRiviTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusTyyppi;
@@ -13,6 +10,12 @@ import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.TavoiteAlueTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.TutkinnonOsaTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.common.AbstractRakenneOsaDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoMetadataDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.MuodostumisSaantoDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiPeruste;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiRivi;
@@ -39,10 +42,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaAlueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaamisenTavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.ValmaTelmaSisaltoDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.MuodostumisSaantoDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.KoulutuksenOsaDto;
@@ -61,7 +61,6 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TaiteenalaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TekstiOsaDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
-import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
 import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClient;
 import fi.vm.sade.eperusteet.pdf.utils.CharapterNumberGenerator;
@@ -120,9 +119,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
     @Autowired
     private DokumenttiUtilService dokumenttiUtilService;
-
-    @Autowired
-    private CommonExternalService commonExternalService;
 
     @Override
     public Document generateXML(Dokumentti dokumentti, PerusteKaikkiDto perusteData) throws ParserConfigurationException, IOException {
@@ -428,7 +424,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                     String avain = node.getAttributes().getNamedItem("data-viite").getNodeValue();
 
                     if (docBase.getPeruste() != null && docBase.getPeruste().getId() != null) {
-                        TermiDto termi = commonExternalService.getTermi(docBase.getPeruste().getId(), avain, docBase.getDokumentti().getTyyppi());
+                        TermiDto termi = dokumenttiUtilService.getTermiFromExternalService(docBase.getPeruste().getId(), avain, docBase.getDokumentti().getTyyppi());
 
                         if (termi != null && termi.getAlaviite() && termi.getSelitys() != null) {
                             element.setAttribute("number", String.valueOf(noteNumber));

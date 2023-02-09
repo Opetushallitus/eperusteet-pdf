@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne;
+package fi.vm.sade.eperusteet.pdf.dto.common;
 
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.LaajuusYksikko;
 import lombok.AllArgsConstructor;

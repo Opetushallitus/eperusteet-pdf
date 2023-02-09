@@ -7,14 +7,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.AbstractRakenneOsaDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.util.PerusteenOsaUpdateDto;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 public class InitJacksonConverter {
     static public MappingModule createMappingModule() {
         MappingModule module = new MappingModule();
-        // TODO: toistaiseksi hoitaa vain amosaan AbstractRakenneOsaDto:n
         module.addDeserializer(AbstractRakenneOsaDto.class, new AbstractRakenneOsaDeserializer());
         module.addDeserializer(PerusteenOsaUpdateDto.class, new PerusteenOsaUpdateDtoDeserializer());
         return module;

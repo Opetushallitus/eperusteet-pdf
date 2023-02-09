@@ -2,7 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusOsanKoulutustyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusOsanTyyppi;
 import lombok.AllArgsConstructor;

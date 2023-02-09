@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.pdf.service;
 import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kuvatyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
@@ -131,6 +132,16 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
 
         element.appendChild(img);
         head.appendChild(element);
+    }
+
+    @Override
+    public TermiDto getTermiFromExternalService(Long id, String avain, DokumenttiTyyppi tyyppi) {
+        try {
+            return commonExternalService.getTermi(id, avain, tyyppi);
+        } catch (Exception e) {
+            log.info("Termiä ei löytynyt id:lle '{}', avain='{}'", id, avain);
+        }
+        return null;
     }
 
     private UUID ylopsUUIDHandling(String id, String src) {

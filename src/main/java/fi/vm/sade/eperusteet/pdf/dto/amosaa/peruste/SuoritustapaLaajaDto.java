@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.LaajuusYksikko;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -35,6 +35,7 @@ public class PdfResource {
             dokumentti = dokumenttiService.generate(dokumentti, null);
             return new ResponseEntity<>(tempOldMapper(dokumentti), HttpStatus.ACCEPTED);
         } catch (Exception e) {
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -47,6 +48,7 @@ public class PdfResource {
             dokumentti = dokumenttiService.generate(dokumentti, null);
             return new ResponseEntity<>(tempOldMapper(dokumentti), HttpStatus.ACCEPTED);
         } catch (Exception e) {
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

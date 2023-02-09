@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.pdf.domain.common;
+package fi.vm.sade.eperusteet.pdf.dto.common;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -146,7 +146,7 @@ public class LokalisoituTekstiDto {
         return palanen == null ? null : new LokalisoituTekstiDto(palanen.getId(), palanen.getTunniste(), palanen.getTeksti());
     }
 
-    public interface LocalizedFunction<F> extends Function<F,LokalisoituTekstiDto> {
+    public interface LocalizedFunction<F> extends Function<F, LokalisoituTekstiDto> {
         default LocalizedFunction<F> concat(String constant) {
             return from -> this.apply(from).concat(anyKieli -> constant);
         }

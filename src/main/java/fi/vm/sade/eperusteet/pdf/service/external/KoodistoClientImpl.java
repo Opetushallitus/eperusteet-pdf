@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.external;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoKoodiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;

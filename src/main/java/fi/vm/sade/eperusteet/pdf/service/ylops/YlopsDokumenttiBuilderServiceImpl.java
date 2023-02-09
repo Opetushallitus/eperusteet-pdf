@@ -1,9 +1,9 @@
 package fi.vm.sade.eperusteet.pdf.service.ylops;
 
 import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoKoodiDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoMetadataDto;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoMetadataDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutustyyppiToteutus;
@@ -298,11 +298,11 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
     }
 
     private TermiDto getTermi(Long opsId, String avain) {
-        TermiDto termiDto = commonExternalService.getTermi(opsId, avain, DokumenttiTyyppi.TOTEUTUSSUUNNITELMA);
+        TermiDto termiDto = dokumenttiUtilService.getTermiFromExternalService(opsId, avain, DokumenttiTyyppi.TOTEUTUSSUUNNITELMA);
 
         if (termiDto == null) {
             log.info("Termiä ei löytynyt ylopsista avaimella '{}'. Etsitään eperusteista.", avain);
-            termiDto = commonExternalService.getTermi(opsId, avain, DokumenttiTyyppi.PERUSTE);
+            termiDto = dokumenttiUtilService.getTermiFromExternalService(opsId, avain, DokumenttiTyyppi.PERUSTE);
         }
         return termiDto;
     }

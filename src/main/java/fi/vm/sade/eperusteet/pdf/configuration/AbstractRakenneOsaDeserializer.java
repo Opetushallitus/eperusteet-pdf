@@ -6,9 +6,9 @@ import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.AbstractRakenneOsaDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.RakenneOsaDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.AbstractRakenneOsaDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

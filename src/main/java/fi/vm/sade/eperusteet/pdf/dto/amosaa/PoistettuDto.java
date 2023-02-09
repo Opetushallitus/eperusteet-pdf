@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.SisaltoTyyppi;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.eperusteet;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.OsaamistasoDto;

@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.peruste;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutustyyppiToteutus;

@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.domain.amosaa;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.utils.domain.utils.Kieli;
 import lombok.Getter;
 import org.hibernate.annotations.Cache;

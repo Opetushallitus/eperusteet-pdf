@@ -1,7 +1,6 @@
-package fi.vm.sade.eperusteet.pdf.domain.common;
+package fi.vm.sade.eperusteet.pdf.dto.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -2,7 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Validointi;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.ValidationCategory;
 import fi.vm.sade.eperusteet.pdf.domain.ylops.validointi.Validable;
 import fi.vm.sade.eperusteet.pdf.utils.DtoMapper;

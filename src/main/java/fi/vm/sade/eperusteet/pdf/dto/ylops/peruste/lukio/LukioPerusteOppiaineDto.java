@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lukio;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.LukiokurssiTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.PerusteTekstiOsaDto;
 import lombok.AllArgsConstructor;

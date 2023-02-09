@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
 import fi.vm.sade.eperusteet.pdf.domain.common.Dokumentti;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.Kieli;

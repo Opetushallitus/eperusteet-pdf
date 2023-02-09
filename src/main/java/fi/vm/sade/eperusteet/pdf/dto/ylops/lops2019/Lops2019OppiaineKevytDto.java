@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019;
 
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.KoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ReferenceableDto;

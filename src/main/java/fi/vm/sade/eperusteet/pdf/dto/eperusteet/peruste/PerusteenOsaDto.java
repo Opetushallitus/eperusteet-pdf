@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteTila;
 import fi.vm.sade.eperusteet.pdf.domain.common.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ReferenceableDto;
@@ -47,7 +47,7 @@ public abstract class PerusteenOsaDto implements ReferenceableDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean kaannettava;
 
-    public PerusteenOsaDto( LokalisoituTekstiDto nimi, PerusteTila tila, PerusteenOsaTunniste tunniste) {
+    public PerusteenOsaDto(LokalisoituTekstiDto nimi, PerusteTila tila, PerusteenOsaTunniste tunniste) {
         this.nimi = nimi;
         this.tila = tila;
         this.tunniste = tunniste;

@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.ArviointiDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

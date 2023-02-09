@@ -21,7 +21,7 @@ public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
     @Override
     public void handleError(ClientHttpResponse httpResponse) throws IOException {
         if (httpResponse.getStatusCode().series() == SERVER_ERROR) {
-            throw new ServiceException("Remote server error.");
+            throw new ServiceException("Remote server error " + httpResponse.getRawStatusCode());
         } else if (httpResponse.getStatusCode().series() == CLIENT_ERROR) {
             if (httpResponse.getStatusCode() == HttpStatus.NOT_FOUND) {
                 throw new ServiceException("Ei löytynyt " + httpResponse.getRawStatusCode());
