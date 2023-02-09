@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
-import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
@@ -43,7 +43,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
     private CommonExternalService commonExternalService;
 
     @Override
-    public void buildImages(DokumenttiBase docBase, Long sisaltoId, DokumenttiTyyppi tyyppi) {
+    public void buildImages(DokumenttiBase docBase, GeneratorData generatorData) {
         XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
         try {
@@ -59,15 +59,15 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
                     continue;
                 }
 
-                UUID uuid = DokumenttiTyyppi.TOTEUTUSSUUNNITELMA.equals(tyyppi) ? ylopsUUIDHandling(id, src) : UUID.fromString(id);
+                UUID uuid = DokumenttiTyyppi.TOTEUTUSSUUNNITELMA.equals(generatorData.getTyyppi()) ? ylopsUUIDHandling(id, src) : UUID.fromString(id);
 
                 // Ladataan kuvan data muistiin
                 InputStream in;
                 try {
-                    in = commonExternalService.getLiitetiedosto(sisaltoId, uuid, tyyppi);
+                    in = commonExternalService.getLiitetiedosto(generatorData.getId(), uuid, generatorData.getTyyppi());
                 }
                 catch (Exception e) {
-                    log.error("Liitettä ei löytynyt, id={}, UUID={}", sisaltoId, uuid);
+                    log.error("Liitettä ei löytynyt, id={}, UUID={}", generatorData.getId(), uuid);
                     return;
                 }
 
@@ -112,18 +112,16 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
     }
 
     @Override
-    public void buildKuva(DokumenttiBase docBase, Kuvatyyppi kuvatyyppi, DokumenttiTyyppi dokumenttiTyyppi, Long ktId) {
-        Dokumentti dokumentti = docBase.getDokumentti();
-
+    public void buildKuva(DokumenttiBase docBase, Kuvatyyppi kuvatyyppi, GeneratorData generatorData) {
         Element head = docBase.getHeadElement();
         Element element = docBase.getDocument().createElement(kuvatyyppi.toString());
         Element img = docBase.getDocument().createElement("img");
 
         byte[] kuva;
         try {
-            kuva = commonExternalService.getDokumenttiKuva(dokumentti.getSisaltoId(), kuvatyyppi, dokumentti.getKieli(), dokumenttiTyyppi, ktId);
+            kuva = commonExternalService.getDokumenttiKuva(generatorData.getId(), kuvatyyppi, generatorData.getKieli(), generatorData.getTyyppi(), generatorData.getKtId());
         } catch (Exception e) {
-            log.warn("Kuvaa ei löytynyt, id={}, tyyppi={}", dokumentti.getSisaltoId(), kuvatyyppi);
+            log.warn("Kuvaa ei löytynyt, id={}, tyyppi={}", generatorData.getId(), kuvatyyppi);
             return;
         }
 

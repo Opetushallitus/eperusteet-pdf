@@ -1,8 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.service.amosaa;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
-import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
@@ -35,6 +35,7 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SuorituspolkuExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
@@ -52,7 +53,6 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.TutkinnonOsaTyyppi;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.pdf.service.external.AmosaaService;
-import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
 import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClient;
 import fi.vm.sade.eperusteet.pdf.utils.CharapterNumberGenerator;
@@ -75,7 +75,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -118,13 +117,10 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
     @Autowired
     private DokumenttiUtilService dokumenttiUtilService;
 
-    @Autowired
-    private CommonExternalService commonExternalService;
-
     private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 
     @Override
-    public Document generateXML(Dokumentti dokumentti, Long ktId, OpetussuunnitelmaKaikkiDto ops) throws ParserConfigurationException, IOException {
+    public Document generateXML(GeneratorData generatorData, OpetussuunnitelmaKaikkiDto ops) throws ParserConfigurationException, JsonProcessingException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -132,7 +128,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
         // Luodaan XHTML pohja
         Element rootElement = doc.createElement("html");
-        rootElement.setAttribute("lang", dokumentti.getKieli().toString());
+        rootElement.setAttribute("lang", generatorData.getKieli().toString());
         doc.appendChild(rootElement);
 
         Element headElement = doc.createElement("head");
@@ -153,8 +149,8 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         docBase.setHeadElement(headElement);
         docBase.setBodyElement(bodyElement);
         docBase.setGenerator(new CharapterNumberGenerator());
-        docBase.setKieli(dokumentti.getKieli());
-        docBase.setDokumentti(dokumentti);
+        docBase.setKieli(generatorData.getKieli());
+        docBase.setGeneratorData(generatorData);
         docBase.setOpetussuunnitelma(ops);
 
         if (ops.getPeruste() != null) {
@@ -172,10 +168,10 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         buildFootnotes(docBase);
 
         // Kuvat
-        dokumenttiUtilService.buildImages(docBase, dokumentti.getSisaltoId(), dokumentti.getTyyppi());
-        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.kansikuva, dokumentti.getTyyppi(), ktId);
-        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.ylatunniste, dokumentti.getTyyppi(), ktId);
-        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.alatunniste, dokumentti.getTyyppi(), ktId);
+        dokumenttiUtilService.buildImages(docBase, generatorData);
+        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.kansikuva, generatorData);
+        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.ylatunniste, generatorData);
+        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.alatunniste, generatorData);
 
         return doc;
     }
@@ -1328,7 +1324,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                     String avain = node.getAttributes().getNamedItem("data-viite").getNodeValue();
 
                     if (docBase.getOpetussuunnitelma() != null && docBase.getOpetussuunnitelma().getId() != null) {
-                        TermiDto termi = dokumenttiUtilService.getTermiFromExternalService(docBase.getOpetussuunnitelma().getKoulutustoimija().getId(), avain, docBase.getDokumentti().getTyyppi());
+                        TermiDto termi = dokumenttiUtilService.getTermiFromExternalService(docBase.getOpetussuunnitelma().getKoulutustoimija().getId(), avain, docBase.getGeneratorData().getTyyppi());
 
                         if (termi != null && termi.getAlaviite() != null && termi.getAlaviite() && termi.getSelitys() != null) {
                             element.setAttribute("number", String.valueOf(noteNumber));

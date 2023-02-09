@@ -1,7 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.service.eperusteet;
 
-import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.dto.common.AbstractRakenneOsaDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
@@ -84,7 +85,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -121,14 +121,14 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     private DokumenttiUtilService dokumenttiUtilService;
 
     @Override
-    public Document generateXML(Dokumentti dokumentti, PerusteKaikkiDto perusteData) throws ParserConfigurationException, IOException {
+    public Document generateXML(GeneratorData generatorData, PerusteKaikkiDto perusteData) throws ParserConfigurationException, JsonProcessingException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         Document doc = docBuilder.newDocument();
 
         // Luodaan XHTML pohja
         Element rootElement = doc.createElement("html");
-        rootElement.setAttribute("lang", dokumentti.getKieli().toString());
+        rootElement.setAttribute("lang", generatorData.getKieli().toString());
         doc.appendChild(rootElement);
 
         // Head-elementti
@@ -150,10 +150,10 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         docBase.setHeadElement(headElement);
         docBase.setBodyElement(bodyElement);
         docBase.setGenerator(new CharapterNumberGenerator());
-        docBase.setKieli(dokumentti.getKieli());
+        docBase.setKieli(generatorData.getKieli());
         docBase.setPeruste(perusteData);
         docBase.setKvLiiteJulkinenDto(eperusteetService.getKvLiite(perusteData.getId()));
-        docBase.setDokumentti(dokumentti);
+        docBase.setGeneratorData(generatorData);
         docBase.setSisalto(perusteData.getSisallot().stream().findFirst().get().getSisalto());
         docBase.setAipeOpetuksenSisalto(perusteData.getAipeOpetuksenPerusteenSisalto());
 
@@ -165,7 +165,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         addPerusteenOsat(docBase); // Tekstikappaleet
         addFootnotes(docBase);
         // Kuvat
-        dokumenttiUtilService.buildImages(docBase, dokumentti.getSisaltoId(), dokumentti.getTyyppi());
+        dokumenttiUtilService.buildImages(docBase, generatorData);
 
         return doc;
     }
@@ -424,7 +424,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                     String avain = node.getAttributes().getNamedItem("data-viite").getNodeValue();
 
                     if (docBase.getPeruste() != null && docBase.getPeruste().getId() != null) {
-                        TermiDto termi = dokumenttiUtilService.getTermiFromExternalService(docBase.getPeruste().getId(), avain, docBase.getDokumentti().getTyyppi());
+                        TermiDto termi = dokumenttiUtilService.getTermiFromExternalService(docBase.getPeruste().getId(), avain, docBase.getGeneratorData().getTyyppi());
 
                         if (termi != null && termi.getAlaviite() && termi.getSelitys() != null) {
                             element.setAttribute("number", String.valueOf(noteNumber));

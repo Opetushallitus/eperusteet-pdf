@@ -17,20 +17,13 @@
 		<java.version>11</java.version>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<flyway.user>oph</flyway.user>
-		<flyway.password>test</flyway.password>
-		<flyway.url>jdbc:postgresql://localhost:5435/pdf</flyway.url>
-		<flyway.baselineOnMigrate>true</flyway.baselineOnMigrate>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<postgresql.version>42.5.1</postgresql.version>
 		<pdfbox.version>2.0.24</pdfbox.version>
 		<slf4j.version>1.7.21</slf4j.version>
-		<flyway.version>6.5.7</flyway.version>
 		<jsoup.version>1.9.2</jsoup.version>
 		<fop.version>2.6</fop.version>
 		<springfox.version>2.7.0</springfox.version>
 		<jackson.version>2.11.4</jackson.version>
-		<hibernate.version>5.6.9.Final</hibernate.version>
 		<ehcache.version>5.6.9.Final</ehcache.version>
 	</properties>
 	<dependencies>
@@ -45,11 +38,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -75,10 +63,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
@@ -165,12 +149,6 @@
 			<artifactId>modelmapper</artifactId>
 			<version>3.1.0</version>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.hibernate</groupId>-->
-<!--			<artifactId>hibernate-ehcache</artifactId>-->
-<!--			<version>5.6.9.Final</version>-->
-<!--		</dependency>-->
-
 	</dependencies>
 
 	<build>
@@ -179,32 +157,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
-				<groupId>org.flywaydb</groupId>
-				<artifactId>flyway-maven-plugin</artifactId>
-			</plugin>
 		</plugins>
 	</build>
-	<profiles>
-		<profile>
-			<id>local</id>
-			<properties>
-				<eperusteet.devdb.user>oph</eperusteet.devdb.user>
-				<eperusteet.devdb.password>test</eperusteet.devdb.password>
-				<eperusteet.devdb.jdbcurl>jdbc:postgresql://localhost:5432/eperusteet</eperusteet.devdb.jdbcurl>
-
-				<eperusteet-amosaa.devdb.user>oph</eperusteet-amosaa.devdb.user>
-				<eperusteet-amosaa.devdb.password>test</eperusteet-amosaa.devdb.password>
-				<eperusteet-amosaa.devdb.jdbcurl>jdbc:postgresql://localhost:5433/amosaa</eperusteet-amosaa.devdb.jdbcurl>
-
-				<eperusteet-ylops.devdb.user>oph</eperusteet-ylops.devdb.user>
-				<eperusteet-ylops.devdb.password>test</eperusteet-ylops.devdb.password>
-				<eperusteet-ylops.devdb.jdbcurl>jdbc:postgresql://localhost:5434/ylops</eperusteet-ylops.devdb.jdbcurl>
-
-				<eperusteet-pdf.devdb.user>oph</eperusteet-pdf.devdb.user>
-				<eperusteet-pdf.devdb.password>test</eperusteet-pdf.devdb.password>
-				<eperusteet-pdf.devdb.jdbcurl>jdbc:postgresql://localhost:5435/pdf</eperusteet-pdf.devdb.jdbcurl>
-			</properties>
-		</profile>
-	</profiles>
 </project>

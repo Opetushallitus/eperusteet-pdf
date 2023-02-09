@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.dokumentti;
 
-import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.utils.CharapterNumberGenerator;
 import lombok.Getter;
@@ -15,6 +15,6 @@ public class DokumenttiBase {
     Element headElement;
     Element bodyElement;
     Kieli kieli;
-    Dokumentti dokumentti;
+    GeneratorData generatorData;
     CharapterNumberGenerator generator;
 }

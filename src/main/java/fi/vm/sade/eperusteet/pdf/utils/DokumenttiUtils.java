@@ -1,16 +1,13 @@
 package fi.vm.sade.eperusteet.pdf.utils;
 
-import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiAmosaa;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
-import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.enums.LaajuusYksikko;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.pdfbox.preflight.PreflightDocument;
 import org.apache.pdfbox.preflight.ValidationResult;
 import org.apache.pdfbox.preflight.exception.SyntaxValidationException;
@@ -35,13 +32,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class DokumenttiUtils {
-    private static final int MAX_TIME_IN_MINUTES = 5;
-
     public static String selectSubjectTranslationKey(DokumenttiTyyppi tyyppi) {
         if (tyyppi.equals(DokumenttiTyyppi.PERUSTE)) {
             return "docgen.meta.subject.peruste";
@@ -196,23 +190,6 @@ public class DokumenttiUtils {
         }
 
         return out.toString();
-    }
-
-    public static boolean isTimePass(Dokumentti dokumentti) {
-        return isTimePass(dokumentti.getAloitusaika());
-    }
-
-    public static boolean isTimePass(DokumenttiDto dokumenttiDto) {
-        return isTimePass(dokumenttiDto.getAloitusaika());
-    }
-
-    public static boolean isTimePass(Date date) {
-        if (date == null) {
-            return true;
-        }
-
-        Date newDate = DateUtils.addMinutes(date, MAX_TIME_IN_MINUTES);
-        return newDate.before(new Date());
     }
 
     public static ValidationResult validatePdf(byte[] pdf) throws IOException {

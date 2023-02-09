@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.ylops;
 
-import fi.vm.sade.eperusteet.pdf.domain.Dokumentti;
+import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoMetadataDto;
@@ -15,7 +15,6 @@ import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
-import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
 import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClientImpl;
 import fi.vm.sade.eperusteet.pdf.service.external.YlopsService;
 import lombok.extern.slf4j.Slf4j;
@@ -76,11 +75,8 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
     @Autowired
     private DokumenttiUtilService dokumenttiUtilService;
 
-    @Autowired
-    private CommonExternalService commonExternalService;
-
     @Override
-    public Document generateXML(Dokumentti dokumentti, OpetussuunnitelmaExportDto ops) throws ParserConfigurationException, NullPointerException {
+    public Document generateXML(GeneratorData generatorData, OpetussuunnitelmaExportDto ops) throws NullPointerException, ParserConfigurationException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -88,7 +84,7 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
 
         // Luodaan XHTML pohja
         Element rootElement = doc.createElement("html");
-        rootElement.setAttribute("lang", dokumentti.getKieli().toString());
+        rootElement.setAttribute("lang", generatorData.getKieli().toString());
         doc.appendChild(rootElement);
 
         Element headElement = doc.createElement("head");
@@ -108,8 +104,8 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
         docBase.setDocument(doc);
         docBase.setHeadElement(headElement);
         docBase.setBodyElement(bodyElement);
-        docBase.setKieli(dokumentti.getKieli());
-        docBase.setDokumentti(dokumentti);
+        docBase.setKieli(generatorData.getKieli());
+        docBase.setGeneratorData(generatorData);
         docBase.setOps(ops);
 
         // Kansilehti & Infosivu
@@ -146,10 +142,10 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
         buildFootnotes(docBase);
 
         // Kuvat
-        dokumenttiUtilService.buildImages(docBase, dokumentti.getSisaltoId(), dokumentti.getTyyppi());
-        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.kansikuva, dokumentti.getTyyppi(), null);
-        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.ylatunniste, dokumentti.getTyyppi(), null);
-        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.alatunniste, dokumentti.getTyyppi(), null);
+        dokumenttiUtilService.buildImages(docBase, generatorData);
+        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.kansikuva, generatorData);
+        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.ylatunniste, generatorData);
+        dokumenttiUtilService.buildKuva(docBase, Kuvatyyppi.alatunniste, generatorData);
 
         return doc;
     }

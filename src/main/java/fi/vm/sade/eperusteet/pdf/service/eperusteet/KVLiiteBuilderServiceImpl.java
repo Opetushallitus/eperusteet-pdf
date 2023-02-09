@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.eperusteet;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.OsaamistasoDto;
@@ -21,7 +22,6 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
@@ -39,7 +39,7 @@ public class KVLiiteBuilderServiceImpl implements KVLiiteBuilderService {
     private EperusteetService eperusteetService;
 
     @Override
-    public Document generateXML(PerusteKaikkiDto peruste, Kieli kieli) throws IOException, ParserConfigurationException {
+    public Document generateXML(PerusteKaikkiDto peruste, Kieli kieli) throws ParserConfigurationException, JsonProcessingException {
         // Luodaan uusi dokumentti
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
