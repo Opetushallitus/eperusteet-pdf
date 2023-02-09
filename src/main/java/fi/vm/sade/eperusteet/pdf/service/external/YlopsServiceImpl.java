@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.pdf.service.external;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiKappaleViiteDto;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
@@ -14,16 +15,19 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class YlopsServiceImpl implements YlopsService {
 
     private static final String API = "/api/";
-    private static final String YLOPS_EXTERNAL_API = "/api/external/";
+    private static final String YLOPS_OPETUSSUUNNITELMA_API = "/api/opetussuunnitelmat/julkiset/{opsId}/julkaisu";
     private static final String YLOPS_PERUSTEET_API = "/api/perusteet/";
     private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 

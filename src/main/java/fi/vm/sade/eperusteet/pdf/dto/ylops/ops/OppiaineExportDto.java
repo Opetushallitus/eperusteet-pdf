@@ -7,7 +7,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -22,4 +24,10 @@ public class OppiaineExportDto extends OppiaineBaseDto {
     private String koodiUri;
     private String koodiArvo;
     private OppiaineExportDto pohjanOppiaine;
+
+    public Optional<OppiaineenVuosiluokkakokonaisuusDto> getVuosiluokkakokonaisuus(String tunniste) {
+        return vuosiluokkakokonaisuudet.stream()
+                .filter(v -> v.getVuosiluokkakokonaisuus().getId().equals(tunniste))
+                .findAny();
+    }
 }

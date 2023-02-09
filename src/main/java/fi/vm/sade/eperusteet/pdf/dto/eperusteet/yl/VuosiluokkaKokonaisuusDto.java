@@ -18,11 +18,11 @@ public class VuosiluokkaKokonaisuusDto implements ReferenceableDto {
     private Long id;
     private UUID tunniste;
     private Set<Vuosiluokka> vuosiluokat;
-    private Optional<LokalisoituTekstiDto> nimi;
-    private Optional<TekstiOsaDto> siirtymaEdellisesta;
-    private Optional<TekstiOsaDto> tehtava;
-    private Optional<TekstiOsaDto> siirtymaSeuraavaan;
-    private Optional<TekstiOsaDto> laajaalainenOsaaminen;
+    private LokalisoituTekstiDto nimi;
+    private TekstiOsaDto siirtymaEdellisesta;
+    private TekstiOsaDto tehtava;
+    private TekstiOsaDto siirtymaSeuraavaan;
+    private TekstiOsaDto laajaalainenOsaaminen;
     private Set<VuosiluokkaKokonaisuudenLaajaalainenOsaaminenDto> laajaalaisetOsaamiset;
-    private Optional<TekstiOsaDto> paikallisestiPaatettavatAsiat;
+    private TekstiOsaDto paikallisestiPaatettavatAsiat;
 }

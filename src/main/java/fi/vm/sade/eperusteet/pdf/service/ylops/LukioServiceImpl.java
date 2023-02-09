@@ -1,46 +1,19 @@
-//package fi.vm.sade.eperusteet.pdf.service.ylops;
-//
-//import fi.vm.sade.eperusteet.pdf.domain.common.enums.LukiokurssiTyyppi;
-//import fi.vm.sade.eperusteet.pdf.domain.ylops.Tekstiosa;
-//import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
-//import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.lukio.LukioOpetussuunnitelmaRakenneOpsDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.lukio.LukioOppiaineRakenneListausDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OppiaineDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lukio.AihekokonaisuudetDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lukio.AihekokonaisuusDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lukio.LukioOpetussuunnitelmaRakenneDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lukio.LukioPerusteOppiaineDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lukio.LukiokoulutuksenPerusteenSisaltoDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lukio.LukiokurssiPerusteDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lukio.OpetuksenYleisetTavoitteetDto;
-//import fi.vm.sade.eperusteet.pdf.utils.LocalizedMessagesService;
-//import org.apache.logging.log4j.util.LambdaUtil;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//import org.xml.sax.SAXException;
-//
-//import javax.xml.parsers.ParserConfigurationException;
-//import java.io.IOException;
-//import java.util.Comparator;
-//import java.util.List;
-//import java.util.Map;
-//import java.util.Optional;
-//import java.util.Set;
-//import java.util.function.Function;
-//
-//import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeader;
-//import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addLokalisoituteksti;
-//import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addTeksti;
-//import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString
-//import static java.util.Comparator.comparing;
-//import static java.util.Optional.ofNullable;
-//import static java.util.stream.Collectors.toMap;
-//import static java.util.stream.Collectors.toSet;
-//
-//
-//@Service
-//public class LukioServiceImpl implements LukioService {
+package fi.vm.sade.eperusteet.pdf.service.ylops;
+
+import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
+import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+
+
+@Service
+public class LukioServiceImpl implements LukioService {
+    @Override
+    public void addOppimistavoitteetJaOpetuksenKeskeisetSisallot(DokumenttiYlops docBase) throws ParserConfigurationException, SAXException, IOException {
+
+    }
 //
 //    @Autowired
 //    private LocalizedMessagesService messages;
@@ -350,4 +323,4 @@
 //                }));
 //    }
 //
-//}
+}

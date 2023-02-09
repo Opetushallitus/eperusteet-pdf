@@ -14,6 +14,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class VuosiluokkaKokonaisuudenLaajaalainenOsaaminenDto implements ReferenceableDto {
     private Long id;
-    private Optional<Reference> laajaalainenOsaaminen;
-    private Optional<LokalisoituTekstiDto> kuvaus;
+    private Reference laajaalainenOsaaminen;
+    private LokalisoituTekstiDto kuvaus;
 }

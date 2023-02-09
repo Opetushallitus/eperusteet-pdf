@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.pdf.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
+import com.google.common.base.Throwables;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
@@ -17,13 +18,13 @@ import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaDokumenttiBuilderService;
 import fi.vm.sade.eperusteet.pdf.service.eperusteet.EperusteetDokumenttiBuilderService;
 import fi.vm.sade.eperusteet.pdf.service.eperusteet.KVLiiteBuilderService;
 import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
+import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.ylops.YlopsDokumenttiBuilderService;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,6 @@ import java.io.IOException;
 
 @Slf4j
 @Service
-@Profile("default")
 public class DokumenttiServiceImpl implements DokumenttiService {
     private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 
@@ -62,6 +62,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Autowired
     private CommonExternalService commonExternalService;
+
+    @Autowired
+    private EperusteetService eperusteetService;
 
     @Value("classpath:docgen/fop.xconf")
     private Resource fopConfig;
@@ -109,11 +112,12 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Async(value = "docTaskExecutor")
     public void generateForYlops(Long dokumenttiId, Kieli kieli, String opsJson) throws JsonProcessingException, DokumenttiException {
         OpetussuunnitelmaExportDto ops = objectMapper.readValue(opsJson, OpetussuunnitelmaExportDto.class);
+        PerusteKaikkiDto perusteKaikkiDto = eperusteetService.getPerusteKaikkiDto(ops.getPerusteenId(), null);
         GeneratorData generatorData = dokumenttiUtilService.createGeneratorData(ops.getId(), dokumenttiId, kieli, DokumenttiTyyppi.TOTEUTUSSUUNNITELMA, null);
 
         try {
             log.info("Luodaan PDF-dokumenttia (docId={}, {}, {})", dokumenttiId, generatorData.getTyyppi(), kieli);
-            Document doc = ylopsDokumenttiBuilderService.generateXML(ops, generatorData);
+            Document doc = ylopsDokumenttiBuilderService.generateXML(ops, perusteKaikkiDto, generatorData);
             handleConversionAndSending(doc, generateMetaData(generatorData, ops.getNimi()), generatorData);
         } catch (Exception ex) {
             handleError(ex,dokumenttiId, generatorData.getTyyppi());

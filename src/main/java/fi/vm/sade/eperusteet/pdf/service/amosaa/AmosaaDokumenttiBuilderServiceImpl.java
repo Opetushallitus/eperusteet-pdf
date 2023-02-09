@@ -96,7 +96,6 @@ import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addTeksti;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
 
 @Slf4j
-@Profile("!test")
 @Service
 public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuilderService {
 

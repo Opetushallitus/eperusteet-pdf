@@ -1,75 +1,16 @@
-//package fi.vm.sade.eperusteet.pdf.service.ylops;
-//
-//import fi.vm.sade.eperusteet.pdf.domain.common.KoodistoKoodiDto;
-//import fi.vm.sade.eperusteet.pdf.domain.common.LokalisoituTekstiDto;
-//import fi.vm.sade.eperusteet.pdf.domain.common.enums.KoulutusTyyppi;
-//import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.KoodiDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OpintojaksoDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OpintojaksonKeskeinenSisaltoDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OpintojaksonModuuliDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OpintojaksonOppiaineDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OpintojaksonTavoiteDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OppiaineJarjestysDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OppiaineenTavoitealueDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OppiaineenTavoitteetDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019PaikallinenLaajaAlainenDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019PaikallinenOppiaineDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019TavoitealueenTavoite;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaKevytDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.Lops2019SisaltoDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet.Lops2019ArviointiDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet.Lops2019OpiskeluymparistoTyotavatDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet.Lops2019OppiaineKaikkiDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet.Lops2019OppiaineLaajaAlainenOsaaminenDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet.Lops2019OppiaineTavoitealueDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet.Lops2019OppiaineTavoitteetDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet.Lops2019TehtavaDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet.moduuli.Lops2019ModuuliDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet.moduuli.Lops2019ModuuliSisaltoDto;
-//import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet.moduuli.Lops2019ModuuliTavoiteDto;
-//import fi.vm.sade.eperusteet.pdf.utils.DtoMapper;
-//import fi.vm.sade.eperusteet.pdf.utils.LocalizedMessagesService;
-//import fi.vm.sade.eperusteet.pdf.utils.Lops2019Utils;
-//import fi.vm.sade.eperusteet.pdf.utils.Pair;
-//import lombok.extern.slf4j.Slf4j;
-//import org.apache.commons.collections.CollectionUtils;
-//import org.apache.commons.lang.StringUtils;
-//import org.jsoup.Jsoup;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//import org.springframework.util.ObjectUtils;
-//import org.w3c.dom.Element;
-//
-//import java.math.BigDecimal;
-//import java.util.ArrayList;
-//import java.util.Collection;
-//import java.util.Comparator;
-//import java.util.HashMap;
-//import java.util.HashSet;
-//import java.util.List;
-//import java.util.Map;
-//import java.util.Objects;
-//import java.util.Optional;
-//import java.util.Set;
-//import java.util.function.Function;
-//import java.util.regex.Matcher;
-//import java.util.regex.Pattern;
-//import java.util.stream.Collectors;
-//import java.util.stream.Stream;
-//
-//import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeader;
-//import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addList;
-//import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addLokalisoituteksti;
-//import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addPlaceholder;
-//import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addTeksti;
-//import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
-//import static java.util.Comparator.comparing;
-//
-//@Slf4j
-//@Service
-//public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService {
+package fi.vm.sade.eperusteet.pdf.service.ylops;
+
+import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService {
+    @Override
+    public void addLops2019Sisalto(DokumenttiYlops docBase) {
+
+    }
 //
 //    @Autowired
 //    private LocalizedMessagesService messages;
@@ -1352,4 +1293,4 @@
 //        li.setTextContent(stringBuilder.toString());
 //        ul.appendChild(li);
 //    }
-//}
+}

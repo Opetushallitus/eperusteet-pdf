@@ -23,7 +23,6 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@Profile("default")
 public class KoodistoClientImpl implements KoodistoClient {
 
     @Value("${koodisto.service.url:https://virkailija.opintopolku.fi/koodisto-service}")

@@ -11,11 +11,11 @@ import java.util.Optional;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TekstiOsaDto {
-    private Optional<Long> id;
-    private Optional<LokalisoituTekstiDto> otsikko;
-    private Optional<LokalisoituTekstiDto> teksti;
+    private Long id;
+    private LokalisoituTekstiDto otsikko;
+    private LokalisoituTekstiDto teksti;
 
-    public TekstiOsaDto(Optional<LokalisoituTekstiDto> otsikko, Optional<LokalisoituTekstiDto> teksti) {
+    public TekstiOsaDto(LokalisoituTekstiDto otsikko, LokalisoituTekstiDto teksti) {
         this.otsikko = otsikko;
         this.teksti = teksti;
     }

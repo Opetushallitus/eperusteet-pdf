@@ -2,8 +2,6 @@ package fi.vm.sade.eperusteet.pdf.service.ylops;
 
 import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoDto;
-import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
-import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
@@ -11,17 +9,17 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
+import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
-import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClientImpl;
 import fi.vm.sade.eperusteet.pdf.service.external.YlopsService;
 import fi.vm.sade.eperusteet.pdf.utils.CharapterNumberGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -48,24 +46,20 @@ import java.util.Set;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
 
 @Slf4j
-@Profile("!test")
 @Service
 public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilderService {
+    
+    @Autowired
+    private PerusopetusService perusopetusService;
 
     @Autowired
-    private KoodistoClientImpl koodistoClient;
+    private LukioService lukioService;
 
-//    @Autowired
-//    private PerusopetusService perusopetusService;
+    @Autowired
+    private Lops2019DokumenttiService lops2019DokumenttiService;
 
-//    @Autowired
-//    private LukioService lukioService;
-
-//    @Autowired
-//    private Lops2019DokumenttiService lops2019DokumenttiService;
-
-//    @Autowired
-//    private YleisetOsuudetService yleisetOsuudetService;
+    @Autowired
+    private YleisetOsuudetService yleisetOsuudetService;
 
     @Autowired
     private LocalizedMessagesService messages;
@@ -77,7 +71,7 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
     private DokumenttiUtilService dokumenttiUtilService;
 
     @Override
-    public Document generateXML(OpetussuunnitelmaExportDto ops, GeneratorData generatorData) throws NullPointerException, ParserConfigurationException {
+    public Document generateXML(OpetussuunnitelmaExportDto ops, PerusteKaikkiDto perusteKaikkiDto, GeneratorData generatorData) throws NullPointerException, ParserConfigurationException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -109,23 +103,21 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
         docBase.setGenerator(new CharapterNumberGenerator());
         docBase.setKieli(generatorData.getKieli());
         docBase.setGeneratorData(generatorData);
+        docBase.setOps(ops);
+        docBase.setPerusteDto(perusteKaikkiDto);
+        docBase.setGenerator(new CharapterNumberGenerator());
 
         // Kansilehti & Infosivu
         addMetaPages(docBase);
 
         // Sisältöelementit
-//        yleisetOsuudetService.addYleisetOsuudet(docBase);
+        yleisetOsuudetService.addYleisetOsuudet(docBase);
 
         if (ops.getKoulutustyyppi() != null) {
-//            PerusteDto perusteDto = eperusteetService.getPeruste(ops.getPerusteenDiaarinumero());
-//            if (perusteDto == null) {
-//                throw new DokumenttiException("Peruste puuttuu", new Throwable());
-//            }
-//            docBase.setPerusteDto(perusteDto);
 
             // Perusopetus
             if (KoulutusTyyppi.PERUSOPETUS.equals(ops.getKoulutustyyppi())) {
-//                perusopetusService.addVuosiluokkakokonaisuudet(docBase);
+                perusopetusService.addVuosiluokkakokonaisuudet(docBase);
             }
 
             // Lukio
@@ -166,19 +158,13 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
             docBase.getHeadElement().appendChild(description);
         }
 
-        Set<KoodistoDto> koodistoKoodit = docBase.getOps().getKunnat();
-        if (koodistoKoodit != null) {
+        Set<KoodistoDto> kuntakoodit = docBase.getOps().getKunnat();
+        if (kuntakoodit != null) {
             Element municipalities = docBase.getDocument().createElement("kunnat");
-            for (KoodistoDto koodistoKoodi : koodistoKoodit) {
+            for (KoodistoDto kuntakoodi : kuntakoodit) {
                 Element kuntaEl = docBase.getDocument().createElement("kunta");
-                KoodistoKoodiDto koodistoKoodiDto = koodistoClient.get("kunta", koodistoKoodi.getKoodiUri());
-                if (koodistoKoodiDto != null && koodistoKoodiDto.getMetadata() != null) {
-                    for (KoodistoMetadataDto metadata : koodistoKoodiDto.getMetadata()) {
-                        if (metadata.getNimi() != null && metadata.getKieli().toLowerCase()
-                                .equals(docBase.getKieli().toString().toLowerCase())) {
-                            kuntaEl.setTextContent(metadata.getNimi());
-                        }
-                    }
+                if (kuntakoodi.getNimi() != null && kuntakoodi.getNimi().get(docBase.getKieli()) != null) {
+                    kuntaEl.setTextContent(kuntakoodi.getNimi().get(docBase.getKieli()));
                 }
                 municipalities.appendChild(kuntaEl);
             }

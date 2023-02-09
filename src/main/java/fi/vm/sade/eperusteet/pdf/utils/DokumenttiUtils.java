@@ -7,6 +7,7 @@ import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.enums.LaajuusYksikko;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiosaDto;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
@@ -213,5 +214,26 @@ public class DokumenttiUtils {
             default:
                 return "docgen.laajuus.op"; // palautetaan 'op', joka oli default ennen laajuusyksikön tuloa
         }
+    }
+
+    public static void addTekstiosa(DokumenttiBase docBase, TekstiosaDto tekstiosa, String tagi) {
+        if (tekstiosa != null) {
+            LokalisoituTekstiDto otsikko = tekstiosa.getOtsikko();
+            LokalisoituTekstiDto teksti = tekstiosa.getTeksti();
+            if (otsikko != null) {
+                addLokalisoituteksti(docBase, otsikko, tagi);
+            }
+            if (teksti != null) {
+                addLokalisoituteksti(docBase, teksti, tagi);
+            }
+        }
+    }
+
+    public static String cleanHtml(String string) {
+        if (string == null) {
+            return "";
+        }
+        String cleanXmlString = Jsoup.clean(stripNonValidXMLCharacters(string), ValidHtml.WhitelistType.NORMAL_PDF.getWhitelist());
+        return StringEscapeUtils.unescapeHtml4(cleanXmlString.replace("&nbsp;", " "));
     }
 }
