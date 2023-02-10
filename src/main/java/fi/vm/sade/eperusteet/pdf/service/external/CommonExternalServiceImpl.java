@@ -71,6 +71,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
 
     @Override
     public byte[] getDokumenttiKuva(Long opsId, Kuvatyyppi kuvatyyppi, Kieli kieli, DokumenttiTyyppi dokumenttityyppi, Long ktId) {
+        //TODO: ei osaa vielä hakea amosaasta kuvia, koska rajapinta ei ole julkinen
         try {
             ResponseEntity<byte[]> response = restTemplate.exchange(getDokumenttiKuvaUrl(dokumenttityyppi, ktId),
                     HttpMethod.GET,

@@ -19,17 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping({"/api/pdf"})
 @RequiredArgsConstructor
 public class PdfResource {
-
     @Autowired
     DokumenttiService dokumenttiService;
 
-    @GetMapping(path = "/generate/eperusteet/{id}/{revision}/{kieli}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/generate/eperusteet/{id}/{revision}/{kieli}", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> generateEperusteetPdf(@PathVariable("id") Long id,
                                                         @PathVariable("revision") Integer revision,
                                                         @PathVariable("kieli") Kieli kieli) {
         try {
             byte[] pdfData = dokumenttiService.generate(id, revision, kieli, DokumenttiTyyppi.PERUSTE, null);
-            log.info("PDF-dokumentti luotu.");
             return new ResponseEntity<>(pdfData, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -37,7 +35,7 @@ public class PdfResource {
         }
     }
 
-    @GetMapping(path = "/generate/kvliite/{id}/{revision}/{kieli}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/generate/kvliite/{id}/{revision}/{kieli}", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> generateKVLiitePdf(@PathVariable("id") Long id,
                                                      @PathVariable("revision") Integer revision,
                                                      @PathVariable("kieli") Kieli kieli) {
@@ -50,7 +48,7 @@ public class PdfResource {
         }
     }
 
-    @GetMapping(path = "/generate/amosaa/{id}/{revision}/{kieli}/{ktId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/generate/amosaa/{id}/{revision}/{kieli}/{ktId}", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> generateAmosaaPdf(@PathVariable("id") Long id,
                                                     @PathVariable("revision") Integer revision,
                                                     @PathVariable("kieli") Kieli kieli,
@@ -63,7 +61,7 @@ public class PdfResource {
         }
     }
 
-    @GetMapping(path = "/generate/ylops/{id}/{revision}/{kieli}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/generate/ylops/{id}/{revision}/{kieli}", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> generateYlopsPdf(@PathVariable("id") Long id,
                                                    @PathVariable("revision") Integer revision,
                                                    @PathVariable("kieli") Kieli kieli) {

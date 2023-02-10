@@ -72,10 +72,11 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     private String activeProfile;
 
     @Override
+//    @Async(value = "docTaskExecutor")
     public byte[] generate(Long id, Integer revision, Kieli kieli, DokumenttiTyyppi tyyppi, Long ktId) throws DokumenttiException {
         GeneratorData generatorData = createGeneratorData(id, revision, kieli, tyyppi, ktId);
 
-        log.info("Luodaan PDF-dokumenttia (id={}, {}, {})", id, tyyppi, kieli);
+        log.info("Luodaan PDF-dokumenttia (id={}, {}, {})", id, tyyppi.name(), kieli);
         byte[] pdfData;
         try {
             if (DokumenttiTyyppi.PERUSTE.equals(tyyppi)) {
@@ -99,14 +100,14 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     private byte[] createEperusteetPdfData(GeneratorData generatorData) throws IOException, TransformerException, SAXException, ParserConfigurationException, DokumenttiException {
         //TODO: haetaan opintopolusta toistaiseksi testidataa, korvataan -> getPerusteKaikkiDto()
-        PerusteKaikkiDto perusteData = eperusteetService.getPerusteKaikkiDtoTemp(generatorData.getId(), generatorData.getRevision());
+        PerusteKaikkiDto perusteData = eperusteetService.getPerusteKaikkiDto(generatorData.getId(), generatorData.getRevision());
         Document doc = eperusteetDokumenttiBuilderService.generateXML(generatorData, perusteData);
         return pdfService.xhtml2pdf(doc, generateMetaData(generatorData, perusteData.getNimi()), TemplateTyyppi.PERUSTE);
     }
 
     private byte[] createAmoseePdfData(GeneratorData generatorData) throws IOException, TransformerException, SAXException, ParserConfigurationException, DokumenttiException {
         //TODO: haetaan opintopolusta toistaiseksi testidataa, korvataan -> getOpetussuunnitelma()
-        OpetussuunnitelmaKaikkiDto ops = amosaaService.getOpetussuunnitelmaTemp(generatorData.getKtId(), generatorData.getId());
+        OpetussuunnitelmaKaikkiDto ops = amosaaService.getOpetussuunnitelma(generatorData.getKtId(), generatorData.getId());
         Document doc = amosaaDokumenttiBuilderService.generateXML(generatorData, ops);
         return pdfService.xhtml2pdf(doc, generateMetaData(generatorData, ops.getNimi()), TemplateTyyppi.AMOSAA);
     }
