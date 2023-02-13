@@ -17,6 +17,7 @@ import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClientImpl;
 import fi.vm.sade.eperusteet.pdf.service.external.YlopsService;
+import fi.vm.sade.eperusteet.pdf.utils.CharapterNumberGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,9 +105,10 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
         docBase.setDocument(doc);
         docBase.setHeadElement(headElement);
         docBase.setBodyElement(bodyElement);
+        docBase.setOps(ops);
+        docBase.setGenerator(new CharapterNumberGenerator());
         docBase.setKieli(generatorData.getKieli());
         docBase.setGeneratorData(generatorData);
-        docBase.setOps(ops);
 
         // Kansilehti & Infosivu
         addMetaPages(docBase);

@@ -14,12 +14,15 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -49,7 +52,10 @@ public class CommonExternalServiceImpl implements CommonExternalService{
 
     @PostConstruct
     protected void init() {
+        ByteArrayHttpMessageConverter converter = new ByteArrayHttpMessageConverter();
+        converter.setSupportedMediaTypes(Arrays.asList(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG));
         restTemplate = restTemplateBuilder
+                .messageConverters(converter)
                 .errorHandler(new RestTemplateResponseErrorHandler())
                 .build();
     }
@@ -77,7 +83,6 @@ public class CommonExternalServiceImpl implements CommonExternalService{
                     HttpMethod.GET,
                     httpEntity,
                     byte[].class,
-                    opsId,
                     opsId,
                     kuvatyyppi,
                     kieli);
