@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Objects;
@@ -63,13 +63,13 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     @Override
     public InputStream getLiitetiedosto(Long id, UUID fileName, DokumenttiTyyppi tyyppi) {
         try {
-            ResponseEntity<Resource> exchange = restTemplate.exchange(getLiitetiedostoUrl(tyyppi),
+            ResponseEntity<byte[]> response = restTemplate.exchange(getLiitetiedostoUrl(tyyppi),
                     HttpMethod.GET,
                     httpEntity,
-                    Resource.class,
+                    byte[].class,
                     id,
                     fileName);
-            return Objects.requireNonNull(exchange.getBody()).getInputStream();
+            return new ByteArrayInputStream(Objects.requireNonNull(response.getBody()));
         }  catch (Exception e) {
             throw new ServiceException("Liitetiedostoa ei saatu haettua: " + e.getMessage());
         }

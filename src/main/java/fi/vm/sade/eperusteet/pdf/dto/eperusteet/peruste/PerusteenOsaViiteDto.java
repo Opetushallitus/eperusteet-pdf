@@ -20,6 +20,7 @@ public class PerusteenOsaViiteDto<R extends PerusteenOsaDto> {
     private Long id;
     @JsonProperty("_perusteenOsa")
     private Reference perusteenOsaRef;
+    private SuoritustapaDto suoritustapa;
     private R perusteenOsa;
 
     public PerusteenOsaViiteDto(R perusteenOsa) {
@@ -30,7 +31,7 @@ public class PerusteenOsaViiteDto<R extends PerusteenOsaDto> {
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     public static class Matala extends PerusteenOsaViiteDto<PerusteenOsaDto.Laaja> {
-        private List<Reference> lapset;
+        private List<PerusteenOsaViiteDto.Laaja> lapset;
 
         public Matala() {
         }

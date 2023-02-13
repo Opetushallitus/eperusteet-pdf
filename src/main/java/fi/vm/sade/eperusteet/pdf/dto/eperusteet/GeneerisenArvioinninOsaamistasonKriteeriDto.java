@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet;
 
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.OsaamistasoDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,6 @@ import java.util.List;
 @EqualsAndHashCode(of = "osaamistaso")
 @Builder
 public class GeneerisenArvioinninOsaamistasonKriteeriDto {
-    private Reference osaamistaso;
+    private OsaamistasoDto osaamistaso;
     private List<LokalisoituTekstiDto> kriteerit = new ArrayList<>();
 }

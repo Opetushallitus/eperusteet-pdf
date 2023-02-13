@@ -16,5 +16,5 @@ public class OsaAlueLaajaDto extends OsaAlueDto {
     private Osaamistavoite2020Dto valinnaisetOsaamistavoitteet;
 
     @Deprecated
-    private List<OsaamistavoiteDto> osaamistavoitteet;
+    private List<OsaamistavoiteLaajaDto> osaamistavoitteet;
 }

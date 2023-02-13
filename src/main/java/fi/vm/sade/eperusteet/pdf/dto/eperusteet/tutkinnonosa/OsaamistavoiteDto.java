@@ -26,6 +26,8 @@ public abstract class OsaamistavoiteDto {
     private String koodiUri;
     private String koodiArvo;
 
+    private Ammattitaitovaatimukset2019Dto tavoitteet2020;
+
     public String getKoodiUri() {
         KoodiDto koodi = this.getKoodi();
         if (koodi != null) {

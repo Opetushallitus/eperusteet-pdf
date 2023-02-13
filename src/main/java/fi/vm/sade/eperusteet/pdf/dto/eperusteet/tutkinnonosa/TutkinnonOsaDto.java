@@ -1,15 +1,15 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimuksenKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.enums.NavigationType;
 import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteTila;
 import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.dto.enums.TutkinnonOsaTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KevytTekstiKappaleDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Reference;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ammattitaitovaatimukset.AmmattitaitovaatimusKohdealueetDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArviointiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKevytDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaDto;
@@ -34,19 +34,19 @@ import java.util.Map;
 public class TutkinnonOsaDto extends PerusteenOsaDto.Laaja {
     private LokalisoituTekstiDto tavoitteet;
     private ArviointiDto arviointi;
-    private List<AmmattitaitovaatimusKohdealueetDto> ammattitaitovaatimuksetLista;
+    private List<AmmattitaitovaatimuksenKohdealueDto> ammattitaitovaatimuksetLista;
     private LokalisoituTekstiDto ammattitaitovaatimukset;
     private LokalisoituTekstiDto ammattitaidonOsoittamistavat;
     private LokalisoituTekstiDto kuvaus;
     private KoodiDto koodi;
     private String koodiUri;
     private String koodiArvo;
-    private List<OsaAlueDto> osaAlueet;
+    private List<OsaAlueLaajaDto> osaAlueet;
     private List<KevytTekstiKappaleDto> vapaatTekstit;
     private TutkinnonOsaTyyppi tyyppi;
     private ValmaTelmaSisaltoDto valmaTelmaSisalto;
     private Ammattitaitovaatimukset2019Dto ammattitaitovaatimukset2019;
-    private Reference geneerinenArviointiasteikko;
+    private GeneerinenArviointiasteikkoDto geneerinenArviointiasteikko;
     private PerusteKevytDto alkuperainenPeruste;
 
     public TutkinnonOsaDto (LokalisoituTekstiDto nimi, PerusteTila tila, PerusteenOsaTunniste tunniste) {

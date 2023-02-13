@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.OsaAlueTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,9 @@ public class OsaAlueDto {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ValmaTelmaSisaltoDto valmaTelmaSisalto;
+    private OsaamistavoiteDto pakollisetOsaamistavoitteet;
+    private OsaamistavoiteDto valinnaisetOsaamistavoitteet;
+    private GeneerinenArviointiasteikkoDto geneerinenArviointiasteikko;
 
     public String getKoodiUri() {
         KoodiDto koodi = this.getKoodi();

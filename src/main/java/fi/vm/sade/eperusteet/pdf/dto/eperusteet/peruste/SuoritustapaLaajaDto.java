@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.LaajuusYksikko;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Suoritustapakoodi;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteSuppeaDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +23,6 @@ public class SuoritustapaLaajaDto implements PerusteenSisaltoDto {
     private LaajuusYksikko laajuusYksikko;
     private RakenneModuuliDto rakenne;
     @JsonProperty("tutkinnonOsaViitteet")
-    private Set<TutkinnonOsaViiteSuppeaDto> tutkinnonOsat;
+    private Set<TutkinnonOsaViiteDto> tutkinnonOsat;
     private PerusteenOsaViiteDto.Laaja sisalto;
 }
