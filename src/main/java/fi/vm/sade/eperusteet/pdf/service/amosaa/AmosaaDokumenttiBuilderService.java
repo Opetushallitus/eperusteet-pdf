@@ -8,5 +8,5 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.ParserConfigurationException;
 
 public interface AmosaaDokumenttiBuilderService {
-    Document generateXML(GeneratorData generatorData, OpetussuunnitelmaKaikkiDto ops) throws ParserConfigurationException, JsonProcessingException;
+    Document generateXML(OpetussuunnitelmaKaikkiDto ops, GeneratorData generatorData) throws ParserConfigurationException, JsonProcessingException;
 }

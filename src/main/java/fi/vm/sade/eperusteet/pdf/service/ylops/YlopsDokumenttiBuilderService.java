@@ -7,5 +7,5 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.ParserConfigurationException;
 
 public interface YlopsDokumenttiBuilderService {
-    Document generateXML(GeneratorData generatorData, OpetussuunnitelmaExportDto ops) throws ParserConfigurationException;
+    Document generateXML(OpetussuunnitelmaExportDto ops, GeneratorData generatorData) throws ParserConfigurationException;
 }

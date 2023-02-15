@@ -77,7 +77,7 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
     private DokumenttiUtilService dokumenttiUtilService;
 
     @Override
-    public Document generateXML(GeneratorData generatorData, OpetussuunnitelmaExportDto ops) throws NullPointerException, ParserConfigurationException {
+    public Document generateXML(OpetussuunnitelmaExportDto ops, GeneratorData generatorData) throws NullPointerException, ParserConfigurationException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();

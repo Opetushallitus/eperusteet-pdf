@@ -1,21 +1,25 @@
 package fi.vm.sade.eperusteet.pdf.service.external;
 
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Objects;
@@ -37,13 +41,23 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     private static final String AMOSAA_API = "/api/amosaa/";
     private static final String EPERUSTEET_API = "/api/perusteet/";
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
     private DokumenttiUtilService dokumenttiUtilService;
 
     @Autowired
     HttpEntity httpEntity;
+
+    @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
+
+    @PostConstruct
+    protected void init() {
+        restTemplate = restTemplateBuilder
+                .errorHandler(new RestTemplateResponseErrorHandler())
+                .build();
+    }
 
     @Override
     public InputStream getLiitetiedosto(Long id, UUID fileName, DokumenttiTyyppi tyyppi) {
@@ -89,6 +103,46 @@ public class CommonExternalServiceImpl implements CommonExternalService{
             return response.getBody();
         } catch (Exception e) {
             throw new ServiceException("Termiä ei saatu haettua: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void postPdfData(byte[] pdfData, Long dokumenttiId, DokumenttiTyyppi tyyppi) {
+        try {
+            HttpEntity<byte[]> entity = new HttpEntity<>(pdfData);
+            dokumenttiUtilService.createRestTemplateWithPdfConversionSupport().exchange(getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/data/{dokumenttiId}",
+                    HttpMethod.POST,
+                    entity,
+                    String.class,
+                    dokumenttiId);
+        } catch (Exception e) {
+            throw new ServiceException("PDF-dataa ei saatu lähetettyä: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void updateDokumenttiTila(DokumenttiTila tila, Long dokumenttiId, DokumenttiTyyppi tyyppi) {
+        try {
+            HttpEntity<DokumenttiTila> entity = new HttpEntity<>(tila);
+            restTemplate.exchange(getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/tila/{dokumenttiId}",
+                    HttpMethod.POST,
+                    entity,
+                    String.class,
+                    dokumenttiId);
+        } catch (Exception e) {
+            throw new ServiceException("PDF-generoinnin tilaa ei saatu päivitettyä: " + e.getMessage());
+        }
+    }
+
+    private String getDokumenttiApiBaseUrl(DokumenttiTyyppi tyyppi) {
+        if (tyyppi.equals(DokumenttiTyyppi.PERUSTE) || tyyppi.equals(DokumenttiTyyppi.KVLIITE)) {
+            return eperusteetServiceUrl;
+        } else if (tyyppi.equals(DokumenttiTyyppi.OPS)) {
+            return amosaaServiceUrl;
+        } else if (tyyppi.equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
+            return ylopsServiceUrl;
+        } else {
+            throw new BusinessRuleViolationException("DokumenttiApi-urlin valinta epäonnistui.");
         }
     }
 

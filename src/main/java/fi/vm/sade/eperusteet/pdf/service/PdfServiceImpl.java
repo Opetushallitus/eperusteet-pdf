@@ -105,7 +105,7 @@ public class PdfServiceImpl implements PdfService {
             foUserAgent.setSubject(meta.getSubject());
         }
 
-        if (tyyppi.equals(DokumenttiTyyppi.OPS)) {
+        if (DokumenttiTyyppi.OPS.equals(tyyppi)) {
             // Override with document title
             try {
                 XPathFactory xPathfactory = XPathFactory.newInstance();

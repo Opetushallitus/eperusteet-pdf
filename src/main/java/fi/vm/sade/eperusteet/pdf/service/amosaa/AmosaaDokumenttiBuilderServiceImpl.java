@@ -120,7 +120,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
     private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 
     @Override
-    public Document generateXML(GeneratorData generatorData, OpetussuunnitelmaKaikkiDto ops) throws ParserConfigurationException, JsonProcessingException {
+    public Document generateXML(OpetussuunnitelmaKaikkiDto ops, GeneratorData generatorData) throws ParserConfigurationException, JsonProcessingException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -154,7 +154,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         docBase.setOpetussuunnitelma(ops);
 
         if (ops.getPeruste() != null) {
-            PerusteKaikkiDto perusteKaikkiDto = amosaaService.getPerusteKaikkiDtoTemp(ops.getPeruste().getId());
+            PerusteKaikkiDto perusteKaikkiDto = amosaaService.getPerusteKaikkiDto(ops.getPeruste().getId());
             docBase.setPeruste(perusteKaikkiDto);
         }
 

@@ -2,8 +2,6 @@ package fi.vm.sade.eperusteet.pdf.service.external;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
-import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiKappaleViiteDto;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
@@ -48,20 +46,6 @@ public class YlopsServiceImpl implements YlopsService {
     }
 
     @Override
-    public OpetussuunnitelmaExportDto getOpetussuunnitelma(Long opsId) {
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + YLOPS_EXTERNAL_API + "opetussuunnitelma/{opsId}",
-                    HttpMethod.GET,
-                    httpEntity,
-                    String.class,
-                    opsId);
-            return objectMapper.readValue(response.getBody(), OpetussuunnitelmaExportDto.class);
-        } catch (Exception e) {
-            throw new ServiceException("Opetussuunnitelmaa ei saatu haettua: " + e.getMessage());
-        }
-    }
-
-    @Override
     public List<TekstiKappaleViiteDto.Matala> getTekstiKappaleViiteOriginals(Long opsId, Long viiteId) {
         try {
             ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API + "opetussuunnitelmat/{opsId}/tekstit/{viiteId}/alkuperaiset",
@@ -102,43 +86,6 @@ public class YlopsServiceImpl implements YlopsService {
             return objectMapper.readValue(response.getBody(), OrganisaatioDto.class);
         } catch (Exception e) {
             throw new ServiceException("Organisaatiota ei saatu haettua: " + e.getMessage());
-        }
-    }
-
-    @Override
-    public byte[] getDokumenttiLiite(Long opsId, Kuvatyyppi tiedostonimi) {
-        try {
-            ResponseEntity<byte[]> response = restTemplate.exchange(ylopsServiceUrl + API + "opetussuunnitelmat/{opsId}/kuvat/{tiedostonimi}",
-                    HttpMethod.GET,
-                    httpEntity,
-                    byte[].class,
-                    opsId,
-                    tiedostonimi);
-            return response.getBody();
-        } catch (Exception e) {
-            throw new ServiceException("Dokumenttiliitettä ei saatu haettua: " + e.getMessage());
-        }
-    }
-
-
-
-
-
-
-
-
-
-    // TODO: remove temp funktio
-    @Override
-    public OpetussuunnitelmaExportDto getOpetussuunnitelmaTemp(Long opsId) {
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API  + "opetussuunnitelmat/" + opsId,
-                    HttpMethod.GET,
-                    httpEntity,
-                    String.class);
-            return objectMapper.readValue(response.getBody(), OpetussuunnitelmaExportDto.class);
-        }  catch (Exception e) {
-            throw new ServiceException("Opetussuunnitelmaa ei saatu haettua: " + e.getMessage());
         }
     }
 }

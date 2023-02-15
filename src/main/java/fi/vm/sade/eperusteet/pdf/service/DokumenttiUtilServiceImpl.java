@@ -4,11 +4,15 @@ import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.GeneratorVersion;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.stereotype.Service;
@@ -46,6 +50,9 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
 
     @Autowired
     private CommonExternalService commonExternalService;
+
+    @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
 
     @Override
     public RestTemplate createRestTemplateWithImageConversionSupport() {
@@ -157,6 +164,20 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
         return null;
     }
 
+    @Override
+    public GeneratorData createGeneratorData(Long perusteId, Long dokumenttiId, Kieli kieli, DokumenttiTyyppi tyyppi, GeneratorVersion versio) {
+        GeneratorData generatorData = new GeneratorData();
+        generatorData.setId(perusteId);
+        generatorData.setDokumenttiId(dokumenttiId);
+        generatorData.setKieli(kieli);
+        if (GeneratorVersion.KVLIITE.equals(versio)) {
+            generatorData.setTyyppi(DokumenttiTyyppi.KVLIITE);
+        } else {
+            generatorData.setTyyppi(tyyppi);
+        }
+        return generatorData;
+    }
+
     private UUID ylopsUUIDHandling(String id, String src) {
         UUID uuid = null;
         try {
@@ -181,8 +202,9 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
         ByteArrayHttpMessageConverter converter = new ByteArrayHttpMessageConverter();
         converter.setSupportedMediaTypes(mediaTypes);
 
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setMessageConverters(List.of(converter));
-        return restTemplate;
+        return restTemplateBuilder
+                .messageConverters(List.of(converter))
+                .errorHandler(new RestTemplateResponseErrorHandler())
+                .build();
     }
 }
