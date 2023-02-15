@@ -5,24 +5,19 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
-import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
+import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -42,35 +37,25 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     private static final String AMOSAA_API = "/api/amosaa/";
     private static final String EPERUSTEET_API = "/api/perusteet/";
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
-    private RestTemplateBuilder restTemplateBuilder;
+    private DokumenttiUtilService dokumenttiUtilService;
 
     @Autowired
     HttpEntity httpEntity;
 
-    @PostConstruct
-    protected void init() {
-        ByteArrayHttpMessageConverter converter = new ByteArrayHttpMessageConverter();
-        converter.setSupportedMediaTypes(Arrays.asList(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG));
-        restTemplate = restTemplateBuilder
-                .messageConverters(converter)
-                .errorHandler(new RestTemplateResponseErrorHandler())
-                .build();
-    }
-
     @Override
     public InputStream getLiitetiedosto(Long id, UUID fileName, DokumenttiTyyppi tyyppi) {
         try {
-            ResponseEntity<byte[]> response = restTemplate.exchange(getLiitetiedostoUrl(tyyppi),
+            ResponseEntity<byte[]> response = dokumenttiUtilService.createRestTemplateWithImageConversionSupport().exchange(getLiitetiedostoUrl(tyyppi),
                     HttpMethod.GET,
                     httpEntity,
                     byte[].class,
                     id,
                     fileName);
             return new ByteArrayInputStream(Objects.requireNonNull(response.getBody()));
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new ServiceException("Liitetiedostoa ei saatu haettua: " + e.getMessage());
         }
     }
@@ -79,7 +64,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     public byte[] getDokumenttiKuva(Long opsId, Kuvatyyppi kuvatyyppi, Kieli kieli, DokumenttiTyyppi dokumenttityyppi, Long ktId) {
         //TODO: ei osaa vielä hakea amosaasta kuvia, koska rajapinta ei ole julkinen
         try {
-            ResponseEntity<byte[]> response = restTemplate.exchange(getDokumenttiKuvaUrl(dokumenttityyppi, ktId),
+            ResponseEntity<byte[]> response = dokumenttiUtilService.createRestTemplateWithImageConversionSupport().exchange(getDokumenttiKuvaUrl(dokumenttityyppi, ktId),
                     HttpMethod.GET,
                     httpEntity,
                     byte[].class,
@@ -87,7 +72,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
                     kuvatyyppi,
                     kieli);
             return response.getBody();
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new ServiceException("Dokumenttikuvaa ei saatu haettua: " + e.getMessage());
         }
     }
@@ -102,7 +87,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
                     id,
                     avain);
             return response.getBody();
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new ServiceException("Termiä ei saatu haettua: " + e.getMessage());
         }
     }

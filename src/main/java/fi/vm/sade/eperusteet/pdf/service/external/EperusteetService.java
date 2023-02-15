@@ -2,11 +2,14 @@ package fi.vm.sade.eperusteet.pdf.service.external;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteJulkinenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 
 public interface EperusteetService {
-    PerusteKaikkiDto getPerusteKaikkiDto(Long id, Integer revision);
+    void postPdfData(byte[] pdfData, Long dokumenttiId);
+
+    void updateDokumenttiTila(DokumenttiTila tila, Long dokumenttiId);
 
     KVLiiteJulkinenDto getKvLiite(Long id) throws JsonProcessingException;
 

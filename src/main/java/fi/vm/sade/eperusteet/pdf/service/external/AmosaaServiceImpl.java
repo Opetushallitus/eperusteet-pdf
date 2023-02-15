@@ -1,6 +1,5 @@
 package fi.vm.sade.eperusteet.pdf.service.external;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
@@ -59,7 +58,7 @@ public class AmosaaServiceImpl implements AmosaaService {
                     ktId,
                     opsId);
             return objectMapper.readValue(response.getBody(), OpetussuunnitelmaKaikkiDto.class);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new ServiceException("Opetussuunnitelmaa ei saatu haettua: " + e.getMessage());
         }
     }
@@ -88,7 +87,7 @@ public class AmosaaServiceImpl implements AmosaaService {
 //                    perusteId,
 //                    perusteenosaId);
 //            return response.getBody();
-//        }  catch (Exception e) {
+//        } catch (Exception e) {
 //            throw new ServiceException("Perusteenosaa ei saatu haettua: " + e.getMessage());
 //        }
 //    }
@@ -104,7 +103,7 @@ public class AmosaaServiceImpl implements AmosaaService {
                     opsId,
                     tyyppi);
             return Arrays.asList(Objects.requireNonNull(response.getBody()));
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new ServiceException("Sisältöä ei saatu haettua: " + e.getMessage());
         }
     }
@@ -127,14 +126,14 @@ public class AmosaaServiceImpl implements AmosaaService {
                     httpEntity,
                     String.class);
             return objectMapper.readValue(response.getBody(), OpetussuunnitelmaKaikkiDto.class);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new ServiceException("Opetussuunnitelmaa ei saatu haettua: " + e.getMessage());
         }
     }
 
     // TODO: remove temp funktio
     @Override
-    public PerusteKaikkiDto getPerusteKaikkiDtoTemp(Long id) throws JsonProcessingException {
+    public PerusteKaikkiDto getPerusteKaikkiDtoTemp(Long id) {
         // haetaan opintopolusta peruste
         String tempDevUrl = "https://eperusteet.testiopintopolku.fi/eperusteet-service/api/perusteet/4804100/kaikki";
         try {

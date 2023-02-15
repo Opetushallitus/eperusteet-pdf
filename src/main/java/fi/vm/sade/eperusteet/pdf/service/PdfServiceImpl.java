@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
-import fi.vm.sade.eperusteet.pdf.dto.enums.TemplateTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiEventListener;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
@@ -60,11 +60,11 @@ public class PdfServiceImpl implements PdfService {
     private Resource config;
 
     @Override
-    public byte[] xhtml2pdf(Document document, DokumenttiMetaDto meta, TemplateTyyppi tyyppi) throws IOException, TransformerException, SAXException, DokumenttiException {
+    public byte[] xhtml2pdf(Document document, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi) throws IOException, TransformerException, SAXException, DokumenttiException {
         return convertDocument2PDF(document, selectTemplate(tyyppi), meta, tyyppi);
     }
 
-    private byte[] convertDocument2PDF(Document doc, File xslt, DokumenttiMetaDto meta, TemplateTyyppi tyyppi)
+    private byte[] convertDocument2PDF(Document doc, File xslt, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi)
             throws IOException, TransformerException, SAXException {
         // Alustetaan Streamit
         ByteArrayOutputStream xmlStream = new ByteArrayOutputStream();
@@ -87,7 +87,7 @@ public class PdfServiceImpl implements PdfService {
     }
 
     @SuppressWarnings("unchecked")
-    private void convertFO2PDF(Document doc, InputStream fo, OutputStream pdf, DokumenttiMetaDto meta, TemplateTyyppi tyyppi)
+    private void convertFO2PDF(Document doc, InputStream fo, OutputStream pdf, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi)
             throws IOException, SAXException, TransformerException {
         FopFactory fopFactory = FopFactory.newInstance(config.getFile());
 
@@ -105,7 +105,7 @@ public class PdfServiceImpl implements PdfService {
             foUserAgent.setSubject(meta.getSubject());
         }
 
-        if (tyyppi.equals(TemplateTyyppi.AMOSAA)) {
+        if (tyyppi.equals(DokumenttiTyyppi.OPS)) {
             // Override with document title
             try {
                 XPathFactory xPathfactory = XPathFactory.newInstance();
@@ -166,17 +166,17 @@ public class PdfServiceImpl implements PdfService {
         }
     }
 
-    private File selectTemplate(TemplateTyyppi tyyppi) throws IOException, DokumenttiException {
-        if (tyyppi.equals(TemplateTyyppi.PERUSTE)) {
+    private File selectTemplate(DokumenttiTyyppi tyyppi) throws IOException, DokumenttiException {
+        if (tyyppi.equals(DokumenttiTyyppi.PERUSTE)) {
             return eperusteetTemplate.getFile();
-        } else if (tyyppi.equals(TemplateTyyppi.AMOSAA)) {
+        } else if (tyyppi.equals(DokumenttiTyyppi.OPS)) {
             return amosaaTemplate.getFile();
-        } else if (tyyppi.equals(TemplateTyyppi.YLOPS)) {
+        } else if (tyyppi.equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
             return ylopsTemplate.getFile();
-        } else if (tyyppi.equals(TemplateTyyppi.KVLIITE)) {
+        } else if (tyyppi.equals(DokumenttiTyyppi.KVLIITE)) {
             return kvLiiteTemplate.getFile();
         } else {
-            throw new DokumenttiException("Template-tyyppiä ei ole määritetty.");
+            throw new DokumenttiException("Dokumentti-tyyppiä ei ole määritetty.");
         }
     }
 }

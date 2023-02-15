@@ -9,5 +9,5 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public interface EperusteetDokumenttiBuilderService {
 
-    Document generateXML(GeneratorData generatorData, PerusteKaikkiDto perusteData) throws ParserConfigurationException, JsonProcessingException;
+    Document generateXML(PerusteKaikkiDto perusteData, GeneratorData generatorData) throws ParserConfigurationException, JsonProcessingException;
 }

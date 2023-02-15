@@ -56,7 +56,7 @@ public class YlopsServiceImpl implements YlopsService {
                     String.class,
                     opsId);
             return objectMapper.readValue(response.getBody(), OpetussuunnitelmaExportDto.class);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new ServiceException("Opetussuunnitelmaa ei saatu haettua: " + e.getMessage());
         }
     }
@@ -71,7 +71,7 @@ public class YlopsServiceImpl implements YlopsService {
                     opsId,
                     viiteId);
             return Collections.singletonList(objectMapper.readValue(response.getBody(), TekstiKappaleViiteDto.Matala.class));
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new ServiceException("Tekstikappaleviitettä ei saatu haettua: " + e.getMessage());
         }
     }
@@ -86,7 +86,7 @@ public class YlopsServiceImpl implements YlopsService {
                     opsId,
                     tekstikappaleId);
             return objectMapper.readValue(response.getBody(), TekstiKappaleViiteDto.class);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new ServiceException("Perustetekstikappaletta ei saatu haettua: " + e.getMessage());
         }
     }
@@ -100,7 +100,7 @@ public class YlopsServiceImpl implements YlopsService {
                     String.class,
                     oid);
             return objectMapper.readValue(response.getBody(), OrganisaatioDto.class);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new ServiceException("Organisaatiota ei saatu haettua: " + e.getMessage());
         }
     }
@@ -115,7 +115,7 @@ public class YlopsServiceImpl implements YlopsService {
                     opsId,
                     tiedostonimi);
             return response.getBody();
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new ServiceException("Dokumenttiliitettä ei saatu haettua: " + e.getMessage());
         }
     }

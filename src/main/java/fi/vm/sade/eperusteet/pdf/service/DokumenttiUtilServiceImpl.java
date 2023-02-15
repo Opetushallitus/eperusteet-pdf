@@ -9,8 +9,11 @@ import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -29,7 +32,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -41,6 +46,16 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
 
     @Autowired
     private CommonExternalService commonExternalService;
+
+    @Override
+    public RestTemplate createRestTemplateWithImageConversionSupport() {
+        return createRestTemplate(Arrays.asList(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG));
+    }
+
+    @Override
+    public RestTemplate createRestTemplateWithPdfConversionSupport() {
+        return createRestTemplate(List.of(MediaType.APPLICATION_PDF));
+    }
 
     @Override
     public void buildImages(DokumenttiBase docBase, GeneratorData generatorData) {
@@ -160,5 +175,14 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
             throw new BusinessRuleViolationException("kuva-uuid-ei-loytynyt");
         }
         return uuid;
+    }
+
+    private RestTemplate createRestTemplate(List<MediaType> mediaTypes) {
+        ByteArrayHttpMessageConverter converter = new ByteArrayHttpMessageConverter();
+        converter.setSupportedMediaTypes(mediaTypes);
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setMessageConverters(List.of(converter));
+        return restTemplate;
     }
 }

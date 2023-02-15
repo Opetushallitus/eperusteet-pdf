@@ -4,20 +4,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
 import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteJulkinenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
-import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
+import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import javax.annotation.PostConstruct;
 
 @Service
 public class EperusteetServiceImpl implements EperusteetService {
@@ -29,36 +27,40 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Value("${fi.vm.sade.eperusteet.pdf.eperusteet-service:''}")
     private String eperusteetServiceUrl;
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
-    private RestTemplateBuilder restTemplateBuilder;
+    private DokumenttiUtilService dokumenttiUtilService;
+
 
     @Autowired
     HttpEntity httpEntity;
 
-    @PostConstruct
-    protected void init() {
-        restTemplate = restTemplateBuilder
-                .errorHandler(new RestTemplateResponseErrorHandler())
-                .build();
+    @Override
+    public void postPdfData(byte[] pdfData, Long dokumenttiId) {
+        try {
+            HttpEntity<byte[]> entity = new HttpEntity<>(pdfData);
+            dokumenttiUtilService.createRestTemplateWithPdfConversionSupport().exchange(eperusteetServiceUrl + "/api/dokumentit/pdf/data/{dokumenttiId}",
+                    HttpMethod.POST,
+                    entity,
+                    String.class,
+                    dokumenttiId);
+        } catch (Exception e) {
+            throw new ServiceException("PDF-dataa ei saatu lähetettyä: " + e.getMessage());
+        }
     }
 
     @Override
-    public PerusteKaikkiDto getPerusteKaikkiDto(Long id, Integer revision) {
+    public void updateDokumenttiTila(DokumenttiTila tila, Long dokumenttiId) {
         try {
-            String url = eperusteetServiceUrl + EPERUSTEET_API + id + "/kaikki";
-            if (revision != null) {
-                url = url.concat("?rev=" + revision);
-            }
-
-            ResponseEntity<String> response = restTemplate.exchange(url,
-                    HttpMethod.GET,
-                    httpEntity,
-                    String.class);
-            return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
+            HttpEntity<DokumenttiTila> entity = new HttpEntity<>(tila);
+            restTemplate.exchange(eperusteetServiceUrl + "/api/dokumentit/pdf/tila/{dokumenttiId}",
+                    HttpMethod.POST,
+                    entity,
+                    String.class,
+                    dokumenttiId);
         } catch (Exception e) {
-            throw new ServiceException("Perustedataa ei saatu haettua: " + e.getMessage());
+            throw new ServiceException("PDF-generoinnin tilaa ei saatu päivitettyä: " + e.getMessage());
         }
     }
 

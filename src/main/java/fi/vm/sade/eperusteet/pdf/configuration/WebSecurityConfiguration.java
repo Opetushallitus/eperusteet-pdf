@@ -23,6 +23,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/pdf/**").permitAll()
                 .anyRequest().authenticated();
 
         // TODO: poistettava myöhemmin, mahdollistaa dev-kälikutsun

@@ -128,7 +128,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     private DokumenttiUtilService dokumenttiUtilService;
 
     @Override
-    public Document generateXML(GeneratorData generatorData, PerusteKaikkiDto perusteData) throws ParserConfigurationException, JsonProcessingException {
+    public Document generateXML(PerusteKaikkiDto perusteData, GeneratorData generatorData) throws ParserConfigurationException, JsonProcessingException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         Document doc = docBuilder.newDocument();

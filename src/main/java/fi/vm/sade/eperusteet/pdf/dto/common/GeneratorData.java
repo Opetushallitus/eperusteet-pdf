@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 public class GeneratorData {
     private Long id;
-    private Integer revision;
     private Kieli kieli;
     private DokumenttiTyyppi tyyppi;
     private Long ktId;
