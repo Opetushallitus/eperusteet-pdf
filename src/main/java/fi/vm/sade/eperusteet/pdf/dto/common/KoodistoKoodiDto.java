@@ -6,15 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 
+// Cache haluaa, että on Serializable
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
-public class KoodistoKoodiDto {
+public class KoodistoKoodiDto implements Serializable {
     private Long id;
     private String koodiUri;
     private String koodiArvo;

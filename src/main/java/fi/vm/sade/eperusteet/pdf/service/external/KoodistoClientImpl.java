@@ -30,22 +30,12 @@ public class KoodistoClientImpl implements KoodistoClient {
     private String koodistoServiceUrl;
 
     private static final String KOODISTO_API = "/rest/json/";
-    private static final String CODEELEMENT = "/rest/codeelement";
 
     @Autowired
     RestClientFactory restClientFactory;
 
     @Autowired
     KoodistoClient self; // for cacheable
-
-//    @Autowired
-//    CacheManager cacheManager;
-
-//    @Autowired
-//    OphClientHelper ophClientHelper;
-
-//    @Autowired
-//    private DtoMapper mapper;
 
     @Autowired
     HttpEntity httpEntity;
@@ -68,7 +58,7 @@ public class KoodistoClientImpl implements KoodistoClient {
     }
 
     @Override
-    @Cacheable(value = "koodistot", key = "#p0 + #p1")
+    @Cacheable(value = "koodistot", key = "'koodistot'")
     public List<KoodistoKoodiDto> getAll(String koodisto, boolean onlyValidKoodis) {
         String url = koodistoServiceUrl + KOODISTO_API + koodisto + "/koodi?onlyValidKoodis=" + onlyValidKoodis;
         try {
@@ -90,7 +80,7 @@ public class KoodistoClientImpl implements KoodistoClient {
     }
 
     @Override
-    @Cacheable("koodistokoodit")
+    @Cacheable(value = "koodistokoodit", key = "#p0 + #p1", unless="#result == null")
     public KoodistoKoodiDto get(String koodistoUri, String koodiUri, Long versio) {
         if (koodistoUri == null || koodiUri == null) {
             return null;
