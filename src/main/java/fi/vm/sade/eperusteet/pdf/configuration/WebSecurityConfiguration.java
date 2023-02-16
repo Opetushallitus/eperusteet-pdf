@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.web.cors.CorsConfiguration;
 
 @Profile("!dev")
 @Configuration
@@ -25,8 +24,5 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/pdf/**").permitAll()
                 .anyRequest().authenticated();
-
-        // TODO: poistettava myöhemmin, mahdollistaa dev-kälikutsun
-        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
     }
 }

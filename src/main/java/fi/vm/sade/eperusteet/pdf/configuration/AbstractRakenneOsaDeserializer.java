@@ -9,8 +9,6 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -36,6 +34,4 @@ public class AbstractRakenneOsaDeserializer extends StdDeserializer<AbstractRake
         }
         throw new JsonMappingException(jp, "Tuntematon rakenneosan", jp.getCurrentLocation());
     }
-
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractRakenneOsaDeserializer.class);
 }

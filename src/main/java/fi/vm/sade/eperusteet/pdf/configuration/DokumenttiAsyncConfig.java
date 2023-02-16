@@ -23,7 +23,6 @@ public class DokumenttiAsyncConfig implements AsyncConfigurer {
         return Executors.newSingleThreadExecutor();
     }
 
-
     @Override
     @Bean(name = "docTaskExecutor")
     public Executor getAsyncExecutor() {

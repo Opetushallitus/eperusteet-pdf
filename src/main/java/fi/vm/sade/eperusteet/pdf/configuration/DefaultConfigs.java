@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Import;
 @Import({ RestTemplateConfig.class })
 public class DefaultConfigs {
 
-
     //TODO: temppitavaraa devauksen ajaksi
     private static final int TIMEOUT = 60000;
     public static final String CALLER_ID = "1.2.246.562.10.00000000001.eperusteet-amosaa";

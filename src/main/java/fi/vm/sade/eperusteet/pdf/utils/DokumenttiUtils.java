@@ -8,11 +8,6 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.enums.LaajuusYksikko;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.pdfbox.preflight.PreflightDocument;
-import org.apache.pdfbox.preflight.ValidationResult;
-import org.apache.pdfbox.preflight.exception.SyntaxValidationException;
-import org.apache.pdfbox.preflight.parser.PreflightParser;
-import org.apache.pdfbox.preflight.utils.ByteArrayDataSource;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
 import org.springframework.util.StringUtils;
@@ -20,17 +15,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -190,45 +174,6 @@ public class DokumenttiUtils {
         }
 
         return out.toString();
-    }
-
-    public static ValidationResult validatePdf(byte[] pdf) throws IOException {
-        ValidationResult result;
-        InputStream is = new ByteArrayInputStream(pdf);
-        PreflightParser parser = new PreflightParser(new ByteArrayDataSource(is));
-
-        try {
-            parser.parse();
-
-            PreflightDocument document = parser.getPreflightDocument();
-            document.validate();
-
-            // Get validation result
-            result = document.getResult();
-            document.close();
-
-        } catch (SyntaxValidationException e) {
-            result = e.getResult();
-        }
-
-        return result;
-    }
-
-    public static ByteArrayOutputStream printDocument(Document doc) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-            transformer.transform(new DOMSource(doc), new StreamResult(new OutputStreamWriter(out, "UTF-8")));
-        } catch (IOException | TransformerException ex) {
-            return out;
-        }
-        return out;
     }
 
     public static Element newBoldElement(Document doc, String teksti) {
