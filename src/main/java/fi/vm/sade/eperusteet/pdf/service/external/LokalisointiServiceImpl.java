@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.pdf.service;
+package fi.vm.sade.eperusteet.pdf.service.external;
 
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisointiDto;
 import org.slf4j.Logger;

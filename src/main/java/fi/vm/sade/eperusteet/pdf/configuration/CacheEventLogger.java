@@ -8,6 +8,6 @@ import org.ehcache.event.CacheEventListener;
 public class CacheEventLogger implements CacheEventListener<Object, Object> {
     @Override
     public void onEvent(CacheEvent<? extends Object, ? extends Object> cacheEvent) {
-        log.info("Cachetettu...");
+        log.info("Cachetetaan '{}'...  ", cacheEvent.getNewValue() != null ? cacheEvent.getNewValue().getClass().getSimpleName() : cacheEvent.getKey());
     }
 }
