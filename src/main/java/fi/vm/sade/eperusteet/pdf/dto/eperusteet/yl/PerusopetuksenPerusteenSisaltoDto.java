@@ -25,7 +25,7 @@ public class PerusopetuksenPerusteenSisaltoDto implements PerusteenSisaltoDto {
     private List<OppiaineLaajaDto> oppiaineet;
     private Set<VuosiluokkaKokonaisuusDto> vuosiluokkakokonaisuudet;
 
-    public Optional<OppiaineBaseDto> getOppiaine(UUID tunniste) {
+    public Optional<OppiaineLaajaDto> getOppiaine(UUID tunniste) {
         return oppiaineet.stream()
                 .flatMap(oa -> Stream.concat(Stream.of(oa), Nulls.nullToEmpty(oa.getOppimaarat()).stream()))
                 .filter(oa -> Objects.equals(oa.getTunniste(), tunniste))

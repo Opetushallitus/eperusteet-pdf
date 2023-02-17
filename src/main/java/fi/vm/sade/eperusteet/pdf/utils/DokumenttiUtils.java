@@ -31,6 +31,10 @@ public class DokumenttiUtils {
         }
     }
 
+    public static boolean hasLokalisoituteksti(DokumenttiBase docBase, LokalisoituTekstiDto lTeksti) {
+        return lTeksti != null && lTeksti.getTekstit() != null && lTeksti.getTekstit().get(docBase.getKieli()) != null;
+    }
+
     public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTekstiDto lTeksti, String tagi) {
         addLokalisoituteksti(docBase, lTeksti, tagi, null);
     }
@@ -89,10 +93,26 @@ public class DokumenttiUtils {
     }
 
     public static void addHeader(DokumenttiBase docBase, String text) {
+        addHeader(docBase, text, null);
+    }
+
+    public static void addHeader(DokumenttiBase docBase, String text, String id) {
+        addHeader(docBase, text, id, true);
+    }
+
+    public static void addHeader(DokumenttiBase docBase, String text, boolean showHeaderNumber) {
+        addHeader(docBase, text, null, showHeaderNumber);
+    }
+
+    public static void addHeader(DokumenttiBase docBase, String text, String id, boolean showHeaderNumber) {
         if (text != null) {
             Element header = docBase.getDocument().createElement("h" + docBase.getGenerator().getDepth());
             header.setAttribute("number", docBase.getGenerator().generateNumber());
-            header.appendChild(docBase.getDocument().createTextNode(unescapeHtml5(text)));
+            header.setAttribute("showHeaderNumber", showHeaderNumber + "");
+            header.appendChild(docBase.getDocument().createTextNode(cleanHtml(text)));
+            if (id != null) {
+                header.setAttribute("id", id);
+            }
             docBase.getBodyElement().appendChild(header);
         }
     }
