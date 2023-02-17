@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.pdf.dto.eperusteet.opas.lops2019.laajaalainenosaaminen;
+package fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.laajaalainenosaaminen;
 
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
