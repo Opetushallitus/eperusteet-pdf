@@ -780,10 +780,10 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 addHeader(docBase, messages.translate("docgen.laaja_alaiset_osaamiset.title", docBase.getKieli()));
 
                 laajaalaisetosaamiset.forEach(laajaalainenOsaaminen -> {
-                    String nimi = getTextString(docBase, getOptionalValue(laajaalainenOsaaminen.getNimi()));
+                    String nimi = getTextString(docBase, laajaalainenOsaaminen.getNimi());
                     addTeksti(docBase, nimi, "h5");
 
-                    String teksti = getTextString(docBase, getOptionalValue(laajaalainenOsaaminen.getKuvaus()));
+                    String teksti = getTextString(docBase, laajaalainenOsaaminen.getKuvaus());
                     addTeksti(docBase, teksti, "div");
                 });
             }
@@ -1607,8 +1607,8 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
     private void addTekstiOsa(DokumenttiPeruste docBase, Optional<TekstiOsaDto> tekstiOsa) {
         if (tekstiOsa.isPresent()) {
-            addTeksti(docBase, getTextString(docBase, getOptionalValue(tekstiOsa.get().getOtsikko())), "h5");
-            addTeksti(docBase, getTextString(docBase, getOptionalValue(tekstiOsa.get().getTeksti())), "div");
+            addTeksti(docBase, getTextString(docBase, tekstiOsa.get().getOtsikko()), "h5");
+            addTeksti(docBase, getTextString(docBase, tekstiOsa.get().getTeksti()), "div");
         }
     }
 
