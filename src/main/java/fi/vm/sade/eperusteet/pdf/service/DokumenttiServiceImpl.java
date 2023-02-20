@@ -3,7 +3,6 @@ package fi.vm.sade.eperusteet.pdf.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
-import com.google.common.base.Throwables;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;

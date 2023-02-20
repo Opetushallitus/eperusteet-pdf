@@ -2,8 +2,6 @@ package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl;
 
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenSisaltoDto;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.PerusteOppiaineDto;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.PerusteVuosiluokkakokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.utils.Nulls;
 import lombok.AllArgsConstructor;
 import lombok.Data;

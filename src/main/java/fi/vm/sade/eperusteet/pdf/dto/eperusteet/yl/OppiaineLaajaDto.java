@@ -1,8 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Reference;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.PerusteOppiaineenVuosiluokkakokonaisuusDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

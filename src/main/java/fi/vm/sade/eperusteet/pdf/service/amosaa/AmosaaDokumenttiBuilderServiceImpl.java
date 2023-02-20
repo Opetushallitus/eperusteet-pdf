@@ -58,7 +58,6 @@ import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClient;
 import fi.vm.sade.eperusteet.pdf.utils.CharapterNumberGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -90,7 +89,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static fi.vm.sade.eperusteet.pdf.dto.enums.RakenneModuuliRooli.VIRTUAALINEN;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addLokalisoituteksti;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addTeksti;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
@@ -490,21 +488,22 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             }
         });
 
+        // TODO: ei haeta enää koodistosta
         // Lisätään tutkinnossa määritettävä rakenne osan aliosat
-        if (VIRTUAALINEN.equals(rakenneModuuliDto.getRooli())) {
-            if (suorituspolkuMap.containsKey(rakenneModuuliDto.getTunniste())) {
-                SuorituspolkuRiviDto rivi = suorituspolkuMap.get(rakenneModuuliDto.getTunniste());
-                Set<String> koodit = rivi.getKoodit();
-                if (koodit != null) {
-                    koodit.forEach(koodi -> {
-                        KoodistoKoodiDto koodistoKoodiDto = koodistoClient.getByUri(koodi);
-                        if (koodistoKoodiDto != null) {
-                            addSuorituspolunKoodiOsa(docBase, koodistoKoodiDto, tbody, depth + 1);
-                        }
-                    });
-                }
-            }
-        }
+//        if (VIRTUAALINEN.equals(rakenneModuuliDto.getRooli())) {
+//            if (suorituspolkuMap.containsKey(rakenneModuuliDto.getTunniste())) {
+//                SuorituspolkuRiviDto rivi = suorituspolkuMap.get(rakenneModuuliDto.getTunniste());
+//                Set<String> koodit = rivi.getKoodit();
+//                if (koodit != null) {
+//                    koodit.forEach(koodi -> {
+//                        KoodistoKoodiDto koodistoKoodiDto = koodistoClient.getByUri(koodi);
+//                        if (koodistoKoodiDto != null) {
+//                            addSuorituspolunKoodiOsa(docBase, koodistoKoodiDto, tbody, depth + 1);
+//                        }
+//                    });
+//                }
+//            }
+//        }
     }
 
     private void addMuodostumisSaanto(DokumenttiAmosaa docBase,

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimuksenKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
-import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
-import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.MuodostumisSaantoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
@@ -67,13 +65,11 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TekstiOsaDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
-import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClient;
 import fi.vm.sade.eperusteet.pdf.utils.CharapterNumberGenerator;
 import fi.vm.sade.eperusteet.pdf.utils.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -119,9 +115,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
     @Autowired
     private LocalizedMessagesService messages;
-
-    @Autowired
-    private KoodistoClient koodistoService;
 
     @Autowired
     private DokumenttiUtilService dokumenttiUtilService;
@@ -360,23 +353,9 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             tutkintonimikkeet.setAttribute("translate", messages.translate("tutkintonimikkeet", docBase.getKieli()));
 
             nimikeKoodit.forEach(tnkoodi -> {
-                if (tnkoodi.getTutkintonimikeUri().startsWith("temporary")) {
-                    Element tutkintonimike = docBase.getDocument().createElement("tutkintonimike");
-                    tutkintonimike.setTextContent(getTextString(docBase, tnkoodi.getNimi()));
-                    tutkintonimikkeet.appendChild(tutkintonimike);
-                } else {
-                    KoodistoKoodiDto koodiDto = koodistoService.get("tutkintonimikkeet", tnkoodi.getTutkintonimikeUri());
-
-                    for (KoodistoMetadataDto meta : koodiDto.getMetadata()) {
-                        if (meta.getKieli().equalsIgnoreCase(docBase.getKieli().toString())) {
-                            Element tutkintonimike = docBase.getDocument().createElement("tutkintonimike");
-                            tutkintonimike.setTextContent(meta.getNimi() + " (" + tnkoodi.getTutkintonimikeArvo() + ")");
-                            tutkintonimikkeet.appendChild(tutkintonimike);
-                        } else {
-                            log.warn("{} was no match", meta.getKieli());
-                        }
-                    }
-                }
+                Element tutkintonimike = docBase.getDocument().createElement("tutkintonimike");
+                tutkintonimike.setTextContent(tnkoodi.getNimi().get(docBase.getKieli()) + " (" + tnkoodi.getTutkintonimikeArvo() + ")");
+                tutkintonimikkeet.appendChild(tutkintonimike);
             });
             if (tutkintonimikkeet.hasChildNodes()) {
                 docBase.getHeadElement().appendChild(tutkintonimikkeet);

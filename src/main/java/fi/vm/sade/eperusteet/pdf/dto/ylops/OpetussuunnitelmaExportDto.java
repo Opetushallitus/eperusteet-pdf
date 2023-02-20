@@ -1,7 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019LaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OppiaineJarjestysDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.export.Lops2019OpintojaksoExportDto;

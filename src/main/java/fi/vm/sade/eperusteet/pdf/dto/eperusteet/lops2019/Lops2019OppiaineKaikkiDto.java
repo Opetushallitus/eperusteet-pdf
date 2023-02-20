@@ -4,7 +4,6 @@ import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019OppiaineBaseDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.moduuli.Lops2019ModuuliDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019SortableOppiaineDto;
-import fi.vm.sade.eperusteet.utils.dto.peruste.lops2019.tutkinnonrakenne.KoodiDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

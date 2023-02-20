@@ -12,7 +12,6 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
-import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.pdf.service.external.YlopsService;
@@ -48,12 +47,9 @@ import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
 @Slf4j
 @Service
 public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilderService {
-    
-    @Autowired
-    private PerusopetusService perusopetusService;
 
     @Autowired
-    private LukioService lukioService;
+    private PerusopetusService perusopetusService;
 
     @Autowired
     private Lops2019DokumenttiService lops2019DokumenttiService;
