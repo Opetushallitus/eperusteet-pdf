@@ -111,7 +111,6 @@ import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.newItalicElement;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.tagTeksti;
 
 @Slf4j
-@Profile("!test")
 @Service
 public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumenttiBuilderService {
 

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteTyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.opas.lops2019.Lops2019SisaltoDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.Lops2019SisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.TutkintoonvalmentavaSisaltoDto;

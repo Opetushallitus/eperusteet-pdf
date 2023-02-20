@@ -15,6 +15,6 @@ import java.util.UUID;
 public class LaajaalainenOsaaminenDto implements ReferenceableDto, AIPEHasId {
     private Long id;
     private UUID tunniste;
-    private Optional<LokalisoituTekstiDto> nimi;
-    private Optional<LokalisoituTekstiDto> kuvaus;
+    private LokalisoituTekstiDto nimi;
+    private LokalisoituTekstiDto kuvaus;
 }

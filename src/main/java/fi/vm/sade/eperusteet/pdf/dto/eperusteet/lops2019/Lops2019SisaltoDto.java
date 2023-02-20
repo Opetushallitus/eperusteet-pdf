@@ -1,6 +1,6 @@
-package fi.vm.sade.eperusteet.pdf.dto.eperusteet.opas.lops2019;
+package fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019;
 
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.opas.lops2019.laajaalainenosaaminen.Lops2019LaajaAlainenOsaaminenKokonaisuusDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.laajaalainenosaaminen.Lops2019LaajaAlainenOsaaminenKokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenSisaltoDto;
 import lombok.AllArgsConstructor;

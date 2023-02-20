@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.StringJoiner;
 
 @Slf4j
-@Profile("!test")
 @Service
 public class KVLiiteBuilderServiceImpl implements KVLiiteBuilderService {
 

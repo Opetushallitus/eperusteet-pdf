@@ -7,6 +7,7 @@ import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.enums.LaajuusYksikko;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiosaDto;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
@@ -28,6 +29,10 @@ public class DokumenttiUtils {
         } else {
             return "docgen.meta.subject.kvliite";
         }
+    }
+
+    public static boolean hasLokalisoituteksti(DokumenttiBase docBase, LokalisoituTekstiDto lTeksti) {
+        return lTeksti != null && lTeksti.getTekstit() != null && lTeksti.getTekstit().get(docBase.getKieli()) != null;
     }
 
     public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTekstiDto lTeksti, String tagi) {
@@ -88,10 +93,26 @@ public class DokumenttiUtils {
     }
 
     public static void addHeader(DokumenttiBase docBase, String text) {
+        addHeader(docBase, text, null);
+    }
+
+    public static void addHeader(DokumenttiBase docBase, String text, String id) {
+        addHeader(docBase, text, id, true);
+    }
+
+    public static void addHeader(DokumenttiBase docBase, String text, boolean showHeaderNumber) {
+        addHeader(docBase, text, null, showHeaderNumber);
+    }
+
+    public static void addHeader(DokumenttiBase docBase, String text, String id, boolean showHeaderNumber) {
         if (text != null) {
             Element header = docBase.getDocument().createElement("h" + docBase.getGenerator().getDepth());
             header.setAttribute("number", docBase.getGenerator().generateNumber());
-            header.appendChild(docBase.getDocument().createTextNode(unescapeHtml5(text)));
+            header.setAttribute("showHeaderNumber", showHeaderNumber + "");
+            header.appendChild(docBase.getDocument().createTextNode(cleanHtml(text)));
+            if (id != null) {
+                header.setAttribute("id", id);
+            }
             docBase.getBodyElement().appendChild(header);
         }
     }
@@ -214,4 +235,47 @@ public class DokumenttiUtils {
                 return "docgen.laajuus.op"; // palautetaan 'op', joka oli default ennen laajuusyksikön tuloa
         }
     }
+
+    public static void addTekstiosa(DokumenttiBase docBase, TekstiosaDto tekstiosa, String tagi) {
+        if (tekstiosa != null) {
+            LokalisoituTekstiDto otsikko = tekstiosa.getOtsikko();
+            LokalisoituTekstiDto teksti = tekstiosa.getTeksti();
+            if (otsikko != null) {
+                addLokalisoituteksti(docBase, otsikko, tagi);
+            }
+            if (teksti != null) {
+                addLokalisoituteksti(docBase, teksti, tagi);
+            }
+        }
+    }
+
+    public static String cleanHtml(String string) {
+        if (string == null) {
+            return "";
+        }
+        String cleanXmlString = Jsoup.clean(stripNonValidXMLCharacters(string), ValidHtml.WhitelistType.NORMAL_PDF.getWhitelist());
+        return StringEscapeUtils.unescapeHtml4(cleanXmlString.replace("&nbsp;", " "));
+    }
+
+    public static Element getList(DokumenttiBase docBase, Collection<LokalisoituTekstiDto> tekstit) {
+        return getStringList(docBase, tekstit.stream()
+                .filter(Objects::nonNull)
+                .map(kuvaus -> getTextString(docBase, kuvaus))
+                .collect(Collectors.toList()));
+    }
+
+    public static Element getStringList(DokumenttiBase docBase, Collection<String> tekstit) {
+        Element ul = docBase.getDocument().createElement("ul");
+        tekstit.stream()
+                .filter(str -> !StringUtils.isEmpty(str))
+                .forEach(str -> {
+                    Element li = docBase.getDocument().createElement("li");
+                    Document doc = new W3CDom().fromJsoup(Jsoup.parse(str));
+                    Node node = doc.getDocumentElement().getChildNodes().item(1).getFirstChild();
+                    li.appendChild(docBase.getDocument().importNode(node, true));
+                    ul.appendChild(li);
+                });
+        return ul;
+    }
+
 }

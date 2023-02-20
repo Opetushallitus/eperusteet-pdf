@@ -38,4 +38,8 @@ public class PerusteOppiaineDto implements ReferenceableDto {
                 .filter(v -> v.getVuosiluokkaKokonaisuus().getTunniste().equals(tunniste))
                 .findAny();
     }
+
+    public Optional<PerusteOppiaineenVuosiluokkakokonaisuusDto> getVuosiluokkakokonaisuus(String tunniste) {
+        return getVuosiluokkakokonaisuus(UUID.fromString(tunniste));
+    }
 }

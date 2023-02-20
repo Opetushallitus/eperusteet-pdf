@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.pdf.dto.eperusteet.opas.lops2019.oppiaineet.moduuli;
+package fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.moduuli;
 
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Lops2019ModuuliSisaltoDto {
+public class Lops2019ModuuliTavoiteDto {
     private LokalisoituTekstiDto kohde;
-    private List<LokalisoituTekstiDto> sisallot;
+    private List<LokalisoituTekstiDto> tavoitteet;
 }
