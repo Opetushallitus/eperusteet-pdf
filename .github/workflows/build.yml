@@ -40,8 +40,11 @@ jobs:
         run: |
           git clone https://github.com/Opetushallitus/ci-tools.git
           source ci-tools/common/setup-tools.sh
-          export BASE_IMAGE="baseimage-fatjar-openjdk11:ga-171"
+          export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
+          ls -la
           cp eperusteet-pdf-service.jar $DOCKER_BUILD_DIR/artifact/eperusteet-pdf.jar
+          ls -la $DOCKER_BUILD_DIR
+          echo $DOCKER_BUILD_DIR
           ./ci-tools/common/pull-image.sh
           ./ci-tools/github-build/build-fatjar.sh $ARTIFACT_NAME
           ./ci-tools/github-build/upload-image.sh $ARTIFACT_NAME
