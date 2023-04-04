@@ -46,6 +46,7 @@ jobs:
           echo "Current working directory content is.."
           ls -la
           cp eperusteet-pdf-service.jar $DOCKER_BUILD_DIR/artifact/eperusteet-pdf.jar
+          echo "Generating some test content to config" >> $DOCKER_BUILD_DIR/config/testfile.txt
           echo "Contents of DOCKER_BUILD_DIR is.."
           ls -la "$DOCKER_BUILD_DIR"
           echo "Contents of DOCKER_BUILD_DIR/artifacts/.."
