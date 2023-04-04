@@ -50,7 +50,7 @@ jobs:
           ls -la "$DOCKER_BUILD_DIR"
           echo "Contents of DOCKER_BUILD_DIR/artifacts/.."
           ls -la "$DOCKER_BUILD_DIR"/artifact/
-	        echo "DOCKER_BUILD_DIR is.."
+          echo "DOCKER_BUILD_DIR is.."
           echo "$DOCKER_BUILD_DIR"
           ./ci-tools/common/pull-image.sh
           ./ci-tools/github-build/build-fatjar.sh $ARTIFACT_NAME
