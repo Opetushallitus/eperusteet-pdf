@@ -41,20 +41,8 @@ jobs:
           git clone https://github.com/Opetushallitus/ci-tools.git
           source ci-tools/common/setup-tools.sh
           export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
-          echo "Current working directory is.."
-          pwd
-          echo "Current working directory content is.."
-          ls -la
           cp eperusteet-pdf-service.jar $DOCKER_BUILD_DIR/artifact/eperusteet-pdf.jar
           echo "Generating some test content to config" >> $DOCKER_BUILD_DIR/config/testfile.txt
-          echo "Contents of DOCKER_BUILD_DIR is.."
-          ls -la "$DOCKER_BUILD_DIR"
-          echo "Contents of DOCKER_BUILD_DIR/artifacts/.."
-          ls -la "$DOCKER_BUILD_DIR"/artifact/
-          echo "Contents of DOCKER_BUILD_DIR/config/.."
-          ls -la "$DOCKER_BUILD_DIR"/config/
-          echo "DOCKER_BUILD_DIR is.."
-          echo "$DOCKER_BUILD_DIR"
           ./ci-tools/common/pull-image.sh
           ./ci-tools/github-build/build-fatjar.sh $ARTIFACT_NAME
           ./ci-tools/github-build/upload-image.sh $ARTIFACT_NAME
