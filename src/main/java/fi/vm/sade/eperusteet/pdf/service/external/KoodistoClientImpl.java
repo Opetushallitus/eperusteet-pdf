@@ -5,10 +5,12 @@ import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.fenum.qual.AwtFlowLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,7 @@ public class KoodistoClientImpl implements KoodistoClient {
     RestClientFactory restClientFactory;
 
     @Autowired
+    @Lazy
     KoodistoClient self; // for cacheable
 
     @Autowired
