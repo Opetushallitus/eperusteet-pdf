@@ -1169,11 +1169,11 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             List<Ammattitaitovaatimus2019Dto> vaatimukset = ammattitaitovaatimukset2019.getVaatimukset();
             List<AmmattitaitovaatimustenKohdealue2019Dto> kohdealueet = ammattitaitovaatimukset2019.getKohdealueet();
 
-            if (kohde != null) {
-                addTeksti(docBase, getTextString(docBase, kohde), "p");
-            }
-
             if (!ObjectUtils.isEmpty(vaatimukset) || !ObjectUtils.isEmpty(kohdealueet)) {
+                if (kohde != null && !ObjectUtils.isEmpty(vaatimukset)) {
+                    addTeksti(docBase, getTextString(docBase, kohde), "p");
+                }
+
                 Element listaEl = docBase.getDocument().createElement("ul");
                 docBase.getBodyElement().appendChild(listaEl);
 
@@ -1691,13 +1691,13 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
                 // Tavoitealueet
                 addTeksti(docBase, messages.translate("docgen.tavoitealueet.title", docBase.getKieli()), "h6", td);
-                // TODO: fix
+                // TODO: fix, datassa tieto referenssinä
 //                opetuksenTavoite.getKohdealueet().forEach(opetuksenKohdealue -> addTeksti(docBase, getTextString(docBase, getOptionalValue(opetuksenKohdealue.getNimi())), "div", td));
 
                 // Laaja-alainen osaaminen
                 addTeksti(docBase, messages.translate("docgen.laaja_alainen_osaaminen.title", docBase.getKieli()), "h6", td);
                 StringJoiner joiner = new StringJoiner(", ");
-                // TODO: fix
+                // TODO: fix, datassa tieto referenssinä
 //                opetuksenTavoite.getLaajattavoitteet().forEach(laajaalainenOsaaminen -> joiner.add(getTextString(docBase, getOptionalValue(laajaalainenOsaaminen.getNimi()))));
                 addTeksti(docBase, joiner.toString(), "div", td);
 
