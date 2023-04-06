@@ -12,7 +12,7 @@
 	<groupId>fi.vm.sade.eperusteet</groupId>
 	<artifactId>eperusteet-pdf-service</artifactId>
 	<name>eperusteet-pdf-service</name>
-	<version>0.1</version>
+	<version>0.1-SNAPSHOT</version>
 	
 	<properties>
 		<java.version>11</java.version>
