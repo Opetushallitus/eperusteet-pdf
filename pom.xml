@@ -20,7 +20,7 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<pdfbox.version>2.0.24</pdfbox.version>
-		<slf4j.version>1.7.21</slf4j.version>
+		<slf4j.version>1.7.36</slf4j.version>
 		<jsoup.version>1.9.2</jsoup.version>
 		<fop.version>2.6</fop.version>
 		<springfox.version>2.7.0</springfox.version>
