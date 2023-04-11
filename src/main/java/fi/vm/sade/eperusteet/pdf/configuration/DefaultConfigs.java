@@ -15,11 +15,11 @@ public class DefaultConfigs {
 
     //TODO: temppitavaraa devauksen ajaksi
     private static final int TIMEOUT = 60000;
-    public static final String CALLER_ID = "1.2.246.562.10.00000000001.eperusteet-amosaa";
-    @Value("${fi.vm.sade.eperusteet.amosaa.oph_username:''}")
+    public static final String CALLER_ID = "1.2.246.562.10.00000000001.eperusteet.pdf";
+    @Value("${fi.vm.sade.eperusteet.pdf.oph_username:''}")
     private String username;
 
-    @Value("${fi.vm.sade.eperusteet.amosaa.oph_password:''}")
+    @Value("${fi.vm.sade.eperusteet.pdf.oph_password:''}")
     private String password;
 
     @Value("${web.url.cas:''}")
@@ -53,7 +53,7 @@ public class DefaultConfigs {
 
             @Override
             public String getCallerId() {
-                return "1.2.246.562.10.00000000001.eperusteet.pdf";
+                return CALLER_ID;
             }
         };
     }

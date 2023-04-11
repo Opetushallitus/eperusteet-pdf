@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.external;
 
+import com.google.common.base.Throwables;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
@@ -115,7 +116,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     @Override
     public void postPdfData(byte[] pdfData, Long dokumenttiId, DokumenttiTyyppi tyyppi) {
         try {
-            HttpEntity<byte[]> entity = new HttpEntity<>(pdfData);
+            HttpEntity<byte[]> entity = new HttpEntity<>(pdfData, this.httpEntity.getHeaders());
             dokumenttiUtilService.createRestTemplateWithPdfConversionSupport().exchange(getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/data/{dokumenttiId}",
                     HttpMethod.POST,
                     entity,
@@ -129,13 +130,14 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     @Override
     public void updateDokumenttiTila(DokumenttiTila tila, Long dokumenttiId, DokumenttiTyyppi tyyppi) {
         try {
-            HttpEntity<DokumenttiTila> entity = new HttpEntity<>(tila);
+            HttpEntity<DokumenttiTila> entity = new HttpEntity<>(tila, this.httpEntity.getHeaders());
             restTemplate.exchange(getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/tila/{dokumenttiId}",
                     HttpMethod.POST,
                     entity,
                     String.class,
                     dokumenttiId);
         } catch (Exception e) {
+            log.error(Throwables.getStackTraceAsString(e));
             throw new ServiceException("PDF-generoinnin tilaa ei saatu päivitettyä: " + e.getMessage());
         }
     }

@@ -4,6 +4,7 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiEventListener;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
+import org.apache.commons.io.FileUtils;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
@@ -11,6 +12,7 @@ import org.apache.fop.apps.MimeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -61,27 +63,22 @@ public class PdfServiceImpl implements PdfService {
 
     @Override
     public byte[] xhtml2pdf(Document document, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi) throws IOException, TransformerException, SAXException, DokumenttiException {
-        return convertDocument2PDF(document, selectTemplate(tyyppi), meta, tyyppi);
-    }
-
-    private byte[] convertDocument2PDF(Document doc, File xslt, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi)
-            throws IOException, TransformerException, SAXException {
         // Alustetaan Streamit
         ByteArrayOutputStream xmlStream = new ByteArrayOutputStream();
         ByteArrayOutputStream foStream = new ByteArrayOutputStream();
         ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
 
         // Muunnetaan ops objekti xml muotoon
-        convertOps2XML(doc, xmlStream);
+        convertOps2XML(document, xmlStream);
 
         // Muunntetaan saatu xml malli fo:ksi
         InputStream xmlInputStream = new ByteArrayInputStream(xmlStream.toByteArray());
-        convertXML2FO(xmlInputStream, xslt, foStream);
+        convertXML2FO(xmlInputStream, selectTemplate(tyyppi), foStream);
 
         // Muunnetaan saatu fo malli pdf:ksi
         InputStream foInputStream = new ByteArrayInputStream(foStream.toByteArray());
 
-        convertFO2PDF(doc, foInputStream, pdfStream, meta, tyyppi);
+        convertFO2PDF(document, foInputStream, pdfStream, meta, tyyppi);
 
         return pdfStream.toByteArray();
     }
@@ -89,7 +86,7 @@ public class PdfServiceImpl implements PdfService {
     @SuppressWarnings("unchecked")
     private void convertFO2PDF(Document doc, InputStream fo, OutputStream pdf, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi)
             throws IOException, SAXException, TransformerException {
-        FopFactory fopFactory = FopFactory.newInstance(config.getFile());
+        FopFactory fopFactory = FopFactory.newInstance(new ClassPathResource("../../../../../../docgen/fop.xconf", this.getClass()).getFile());
 
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
         foUserAgent.setAccessibility(true);
@@ -151,7 +148,7 @@ public class PdfServiceImpl implements PdfService {
         transformer.transform(src, res);
     }
 
-    private void convertXML2FO(InputStream xml, File xslt, OutputStream fo) throws IOException, TransformerException {
+    private void convertXML2FO(InputStream xml, InputStream xslt, OutputStream fo) throws IOException, TransformerException {
         try {
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transformer = factory.newTransformer(new StreamSource(xslt));
@@ -165,15 +162,15 @@ public class PdfServiceImpl implements PdfService {
         }
     }
 
-    private File selectTemplate(DokumenttiTyyppi tyyppi) throws IOException, DokumenttiException {
+    private InputStream selectTemplate(DokumenttiTyyppi tyyppi) throws IOException, DokumenttiException {
         if (tyyppi.equals(DokumenttiTyyppi.PERUSTE)) {
-            return eperusteetTemplate.getFile();
+            return eperusteetTemplate.getInputStream();
         } else if (tyyppi.equals(DokumenttiTyyppi.OPS)) {
-            return amosaaTemplate.getFile();
+            return amosaaTemplate.getInputStream();
         } else if (tyyppi.equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
-            return ylopsTemplate.getFile();
+            return ylopsTemplate.getInputStream();
         } else if (tyyppi.equals(DokumenttiTyyppi.KVLIITE)) {
-            return kvLiiteTemplate.getFile();
+            return kvLiiteTemplate.getInputStream();
         } else {
             throw new DokumenttiException("Dokumentti-tyyppiä ei ole määritetty.");
         }

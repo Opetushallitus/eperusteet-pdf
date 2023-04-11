@@ -151,7 +151,9 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         docBase.setGenerator(new CharapterNumberGenerator());
         docBase.setKieli(generatorData.getKieli());
         docBase.setPeruste(perusteData);
-        docBase.setKvLiiteJulkinenDto(eperusteetService.getKvLiite(perusteData.getId()));
+        if (KoulutusTyyppi.of(perusteData.getKoulutustyyppi()).isAmmatillinen()) {
+            docBase.setKvLiiteJulkinenDto(eperusteetService.getKvLiite(perusteData.getId()));
+        }
         docBase.setGeneratorData(generatorData);
         docBase.setSisalto(perusteData.getSisallot().stream().findFirst().get().getSisalto());
         docBase.setAipeOpetuksenSisalto(perusteData.getAipeOpetuksenPerusteenSisalto());
