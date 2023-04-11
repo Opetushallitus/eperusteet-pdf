@@ -1,7 +1,5 @@
 package fi.vm.sade.eperusteet.pdf.service.ylops;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
 import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusTyyppi;
@@ -12,7 +10,6 @@ import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.exception.NotExistsException;
 import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
-import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.utils.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +29,6 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
 
     @Autowired
     private LocalizedMessagesService messages;
-
-    @Autowired
-    private EperusteetService eperusteetService;
-
-    private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 
     public void addYleisetOsuudet(DokumenttiYlops docBase) {
         Optional.ofNullable(docBase.getOps().getTekstit())

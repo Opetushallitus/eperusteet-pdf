@@ -165,11 +165,12 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
     }
 
     @Override
-    public GeneratorData createGeneratorData(Long perusteId, Long dokumenttiId, Kieli kieli, DokumenttiTyyppi tyyppi, GeneratorVersion versio) {
+    public GeneratorData createGeneratorData(Long perusteId, Long dokumenttiId, Kieli kieli, DokumenttiTyyppi tyyppi, GeneratorVersion versio, Long ktId) {
         GeneratorData generatorData = new GeneratorData();
         generatorData.setId(perusteId);
         generatorData.setDokumenttiId(dokumenttiId);
         generatorData.setKieli(kieli);
+        generatorData.setKtId(ktId);
         if (GeneratorVersion.KVLIITE.equals(versio)) {
             generatorData.setTyyppi(DokumenttiTyyppi.KVLIITE);
         } else {

@@ -78,18 +78,22 @@ public class CommonExternalServiceImpl implements CommonExternalService{
 
     @Override
     public byte[] getDokumenttiKuva(Long opsId, Kuvatyyppi kuvatyyppi, Kieli kieli, DokumenttiTyyppi dokumenttityyppi, Long ktId) {
-        //TODO: ei osaa vielä hakea amosaasta kuvia, koska rajapinta ei ole julkinen
+        ResponseEntity<byte[]> response;
         try {
-            ResponseEntity<byte[]> response = dokumenttiUtilService.createRestTemplateWithImageConversionSupport().exchange(getDokumenttiKuvaUrl(dokumenttityyppi, ktId),
+            response = dokumenttiUtilService.createRestTemplateWithImageConversionSupport().exchange(getDokumenttiKuvaUrl(dokumenttityyppi, ktId, opsId),
                     HttpMethod.GET,
                     httpEntity,
                     byte[].class,
                     opsId,
                     kuvatyyppi,
                     kieli);
-            return response.getBody();
         } catch (Exception e) {
             throw new ServiceException("Dokumenttikuvaa ei saatu haettua: " + e.getMessage());
+        }
+        if (response.getBody() == null) {
+            throw new ServiceException("Dokumenttikuvaa ei löytynyt");
+        } else {
+            return response.getBody();
         }
     }
 
@@ -172,9 +176,10 @@ public class CommonExternalServiceImpl implements CommonExternalService{
         }
     }
 
-    private String getDokumenttiKuvaUrl(DokumenttiTyyppi tyyppi, Long ktId) {
+    private String getDokumenttiKuvaUrl(DokumenttiTyyppi tyyppi, Long ktId, Long opsId) {
         if (tyyppi.equals(DokumenttiTyyppi.OPS)) {
-            return amosaaServiceUrl + AMOSAA_API + "koulutustoimijat/" + ktId +"/opetussuunnitelmat/{opsId}/dokumentti/kuva?opsId={opsId}&tyyppi={tyyppi}&kieli={kieli}";
+            // koska amosaan ja ylopsin urlien rakenne eroaa, ja amosaa vaatii opsId:n kahdesti, asetetaan tässä ensimmäinen kerta ja muut uriVariablet myöhemmin
+            return amosaaServiceUrl + "/api/koulutustoimijat/" + ktId + "/opetussuunnitelmat/" + opsId + "/dokumentti/kuva?opsId={opsId}&tyyppi={tyyppi}&kieli={kieli}";
         } else if (tyyppi.equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
             return ylopsServiceUrl + "/api/dokumentit/kuva?opsId={opsId}&tyyppi={tyyppi}&kieli={kieli}";
         } else {

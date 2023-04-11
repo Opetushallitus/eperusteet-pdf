@@ -23,8 +23,7 @@ import java.util.List;
 public class YlopsServiceImpl implements YlopsService {
 
     private static final String API = "/api/";
-    private static final String YLOPS_OPETUSSUUNNITELMA_API = "/api/opetussuunnitelmat/julkiset/{opsId}/julkaisu";
-    private static final String YLOPS_PERUSTEET_API = "/api/perusteet/";
+
     private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 
     @Value("${fi.vm.sade.eperusteet.pdf.ylops-service:''}")
