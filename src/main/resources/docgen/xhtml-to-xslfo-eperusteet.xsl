@@ -42,9 +42,9 @@
                                              extent="20mm"/>
                             <fo:region-start region-name="rs-left" extent="30mm"
                                              reference-orientation="90" display-align="before"
-                                             background-image="gradient.svg"
                                              background-repeat="no-repeat"
                                              background-position-horizontal="left"/>
+<!--                                           background-image="gradient.svg"-->
                             <fo:region-end extent="30mm"/>
                         </fo:simple-page-master>
 
@@ -62,9 +62,9 @@
                             <fo:region-start extent="30mm"/>
                             <fo:region-end region-name="re-right" extent="30mm"
                                            reference-orientation="90" display-align="after"
-                                           background-image="gradient.svg"
                                            background-repeat="no-repeat"
                                            background-position-horizontal="right"/>
+<!--                                           background-image="gradient.svg"-->
                         </fo:simple-page-master>
                     </xsl:when>
                 </xsl:choose>
@@ -112,16 +112,16 @@
                     <fo:block text-align="center">
                         <xsl:choose>
                             <xsl:when test="/html/@lang='fi' or /html/@lang='sv'">
-                                <fo:external-graphic src="logos/oph_su_ru.svg"
-                                                     height="14mm"
-                                                     content-height="scale-to-fit"
-                                                     scaling="uniform"/>
+<!--                                <fo:external-graphic src="logos/oph_su_ru.svg"-->
+<!--                                                     height="14mm"-->
+<!--                                                     content-height="scale-to-fit"-->
+<!--                                                     scaling="uniform"/>-->
                             </xsl:when>
                             <xsl:otherwise>
-                                <fo:external-graphic src="logos/oph_en.svg"
-                                                     height="14mm"
-                                                     content-height="scale-to-fit"
-                                                     scaling="uniform"/>
+<!--                                <fo:external-graphic src="logos/oph_en.svg"-->
+<!--                                                     height="14mm"-->
+<!--                                                     content-height="scale-to-fit"-->
+<!--                                                     scaling="uniform"/>-->
                             </xsl:otherwise>
                         </xsl:choose>
                     </fo:block>
@@ -628,8 +628,8 @@
                     <fo:table-row keep-with-next="always">
                         <fo:table-cell>
                             <fo:block>
-                                <fo:external-graphic src="{@src}" content-width="scale-to-fit" content-height="100%"
-                                                     width="100%" scaling="uniform"/>
+<!--                                <fo:external-graphic src="{@src}" content-width="scale-to-fit" content-height="100%"-->
+<!--                                                     width="100%" scaling="uniform"/>-->
                             </fo:block>
                         </fo:table-cell>
                     </fo:table-row>

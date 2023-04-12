@@ -65,9 +65,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Autowired
     private EperusteetService eperusteetService;
 
-    @Value("classpath:docgen/fop.xconf")
-    private Resource fopConfig;
-
     // FIXME: Tämä service pitää mockata. Onko enää ajankohtainen 2023?
     @Value("${spring.profiles.active:normal}")
     private String activeProfile;

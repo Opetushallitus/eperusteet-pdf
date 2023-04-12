@@ -13,6 +13,7 @@
 	<artifactId>eperusteet-pdf-service</artifactId>
 	<name>eperusteet-pdf-service</name>
 	<version>0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	
 	<properties>
 		<java.version>11</java.version>
@@ -22,7 +23,7 @@
 		<pdfbox.version>2.0.24</pdfbox.version>
 		<slf4j.version>1.7.21</slf4j.version>
 		<jsoup.version>1.9.2</jsoup.version>
-		<fop.version>2.6</fop.version>
+		<fop.version>2.8</fop.version>
 		<springfox.version>2.7.0</springfox.version>
 		<jackson.version>2.11.4</jackson.version>
 		<ehcache.version>2.6.11</ehcache.version>
@@ -180,6 +181,21 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>10.0.12</version>
+				<configuration>
+					<scan>0</scan>
+					<httpConnector>
+						<port>8083</port>
+					</httpConnector>
+					<webApp>
+						<contextPath>/eperusteet-pdf-service</contextPath>
+					</webApp>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

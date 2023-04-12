@@ -7,14 +7,22 @@ import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import org.apache.commons.io.FileUtils;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
+import org.apache.fop.apps.FopConfParser;
 import org.apache.fop.apps.FopFactory;
+import org.apache.fop.apps.FopFactoryBuilder;
 import org.apache.fop.apps.MimeConstants;
+import org.apache.fop.apps.io.ResourceResolverFactory;
+import org.apache.fop.configuration.ConfigurationException;
+import org.apache.fop.configuration.DefaultConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -41,6 +49,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 
 @Service
 public class PdfServiceImpl implements PdfService {
@@ -86,7 +95,7 @@ public class PdfServiceImpl implements PdfService {
     @SuppressWarnings("unchecked")
     private void convertFO2PDF(Document doc, InputStream fo, OutputStream pdf, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi)
             throws IOException, SAXException, TransformerException {
-        FopFactory fopFactory = FopFactory.newInstance(new ClassPathResource("../../../../../../docgen/fop.xconf", this.getClass()).getFile());
+        FopFactory fopFactory = FopFactory.newInstance(config.getURI(), config.getInputStream());
 
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
         foUserAgent.setAccessibility(true);

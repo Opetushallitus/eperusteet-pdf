@@ -49,7 +49,7 @@
         <!-- <value>ascii-hex</value> -->
       </filterList>
 
-      <fonts>
+<!--      <fonts>-->
         <!-- embedded fonts -->
         <!--
         This information must exactly match the font specified
@@ -73,61 +73,61 @@
         (normal = 400, bold = 700)
         -->
 
-        <font embed-url="Arimo-Bold.ttf" embedding-mode="full">
-          <font-triplet name="sans-serif" style="normal" weight="bold" />
-          <font-triplet name="Symbol" style="normal" weight="bold"/>
-          <font-triplet name="ZapfDingbats" style="normal" weight="bold"/>
-        </font>
-        <font embed-url="Arimo-BoldItalic.ttf" embedding-mode="full">
-          <font-triplet name="sans-serif" style="italic" weight="bold" />
-          <font-triplet name="Symbol" style="italic" weight="bold" />
-          <font-triplet name="ZapfDingbats" style="italic" weight="bold" />
-        </font>
+<!--        <font embed-url="classpath:Arimo-Bold.ttf" embedding-mode="full">-->
+<!--          <font-triplet name="sans-serif" style="normal" weight="bold" />-->
+<!--          <font-triplet name="Symbol" style="normal" weight="bold"/>-->
+<!--          <font-triplet name="ZapfDingbats" style="normal" weight="bold"/>-->
+<!--        </font>-->
+<!--        <font embed-url="Arimo-BoldItalic.ttf" embedding-mode="full">-->
+<!--          <font-triplet name="sans-serif" style="italic" weight="bold" />-->
+<!--          <font-triplet name="Symbol" style="italic" weight="bold" />-->
+<!--          <font-triplet name="ZapfDingbats" style="italic" weight="bold" />-->
+<!--        </font>-->
 
-        <font embed-url="Arimo-Italic.ttf" embedding-mode="full">
-          <font-triplet name="sans-serif" style="italic" weight="normal" />
-          <font-triplet name="Symbol" style="italic" weight="normal" />
-          <font-triplet name="ZapfDingbats" style="italic" weight="normal" />
-        </font>
+<!--        <font embed-url="Arimo-Italic.ttf" embedding-mode="full">-->
+<!--          <font-triplet name="sans-serif" style="italic" weight="normal" />-->
+<!--          <font-triplet name="Symbol" style="italic" weight="normal" />-->
+<!--          <font-triplet name="ZapfDingbats" style="italic" weight="normal" />-->
+<!--        </font>-->
 
-        <font embed-url="Arimo-Regular.ttf" embedding-mode="full">
-          <font-triplet name="sans-serif" style="normal" weight="normal" />
-          <font-triplet name="Symbol" style="normal" weight="normal"/>
-          <font-triplet name="ZapfDingbats" style="normal" weight="normal"/>
-        </font>
+<!--        <font embed-url="Arimo-Regular.ttf" embedding-mode="full">-->
+<!--          <font-triplet name="sans-serif" style="normal" weight="normal" />-->
+<!--          <font-triplet name="Symbol" style="normal" weight="normal"/>-->
+<!--          <font-triplet name="ZapfDingbats" style="normal" weight="normal"/>-->
+<!--        </font>-->
 
-        <font embed-url="Tinos-Bold.ttf" embedding-mode="full">
-          <font-triplet name="serif" style="normal" weight="bold" />
-        </font>
+<!--        <font embed-url="Tinos-Bold.ttf" embedding-mode="full">-->
+<!--          <font-triplet name="serif" style="normal" weight="bold" />-->
+<!--        </font>-->
 
-        <font embed-url="Tinos-BoldItalic.ttf" embedding-mode="full">
-          <font-triplet name="serif" style="italic" weight="bold" />
-        </font>
+<!--        <font embed-url="Tinos-BoldItalic.ttf" embedding-mode="full">-->
+<!--          <font-triplet name="serif" style="italic" weight="bold" />-->
+<!--        </font>-->
 
-        <font embed-url="Tinos-Italic.ttf" embedding-mode="full">
-          <font-triplet name="serif" style="italic" weight="normal" />
-        </font>
+<!--        <font embed-url="Tinos-Italic.ttf" embedding-mode="full">-->
+<!--          <font-triplet name="serif" style="italic" weight="normal" />-->
+<!--        </font>-->
 
-        <font embed-url="Tinos-Regular.ttf" embedding-mode="full">
-          <font-triplet name="serif" style="normal" weight="normal" />
-        </font>
+<!--        <font embed-url="Tinos-Regular.ttf" embedding-mode="full">-->
+<!--          <font-triplet name="serif" style="normal" weight="normal" />-->
+<!--        </font>-->
 
-        <font embed-url="Cousine-Bold.ttf" embedding-mode="full">
-          <font-triplet name="monospace" style="normal" weight="bold" />
-        </font>
+<!--        <font embed-url="Cousine-Bold.ttf" embedding-mode="full">-->
+<!--          <font-triplet name="monospace" style="normal" weight="bold" />-->
+<!--        </font>-->
 
-        <font embed-url="Cousine-BoldItalic.ttf" embedding-mode="full">
-          <font-triplet name="monospace" style="italic" weight="bold" />
-        </font>
+<!--        <font embed-url="Cousine-BoldItalic.ttf" embedding-mode="full">-->
+<!--          <font-triplet name="monospace" style="italic" weight="bold" />-->
+<!--        </font>-->
 
-        <font embed-url="Cousine-Italic.ttf" embedding-mode="full">
-          <font-triplet name="monospace" style="italic" weight="normal" />
-        </font>
+<!--        <font embed-url="Cousine-Italic.ttf" embedding-mode="full">-->
+<!--          <font-triplet name="monospace" style="italic" weight="normal" />-->
+<!--        </font>-->
 
-        <font embed-url="Cousine-Regular.ttf" embedding-mode="full">
-          <font-triplet name="monospace" style="normal" weight="normal" />
-        </font>
-      </fonts>
+<!--        <font embed-url="Cousine-Regular.ttf" embedding-mode="full">-->
+<!--          <font-triplet name="monospace" style="normal" weight="normal" />-->
+<!--        </font>-->
+<!--      </fonts>-->
 
       <!-- This option lets you specify additional options on an XML handler -->
       <!--xml-handler namespace="http://www.w3.org/2000/svg">
