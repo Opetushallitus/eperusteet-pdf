@@ -34,7 +34,7 @@
       <accessibility>true</accessibility>
       <pdf-a-mode>PDF/A-1b</pdf-a-mode>
       <version>1.4</version>
-<!--      <pdf-ua-mode>PDF/UA-1</pdf-ua-mode>-->
+      <!--      <pdf-ua-mode>PDF/UA-1</pdf-ua-mode>-->
 
       <filterList>
         <!-- provides compression using zlib flate (default is on) -->
@@ -49,7 +49,7 @@
         <!-- <value>ascii-hex</value> -->
       </filterList>
 
-<!--      <fonts>-->
+      <fonts>
         <!-- embedded fonts -->
         <!--
         This information must exactly match the font specified
@@ -73,61 +73,61 @@
         (normal = 400, bold = 700)
         -->
 
-<!--        <font embed-url="classpath:Arimo-Bold.ttf" embedding-mode="full">-->
-<!--          <font-triplet name="sans-serif" style="normal" weight="bold" />-->
-<!--          <font-triplet name="Symbol" style="normal" weight="bold"/>-->
-<!--          <font-triplet name="ZapfDingbats" style="normal" weight="bold"/>-->
-<!--        </font>-->
-<!--        <font embed-url="Arimo-BoldItalic.ttf" embedding-mode="full">-->
-<!--          <font-triplet name="sans-serif" style="italic" weight="bold" />-->
-<!--          <font-triplet name="Symbol" style="italic" weight="bold" />-->
-<!--          <font-triplet name="ZapfDingbats" style="italic" weight="bold" />-->
-<!--        </font>-->
+        <font embed-url="file:///etc/oph/docgen/fonts/Arimo-Bold.ttf" embedding-mode="full">
+          <font-triplet name="sans-serif" style="normal" weight="bold" />
+          <font-triplet name="Symbol" style="normal" weight="bold"/>
+          <font-triplet name="ZapfDingbats" style="normal" weight="bold"/>
+        </font>
+        <font embed-url="file:///etc/oph/docgen/fonts/Arimo-BoldItalic.ttf" embedding-mode="full">
+          <font-triplet name="sans-serif" style="italic" weight="bold" />
+          <font-triplet name="Symbol" style="italic" weight="bold" />
+          <font-triplet name="ZapfDingbats" style="italic" weight="bold" />
+        </font>
 
-<!--        <font embed-url="Arimo-Italic.ttf" embedding-mode="full">-->
-<!--          <font-triplet name="sans-serif" style="italic" weight="normal" />-->
-<!--          <font-triplet name="Symbol" style="italic" weight="normal" />-->
-<!--          <font-triplet name="ZapfDingbats" style="italic" weight="normal" />-->
-<!--        </font>-->
+        <font embed-url="file:///etc/oph/docgen/fonts/Arimo-Italic.ttf" embedding-mode="full">
+          <font-triplet name="sans-serif" style="italic" weight="normal" />
+          <font-triplet name="Symbol" style="italic" weight="normal" />
+          <font-triplet name="ZapfDingbats" style="italic" weight="normal" />
+        </font>
 
-<!--        <font embed-url="Arimo-Regular.ttf" embedding-mode="full">-->
-<!--          <font-triplet name="sans-serif" style="normal" weight="normal" />-->
-<!--          <font-triplet name="Symbol" style="normal" weight="normal"/>-->
-<!--          <font-triplet name="ZapfDingbats" style="normal" weight="normal"/>-->
-<!--        </font>-->
+        <font embed-url="file:///etc/oph/docgen/fonts/Arimo-Regular.ttf" embedding-mode="full">
+          <font-triplet name="sans-serif" style="normal" weight="normal" />
+          <font-triplet name="Symbol" style="normal" weight="normal"/>
+          <font-triplet name="ZapfDingbats" style="normal" weight="normal"/>
+        </font>
 
-<!--        <font embed-url="Tinos-Bold.ttf" embedding-mode="full">-->
-<!--          <font-triplet name="serif" style="normal" weight="bold" />-->
-<!--        </font>-->
+        <font embed-url="file:///etc/oph/docgen/fonts/Tinos-Bold.ttf" embedding-mode="full">
+          <font-triplet name="serif" style="normal" weight="bold" />
+        </font>
 
-<!--        <font embed-url="Tinos-BoldItalic.ttf" embedding-mode="full">-->
-<!--          <font-triplet name="serif" style="italic" weight="bold" />-->
-<!--        </font>-->
+        <font embed-url="file:///etc/oph/docgen/fonts/Tinos-BoldItalic.ttf" embedding-mode="full">
+          <font-triplet name="serif" style="italic" weight="bold" />
+        </font>
 
-<!--        <font embed-url="Tinos-Italic.ttf" embedding-mode="full">-->
-<!--          <font-triplet name="serif" style="italic" weight="normal" />-->
-<!--        </font>-->
+        <font embed-url="file:///etc/oph/docgen/fonts/Tinos-Italic.ttf" embedding-mode="full">
+          <font-triplet name="serif" style="italic" weight="normal" />
+        </font>
 
-<!--        <font embed-url="Tinos-Regular.ttf" embedding-mode="full">-->
-<!--          <font-triplet name="serif" style="normal" weight="normal" />-->
-<!--        </font>-->
+        <font embed-url="file:///etc/oph/docgen/fonts/Tinos-Regular.ttf" embedding-mode="full">
+          <font-triplet name="serif" style="normal" weight="normal" />
+        </font>
 
-<!--        <font embed-url="Cousine-Bold.ttf" embedding-mode="full">-->
-<!--          <font-triplet name="monospace" style="normal" weight="bold" />-->
-<!--        </font>-->
+        <font embed-url="file:///etc/oph/docgen/fonts/Cousine-Bold.ttf" embedding-mode="full">
+          <font-triplet name="monospace" style="normal" weight="bold" />
+        </font>
 
-<!--        <font embed-url="Cousine-BoldItalic.ttf" embedding-mode="full">-->
-<!--          <font-triplet name="monospace" style="italic" weight="bold" />-->
-<!--        </font>-->
+        <font embed-url="file:///etc/oph/docgen/fonts/Cousine-BoldItalic.ttf" embedding-mode="full">
+          <font-triplet name="monospace" style="italic" weight="bold" />
+        </font>
 
-<!--        <font embed-url="Cousine-Italic.ttf" embedding-mode="full">-->
-<!--          <font-triplet name="monospace" style="italic" weight="normal" />-->
-<!--        </font>-->
+        <font embed-url="file:///etc/oph/docgen/fonts/Cousine-Italic.ttf" embedding-mode="full">
+          <font-triplet name="monospace" style="italic" weight="normal" />
+        </font>
 
-<!--        <font embed-url="Cousine-Regular.ttf" embedding-mode="full">-->
-<!--          <font-triplet name="monospace" style="normal" weight="normal" />-->
-<!--        </font>-->
-<!--      </fonts>-->
+        <font embed-url="file:///etc/oph/docgen/fonts/Cousine-Regular.ttf" embedding-mode="full">
+          <font-triplet name="monospace" style="normal" weight="normal" />
+        </font>
+      </fonts>
 
       <!-- This option lets you specify additional options on an XML handler -->
       <!--xml-handler namespace="http://www.w3.org/2000/svg">
@@ -147,20 +147,20 @@
       <resource-group-file>resources.afp</resource-group-file>
 
       <fonts>
-      <!--
-           Below is an example using raster font configuration using FOP builtin base-14 font metrics.
-           for Times Roman, Helvetica and Courier.
+        <!--
+             Below is an example using raster font configuration using FOP builtin base-14 font metrics.
+             for Times Roman, Helvetica and Courier.
 
-           Depending on AFP raster and outline font availability on your installation you will
-           most likely need to modify the configuration provided below.
+             Depending on AFP raster and outline font availability on your installation you will
+             most likely need to modify the configuration provided below.
 
-           See http://xmlgraphics.apache.org/fop/trunk/output.html#afp-configuration
-           for details of FOP configuration for AFP
-      -->
+             See http://xmlgraphics.apache.org/fop/trunk/output.html#afp-configuration
+             for details of FOP configuration for AFP
+        -->
 
         <!-- Times Roman -->
         <font>
-         <afp-font name="Times Roman" type="raster" codepage="T1V10500" encoding="Cp500">
+          <afp-font name="Times Roman" type="raster" codepage="T1V10500" encoding="Cp500">
             <afp-raster-font size="6" characterset="C0N20060" base14-font="TimesRoman"/>
             <afp-raster-font size="7" characterset="C0N20070" base14-font="TimesRoman"/>
             <afp-raster-font size="8" characterset="C0N20080" base14-font="TimesRoman"/>
@@ -447,17 +447,17 @@
           <font-triplet name="monospace" style="italic" weight="bold"/>
         </font>
 
-         <!--
-        Configure double-byte (CID Keyed font (Type 0)) AFP fonts with type="CIDKeyed".
+        <!--
+       Configure double-byte (CID Keyed font (Type 0)) AFP fonts with type="CIDKeyed".
 
-        example:
-         <font>
-        	<afp-font type="CIDKeyed" encoding="UnicodeBigUnmarked"
-        	codepage="T1120000" characterset="CZJHMNU"
-        	base-uri="fonts" />
-         	<font-triplet name="J-Heisei Mincho" style="normal" weight="normal" />
-     	 </font>
-        -->
+       example:
+        <font>
+           <afp-font type="CIDKeyed" encoding="UnicodeBigUnmarked"
+           codepage="T1120000" characterset="CZJHMNU"
+           base-uri="fonts" />
+            <font-triplet name="J-Heisei Mincho" style="normal" weight="normal" />
+         </font>
+       -->
 
 
       </fonts>
@@ -510,4 +510,3 @@
   </renderers>
 
 </fop>
-

@@ -55,7 +55,7 @@ import java.net.URI;
 public class PdfServiceImpl implements PdfService {
     private static final Logger LOG = LoggerFactory.getLogger(PdfServiceImpl.class);
 
-    @Value("classpath:docgen/xhtml-to-xslfo-eperusteet.xsl")
+    @Value("${eperusteet-xsl}")
     private Resource eperusteetTemplate;
 
     @Value("classpath:docgen/xhtml-to-xslfo-ylops.xsl")
@@ -67,8 +67,11 @@ public class PdfServiceImpl implements PdfService {
     @Value("classpath:docgen/kvliite.xsl")
     private Resource kvLiiteTemplate;
 
-    @Value("classpath:docgen/fop.xconf")
+    @Value("${fopConf}")
     private Resource config;
+
+    @Value("${fopContext: ''}")
+    private String fopContext;
 
     @Override
     public byte[] xhtml2pdf(Document document, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi) throws IOException, TransformerException, SAXException, DokumenttiException {
@@ -136,6 +139,7 @@ public class PdfServiceImpl implements PdfService {
 
         // XSLT version
         transformer.setParameter("versionParam", "2.0");
+        transformer.setParameter("fopContext", fopContext);
 
         Source src = new StreamSource(fo);
         Result res = new SAXResult(fop.getDefaultHandler());

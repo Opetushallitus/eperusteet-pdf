@@ -15,7 +15,7 @@ public class DefaultConfigs {
 
     //TODO: temppitavaraa devauksen ajaksi
     private static final int TIMEOUT = 60000;
-    public static final String CALLER_ID = "1.2.246.562.10.00000000001.eperusteet.pdf";
+    public static final String CALLER_ID = "1.2.246.562.10.00000000001.eperusteet-pdf";
     @Value("${fi.vm.sade.eperusteet.pdf.oph_username:''}")
     private String username;
 
