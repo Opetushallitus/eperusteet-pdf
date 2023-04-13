@@ -4,6 +4,7 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiEventListener;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
@@ -51,11 +52,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 
+@Slf4j
 @Service
 public class PdfServiceImpl implements PdfService {
     private static final Logger LOG = LoggerFactory.getLogger(PdfServiceImpl.class);
 
-    @Value("${eperusteet-xsl}")
+    @Value("classpath:docgen/xhtml-to-xslfo-eperusteet.xsl")
     private Resource eperusteetTemplate;
 
     @Value("classpath:docgen/xhtml-to-xslfo-ylops.xsl")
@@ -67,11 +69,11 @@ public class PdfServiceImpl implements PdfService {
     @Value("classpath:docgen/kvliite.xsl")
     private Resource kvLiiteTemplate;
 
-    @Value("${fopConf}")
+    @Value("${fopConfiguration}")
     private Resource config;
 
-    @Value("${fopContext: ''}")
-    private String fopContext;
+    @Value("${docgenPath: ''}")
+    private String docgenPath;
 
     @Override
     public byte[] xhtml2pdf(Document document, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi) throws IOException, TransformerException, SAXException, DokumenttiException {
@@ -139,7 +141,6 @@ public class PdfServiceImpl implements PdfService {
 
         // XSLT version
         transformer.setParameter("versionParam", "2.0");
-        transformer.setParameter("fopContext", fopContext);
 
         Source src = new StreamSource(fo);
         Result res = new SAXResult(fop.getDefaultHandler());
@@ -165,6 +166,7 @@ public class PdfServiceImpl implements PdfService {
         try {
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transformer = factory.newTransformer(new StreamSource(xslt));
+            transformer.setParameter("docgenPath", docgenPath);
 
             Source src = new StreamSource(xml);
             Result res = new StreamResult(fo);
