@@ -734,8 +734,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
     private void addTekstikappale(DokumenttiPeruste docBase, TekstiKappaleDto tk, PerusteenOsaDto po, PerusteenOsaViiteDto.Laaja lapsi) {
         PerusteenOsaTunniste tunniste = po.getTunniste();
-        if (tunniste != PerusteenOsaTunniste.NORMAALI
-                && tunniste != PerusteenOsaTunniste.LAAJAALAINENOSAAMINEN
+        if (tunniste != PerusteenOsaTunniste.NORMAALI && tunniste != PerusteenOsaTunniste.LAAJAALAINENOSAAMINEN
                 && tunniste != PerusteenOsaTunniste.RAKENNE) {
             String nimi = getTextString(docBase, tk.getNimi());
             addHeader(docBase, nimi);
@@ -749,9 +748,9 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             addPerusteenOsat(docBase, lapsi);
 
             docBase.getGenerator().decreaseDepth();
+            docBase.getGenerator().increaseNumber();
 
-        } else if (tunniste == PerusteenOsaTunniste.LAAJAALAINENOSAAMINEN
-                && docBase.getAipeOpetuksenSisalto() != null) {
+        } else if (tunniste == PerusteenOsaTunniste.LAAJAALAINENOSAAMINEN && docBase.getAipeOpetuksenSisalto() != null) {
             AIPEOpetuksenSisaltoDto aipeOpetuksenSisalto = docBase.getAipeOpetuksenSisalto();
 
             List<LaajaalainenOsaaminenDto> laajaalaisetosaamiset = aipeOpetuksenSisalto.getLaajaalaisetosaamiset();
@@ -766,8 +765,8 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                     addTeksti(docBase, teksti, "div");
                 });
             }
+            docBase.getGenerator().increaseNumber();
         }
-        docBase.getGenerator().increaseNumber();
     }
 
     private void addTaiteenala(DokumenttiPeruste docBase, TaiteenalaDto taiteenala, PerusteenOsaDto po,
