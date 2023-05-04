@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.pdf.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Throwables;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
@@ -127,7 +128,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     private void handleError(Exception ex, Long dokumenttiId, DokumenttiTyyppi tyyppi) throws DokumenttiException {
-        log.error("PDF-dokumentin luonti epäonnistui ({})", ex.getMessage());
+        log.error("PDF-dokumentin luonti epäonnistui ({})", Throwables.getStackTraceAsString(ex));
         commonExternalService.updateDokumenttiTila(DokumenttiTila.EPAONNISTUI, dokumenttiId, tyyppi);
         throw new DokumenttiException(ex.getMessage(), ex);
     }

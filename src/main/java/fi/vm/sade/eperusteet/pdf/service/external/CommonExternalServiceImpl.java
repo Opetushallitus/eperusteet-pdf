@@ -1,6 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.service.external;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.Throwables;
+import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
@@ -10,7 +12,12 @@ import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
+import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
+import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.javautils.http.OphHttpEntity;
+import fi.vm.sade.javautils.http.OphHttpRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -23,9 +30,21 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
+
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_CREATED;
+import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+import static javax.servlet.http.HttpServletResponse.SC_FOUND;
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static javax.servlet.http.HttpServletResponse.SC_METHOD_NOT_ALLOWED;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 @Slf4j
 @Service
@@ -54,6 +73,9 @@ public class CommonExternalServiceImpl implements CommonExternalService{
 
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
+
+    @Autowired
+    private RestClientFactory restClientFactory;
 
     @PostConstruct
     protected void init() {
@@ -116,12 +138,37 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     @Override
     public void postPdfData(byte[] pdfData, Long dokumenttiId, DokumenttiTyyppi tyyppi) {
         try {
-            HttpEntity<byte[]> entity = new HttpEntity<>(pdfData, this.httpEntity.getHeaders());
-            dokumenttiUtilService.createRestTemplateWithPdfConversionSupport().exchange(getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/data/{dokumenttiId}",
-                    HttpMethod.POST,
-                    entity,
-                    String.class,
-                    dokumenttiId);
+            OphHttpClient client = restClientFactory.get(getDokumenttiApiBaseUrl(tyyppi), true);
+
+            String url = getDokumenttiApiBaseUrl(tyyppi)
+                    + "/api/dokumentit/pdf/data/" + dokumenttiId;
+
+            OphHttpRequest request = OphHttpRequest.Builder
+                    .post(url)
+                    .addHeader("Content-Type", "application/json;charset=UTF-8")
+                    .setEntity(new OphHttpEntity.Builder()
+                            .content(Base64.getEncoder().encodeToString(pdfData))
+                            .contentType(ContentType.TEXT_PLAIN)
+                            .build())
+                    .build();
+
+            client.execute(request)
+                    .handleErrorStatus(SC_FOUND, SC_UNAUTHORIZED, SC_FORBIDDEN, SC_METHOD_NOT_ALLOWED, SC_BAD_REQUEST, SC_INTERNAL_SERVER_ERROR)
+                    .with(error -> {
+                        log.error("Virhe pdf:n lähetyksessä");
+                        throw new RuntimeException("Virhe pdf:n lähetyksessä");
+                    })
+                    .expectedStatus(SC_OK, SC_CREATED)
+                    .ignoreResponse();
+
+
+//            HttpEntity<byte[]> entity = new HttpEntity<>(pdfData, this.httpEntity.getHeaders());
+//            ResponseEntity response = dokumenttiUtilService.createRestTemplateWithPdfConversionSupport().exchange(getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/data/{dokumenttiId}",
+//                    HttpMethod.POST,
+//                    entity,
+//                    String.class,
+//                    dokumenttiId);
+            log.info("dokumentti lähetetty palvelulle: {}, vastauksella:{}", getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/data/"+dokumenttiId);
         } catch (Exception e) {
             throw new ServiceException("PDF-dataa ei saatu lähetettyä: " + e.getMessage());
         }
