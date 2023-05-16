@@ -24,7 +24,7 @@
 		<jsoup.version>1.9.2</jsoup.version>
 		<fop.version>2.6</fop.version>
 		<springfox.version>2.7.0</springfox.version>
-		<jackson.version>2.11.4</jackson.version>
+		<jackson.version>2.15.0</jackson.version>
 		<ehcache.version>2.6.11</ehcache.version>
 	</properties>
 	
