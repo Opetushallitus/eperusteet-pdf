@@ -278,7 +278,7 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
     }
 
     private TermiDto getTermi(Long opsId, String avain) {
-        TermiDto termiDto = dokumenttiUtilService.getTermiFromExternalService(opsId, avain, DokumenttiTyyppi.TOTEUTUSSUUNNITELMA);
+        TermiDto termiDto = dokumenttiUtilService.getTermiFromExternalService(opsId, avain, DokumenttiTyyppi.AMOSAA);
 
         if (termiDto == null) {
             log.info("Termiä ei löytynyt ylopsista avaimella '{}'. Etsitään eperusteista.", avain);

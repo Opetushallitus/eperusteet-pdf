@@ -31,7 +31,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-@Profile("!dev")
+@Profile("default")
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @EnableWebSecurity
@@ -43,10 +43,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 //    @Value("${web.url.cas")
 //    private String webCasUrl;
 //
-//    @Value("${fi.vm.sade.eperusteet.amosaa.oph_username}")
+//    @Value("${fi.vm.sade.eperusteet.oph_username:''}")
 //    private String username;
 //
-//    @Value("${fi.vm.sade.eperusteet.amosaa.oph_password}")
+//    @Value("${fi.vm.sade.eperusteet.oph_password:''}")
 //    private String password;
 //
 //    @Value("${cas.service.eperusteet-pdf-service}")
@@ -103,7 +103,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 //    @Bean
 //    public CasAuthenticationEntryPoint casAuthenticationEntryPoint() {
 //        CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
-//        casAuthenticationEntryPoint.setLoginUrl(ophProperties.url("cas.login"));
+//        casAuthenticationEntryPoint.setLoginUrl(webCasUrl + "/login");
 //        casAuthenticationEntryPoint.setServiceProperties(serviceProperties());
 //        return casAuthenticationEntryPoint;
 //    }
@@ -116,8 +116,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/pdf/**").permitAll()
                 .antMatchers("/actuator/health").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers(HttpMethod.POST, "/api/pdf/**").permitAll()
+                .anyRequest().permitAll();
+//                .and()
+//                .addFilter(casAuthenticationFilter())
+//                .exceptionHandling()
+//                .authenticationEntryPoint(casAuthenticationEntryPoint());
     }
 }

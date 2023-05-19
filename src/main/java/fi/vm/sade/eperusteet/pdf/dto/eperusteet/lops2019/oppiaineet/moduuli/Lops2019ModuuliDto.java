@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.moduuli;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Reference;
 import lombok.AllArgsConstructor;
@@ -23,5 +24,6 @@ public class Lops2019ModuuliDto extends Lops2019ModuuliBaseDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<Lops2019ModuuliSisaltoDto> sisallot;
 
+    @JsonProperty("_oppiaine")
     private Reference oppiaine;
 }

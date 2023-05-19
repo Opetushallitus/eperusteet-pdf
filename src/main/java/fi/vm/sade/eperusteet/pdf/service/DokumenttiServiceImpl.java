@@ -1,6 +1,5 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
@@ -24,8 +23,6 @@ import fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -66,18 +63,15 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Autowired
     private EperusteetService eperusteetService;
 
-    // FIXME: Tämä service pitää mockata. Onko enää ajankohtainen 2023?
-    @Value("${spring.profiles.active:normal}")
-    private String activeProfile;
-
     @Override
     @Async(value = "docTaskExecutor")
-    public void generateForEperusteet(Long dokumenttiId, Kieli kieli, GeneratorVersion versio, String perusteJson) throws JsonProcessingException, DokumenttiException {
-        PerusteKaikkiDto peruste = objectMapper.readValue(perusteJson, PerusteKaikkiDto.class);
-        GeneratorData generatorData = dokumenttiUtilService.createGeneratorData(peruste.getId(), dokumenttiId, kieli, DokumenttiTyyppi.PERUSTE, versio, null);
-
-        Document doc;
+    public void generateForEperusteet(Long dokumenttiId, Kieli kieli, GeneratorVersion versio, String perusteJson) {
+        GeneratorData generatorData = GeneratorData.of(DokumenttiTyyppi.PERUSTE);
         try {
+            PerusteKaikkiDto peruste = objectMapper.readValue(perusteJson, PerusteKaikkiDto.class);
+            generatorData = GeneratorData.of(peruste.getId(), dokumenttiId, kieli, DokumenttiTyyppi.PERUSTE, versio, null);
+
+            Document doc;
             log.info("Luodaan PDF-dokumenttia (docId={}, {}, {})", dokumenttiId, generatorData.getTyyppi(), kieli);
             if (DokumenttiTyyppi.PERUSTE.equals(generatorData.getTyyppi())) {
                 doc = eperusteetDokumenttiBuilderService.generateXML(peruste, generatorData);
@@ -92,11 +86,12 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Async(value = "docTaskExecutor")
-    public void generateForAmosaa(Long dokumenttiId, Kieli kieli, Long ktId, String opsJson) throws JsonProcessingException, DokumenttiException {
-        OpetussuunnitelmaKaikkiDto ops = objectMapper.readValue(opsJson, OpetussuunnitelmaKaikkiDto.class);
-        GeneratorData generatorData = dokumenttiUtilService.createGeneratorData(ops.getId(), dokumenttiId, kieli, DokumenttiTyyppi.OPS, null, ktId);
-
+    public void generateForAmosaa(Long dokumenttiId, Kieli kieli, Long ktId, String opsJson) {
+        GeneratorData generatorData = GeneratorData.of(DokumenttiTyyppi.AMOSAA);
         try {
+            OpetussuunnitelmaKaikkiDto ops = objectMapper.readValue(opsJson, OpetussuunnitelmaKaikkiDto.class);
+            generatorData = GeneratorData.of(ops.getId(), dokumenttiId, kieli, DokumenttiTyyppi.AMOSAA, null, ktId);
+
             log.info("Luodaan PDF-dokumenttia (docId={}, {}, {})", dokumenttiId, generatorData.getTyyppi(), kieli);
             Document doc = amosaaDokumenttiBuilderService.generateXML(ops, generatorData);
             handleConversionAndSending(doc, generateMetaData(generatorData, ops.getNimi()), generatorData);
@@ -107,12 +102,13 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Async(value = "docTaskExecutor")
-    public void generateForYlops(Long dokumenttiId, Kieli kieli, String opsJson) throws JsonProcessingException, DokumenttiException {
-        OpetussuunnitelmaExportDto ops = objectMapper.readValue(opsJson, OpetussuunnitelmaExportDto.class);
-        PerusteKaikkiDto perusteKaikkiDto = eperusteetService.getPerusteKaikkiDto(ops.getPerusteenId(), null);
-        GeneratorData generatorData = dokumenttiUtilService.createGeneratorData(ops.getId(), dokumenttiId, kieli, DokumenttiTyyppi.TOTEUTUSSUUNNITELMA, null, null);
-
+    public void generateForYlops(Long dokumenttiId, Kieli kieli, String opsJson) {
+        GeneratorData generatorData = GeneratorData.of(DokumenttiTyyppi.YLOPS);
         try {
+            OpetussuunnitelmaExportDto ops = objectMapper.readValue(opsJson, OpetussuunnitelmaExportDto.class);
+            generatorData = GeneratorData.of(ops.getId(), dokumenttiId, kieli, DokumenttiTyyppi.YLOPS, null, null);
+            PerusteKaikkiDto perusteKaikkiDto = eperusteetService.getPerusteKaikkiDto(ops.getPerusteenId(), null);
+
             log.info("Luodaan PDF-dokumenttia (docId={}, {}, {})", dokumenttiId, generatorData.getTyyppi(), kieli);
             Document doc = ylopsDokumenttiBuilderService.generateXML(ops, perusteKaikkiDto, generatorData);
             handleConversionAndSending(doc, generateMetaData(generatorData, ops.getNimi()), generatorData);
@@ -127,10 +123,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         commonExternalService.postPdfData(pdfData, generatorData.getDokumenttiId(), generatorData.getTyyppi());
     }
 
-    private void handleError(Exception ex, Long dokumenttiId, DokumenttiTyyppi tyyppi) throws DokumenttiException {
+    private void handleError(Exception ex, Long dokumenttiId, DokumenttiTyyppi tyyppi) {
         log.error("PDF-dokumentin luonti epäonnistui ({})", Throwables.getStackTraceAsString(ex));
         commonExternalService.updateDokumenttiTila(DokumenttiTila.EPAONNISTUI, dokumenttiId, tyyppi);
-        throw new DokumenttiException(ex.getMessage(), ex);
     }
 
     private DokumenttiMetaDto generateMetaData(GeneratorData generatorData, LokalisoituTekstiDto nimi) {

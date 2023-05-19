@@ -4,8 +4,6 @@ import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.enums.GeneratorVersion;
-import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
@@ -81,7 +79,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
                     continue;
                 }
 
-                UUID uuid = DokumenttiTyyppi.TOTEUTUSSUUNNITELMA.equals(generatorData.getTyyppi()) ? ylopsUUIDHandling(id, src) : UUID.fromString(id);
+                UUID uuid = DokumenttiTyyppi.YLOPS.equals(generatorData.getTyyppi()) ? ylopsUUIDHandling(id, src) : UUID.fromString(id);
 
                 // Ladataan kuvan data muistiin
                 InputStream in;
@@ -162,21 +160,6 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
             log.info("Termiä ei löytynyt id:lle '{}', avain='{}'", id, avain);
         }
         return null;
-    }
-
-    @Override
-    public GeneratorData createGeneratorData(Long perusteId, Long dokumenttiId, Kieli kieli, DokumenttiTyyppi tyyppi, GeneratorVersion versio, Long ktId) {
-        GeneratorData generatorData = new GeneratorData();
-        generatorData.setId(perusteId);
-        generatorData.setDokumenttiId(dokumenttiId);
-        generatorData.setKieli(kieli);
-        generatorData.setKtId(ktId);
-        if (GeneratorVersion.KVLIITE.equals(versio)) {
-            generatorData.setTyyppi(DokumenttiTyyppi.KVLIITE);
-        } else {
-            generatorData.setTyyppi(tyyppi);
-        }
-        return generatorData;
     }
 
     private UUID ylopsUUIDHandling(String id, String src) {

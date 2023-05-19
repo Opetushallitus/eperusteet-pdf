@@ -4,6 +4,7 @@
                 xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <xsl:output method="xml"/>
     <xsl:param name="page-size" select="'a4'"/>
+    <xsl:param name="docgenPath"/>
 
     <xsl:template match="html">
 
@@ -38,7 +39,7 @@
                                              extent="20mm"/>
                             <fo:region-start region-name="rs-left" extent="30mm"
                                              reference-orientation="90" display-align="before"
-                                             background-image="gradient.svg"
+                                             background-image="{$docgenPath}gradient.svg"
                                              background-repeat="no-repeat" background-position-horizontal="left"/>
                             <fo:region-end extent="30mm"/>
                         </fo:simple-page-master>
@@ -57,7 +58,7 @@
                             <fo:region-start extent="30mm"/>
                             <fo:region-end region-name="re-right" extent="30mm"
                                            reference-orientation="90" display-align="after"
-                                           background-image="gradient.svg"
+                                           background-image="{$docgenPath}gradient.svg"
                                            background-repeat="no-repeat" background-position-horizontal="right"/>
                         </fo:simple-page-master>
                     </xsl:when>

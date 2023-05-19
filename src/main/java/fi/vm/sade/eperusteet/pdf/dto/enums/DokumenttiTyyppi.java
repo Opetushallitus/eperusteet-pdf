@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum DokumenttiTyyppi {
     PERUSTE("peruste"),
-    OPS("ops"),
-    TOTEUTUSSUUNNITELMA("toteutussuunnitelma"),
+    YLOPS("ylops"),
+    AMOSAA("amosaa"),
     KVLIITE("kvliite");
 
     private final String tyyppi;

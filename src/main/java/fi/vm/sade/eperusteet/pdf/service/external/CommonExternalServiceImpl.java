@@ -1,8 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.service.external;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
-import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
+import fi.vm.sade.eperusteet.pdf.dto.PdfData;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
@@ -24,17 +24,16 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
@@ -136,38 +135,32 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     }
 
     @Override
-    public void postPdfData(byte[] pdfData, Long dokumenttiId, DokumenttiTyyppi tyyppi) {
+    public void postPdfData(byte[] pdfDataBytes, Long dokumenttiId, DokumenttiTyyppi tyyppi) {
         try {
             OphHttpClient client = restClientFactory.get(getDokumenttiApiBaseUrl(tyyppi), true);
 
             String url = getDokumenttiApiBaseUrl(tyyppi)
                     + "/api/dokumentit/pdf/data/" + dokumenttiId;
 
+            PdfData pdfData = PdfData.of(Base64.getEncoder().encodeToString(pdfDataBytes));
+
             OphHttpRequest request = OphHttpRequest.Builder
                     .post(url)
-                    .addHeader("Content-Type", "application/json;charset=UTF-8")
+                    .addHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                     .setEntity(new OphHttpEntity.Builder()
-                            .content(Base64.getEncoder().encodeToString(pdfData))
-                            .contentType(ContentType.TEXT_PLAIN)
+                            .content(new ObjectMapper().writeValueAsString(pdfData))
+                            .contentType(ContentType.APPLICATION_JSON)
                             .build())
                     .build();
 
             client.execute(request)
                     .handleErrorStatus(SC_FOUND, SC_UNAUTHORIZED, SC_FORBIDDEN, SC_METHOD_NOT_ALLOWED, SC_BAD_REQUEST, SC_INTERNAL_SERVER_ERROR)
                     .with(error -> {
-                        log.error("Virhe pdf:n lähetyksessä");
-                        throw new RuntimeException("Virhe pdf:n lähetyksessä");
+                        log.error("Virhe pdf:n lähetyksessä: " + error);
+                        throw new RuntimeException("Virhe pdf:n lähetyksessä: " + error);
                     })
                     .expectedStatus(SC_OK, SC_CREATED)
                     .ignoreResponse();
-
-
-//            HttpEntity<byte[]> entity = new HttpEntity<>(pdfData, this.httpEntity.getHeaders());
-//            ResponseEntity response = dokumenttiUtilService.createRestTemplateWithPdfConversionSupport().exchange(getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/data/{dokumenttiId}",
-//                    HttpMethod.POST,
-//                    entity,
-//                    String.class,
-//                    dokumenttiId);
             log.info("dokumentti lähetetty palvelulle: {}, vastauksella:{}", getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/data/"+dokumenttiId);
         } catch (Exception e) {
             throw new ServiceException("PDF-dataa ei saatu lähetettyä: " + e.getMessage());
@@ -177,12 +170,28 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     @Override
     public void updateDokumenttiTila(DokumenttiTila tila, Long dokumenttiId, DokumenttiTyyppi tyyppi) {
         try {
-            HttpEntity<DokumenttiTila> entity = new HttpEntity<>(tila, this.httpEntity.getHeaders());
-            restTemplate.exchange(getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/tila/{dokumenttiId}",
-                    HttpMethod.POST,
-                    entity,
-                    String.class,
-                    dokumenttiId);
+            OphHttpClient client = restClientFactory.get(getDokumenttiApiBaseUrl(tyyppi), true);
+            String url = getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/tila/" + dokumenttiId;
+            PdfData pdfData = new PdfData(null, tila.toString());
+
+            OphHttpRequest request = OphHttpRequest.Builder
+                    .post(url)
+                    .addHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                    .setEntity(new OphHttpEntity.Builder()
+                            .content(new ObjectMapper().writeValueAsString(pdfData))
+                            .contentType(ContentType.APPLICATION_JSON)
+                            .build())
+                    .build();
+
+            client.execute(request)
+                    .handleErrorStatus(SC_FOUND, SC_UNAUTHORIZED, SC_FORBIDDEN, SC_METHOD_NOT_ALLOWED, SC_BAD_REQUEST, SC_INTERNAL_SERVER_ERROR)
+                    .with(error -> {
+                        log.error("Virhe tilan paivityksessa: " + error);
+                        throw new RuntimeException("Virhe tilan paivityksessa: " + error);
+                    })
+                    .expectedStatus(SC_OK, SC_CREATED)
+                    .ignoreResponse();
+
         } catch (Exception e) {
             log.error(Throwables.getStackTraceAsString(e));
             throw new ServiceException("PDF-generoinnin tilaa ei saatu päivitettyä: " + e.getMessage());
@@ -192,9 +201,9 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     private String getDokumenttiApiBaseUrl(DokumenttiTyyppi tyyppi) {
         if (tyyppi.equals(DokumenttiTyyppi.PERUSTE) || tyyppi.equals(DokumenttiTyyppi.KVLIITE)) {
             return eperusteetServiceUrl;
-        } else if (tyyppi.equals(DokumenttiTyyppi.OPS)) {
+        } else if (tyyppi.equals(DokumenttiTyyppi.AMOSAA)) {
             return amosaaServiceUrl;
-        } else if (tyyppi.equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
+        } else if (tyyppi.equals(DokumenttiTyyppi.YLOPS)) {
             return ylopsServiceUrl;
         } else {
             throw new BusinessRuleViolationException("DokumenttiApi-urlin valinta epäonnistui.");
@@ -204,9 +213,9 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     private String getTermiUrl(DokumenttiTyyppi tyyppi) {
         if (tyyppi.equals(DokumenttiTyyppi.PERUSTE)) {
             return eperusteetServiceUrl + EPERUSTEET_API + "{id}/termisto/{avain}";
-        } else if (tyyppi.equals(DokumenttiTyyppi.OPS)) {
+        } else if (tyyppi.equals(DokumenttiTyyppi.AMOSAA)) {
             return amosaaServiceUrl + AMOSAA_API  + "koulutustoimijat/{id}/termisto/{avain}";
-        } else if (tyyppi.equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
+        } else if (tyyppi.equals(DokumenttiTyyppi.YLOPS)) {
             return ylopsServiceUrl + "/api/opetussuunnitelmat/{id}/termi/{avain}";
         } else {
             throw new BusinessRuleViolationException("Termi-urlin valinta epäonnistui.");
@@ -216,9 +225,9 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     private String getLiitetiedostoUrl(DokumenttiTyyppi tyyppi) {
         if (tyyppi.equals(DokumenttiTyyppi.PERUSTE)) {
             return eperusteetServiceUrl + EPERUSTEET_API + "{id}/liitteet/{fileName}";
-        } else if (tyyppi.equals(DokumenttiTyyppi.OPS)) {
+        } else if (tyyppi.equals(DokumenttiTyyppi.AMOSAA)) {
             return amosaaServiceUrl + AMOSAA_API + "liitetiedostot/opetussuunnitelmat/{id}/kuvat/{fileName}";
-        } else if (tyyppi.equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
+        } else if (tyyppi.equals(DokumenttiTyyppi.YLOPS)) {
             return ylopsServiceUrl + "/api/opetussuunnitelmat/{id}/kuvat/{fileName}";
         } else {
             throw new BusinessRuleViolationException("Liitetiedosto-urlin valinta epäonnistui.");
@@ -226,10 +235,10 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     }
 
     private String getDokumenttiKuvaUrl(DokumenttiTyyppi tyyppi, Long ktId, Long opsId) {
-        if (tyyppi.equals(DokumenttiTyyppi.OPS)) {
+        if (tyyppi.equals(DokumenttiTyyppi.AMOSAA)) {
             // koska amosaan ja ylopsin urlien rakenne eroaa, ja amosaa vaatii opsId:n kahdesti, asetetaan tässä ensimmäinen kerta ja muut uriVariablet myöhemmin
             return amosaaServiceUrl + "/api/koulutustoimijat/" + ktId + "/opetussuunnitelmat/" + opsId + "/dokumentti/kuva?opsId={opsId}&tyyppi={tyyppi}&kieli={kieli}";
-        } else if (tyyppi.equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
+        } else if (tyyppi.equals(DokumenttiTyyppi.YLOPS)) {
             return ylopsServiceUrl + "/api/dokumentit/kuva?opsId={opsId}&tyyppi={tyyppi}&kieli={kieli}";
         } else {
             throw new BusinessRuleViolationException("Dokumenttikuva-urlin valinta epäonnistui.");

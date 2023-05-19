@@ -20,5 +20,4 @@ public interface DokumenttiUtilService {
 
     TermiDto getTermiFromExternalService(Long id, String avain, DokumenttiTyyppi tyyppi);
 
-    GeneratorData createGeneratorData(Long perusteId, Long dokumenttiId, Kieli kieli, DokumenttiTyyppi tyyppi, GeneratorVersion versio, Long ktId);
 }
