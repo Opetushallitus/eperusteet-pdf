@@ -79,7 +79,11 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
                     continue;
                 }
 
+                log.info("id {}, src {}", id, src);
+
                 UUID uuid = DokumenttiTyyppi.YLOPS.equals(generatorData.getTyyppi()) ? ylopsUUIDHandling(id, src) : UUID.fromString(id);
+
+                log.info("uuid {}", uuid);
 
                 // Ladataan kuvan data muistiin
                 InputStream in;
@@ -87,6 +91,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
                     in = commonExternalService.getLiitetiedosto(generatorData.getId(), uuid, generatorData.getTyyppi());
                 }
                 catch (Exception e) {
+                    log.error(e.getMessage());
                     log.error("Liitettä ei löytynyt, id={}, UUID={}", generatorData.getId(), uuid);
                     return;
                 }
@@ -141,6 +146,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
         try {
             kuva = commonExternalService.getDokumenttiKuva(generatorData.getId(), kuvatyyppi, generatorData.getKieli(), generatorData.getTyyppi(), generatorData.getKtId());
         } catch (Exception e) {
+            log.error(e.getMessage());
             log.warn("Kuvaa ei löytynyt, id={}, tyyppi={}", generatorData.getId(), kuvatyyppi);
             return;
         }
@@ -157,7 +163,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
         try {
             return commonExternalService.getTermi(id, avain, tyyppi);
         } catch (Exception e) {
-            log.info("Termiä ei löytynyt id:lle '{}', avain='{}'", id, avain);
+            log.error("Termiä ei löytynyt id:lle '{}', avain='{}', error: {}", id, avain, e.getMessage());
         }
         return null;
     }

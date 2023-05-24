@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.pdf.service.external;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
 import fi.vm.sade.eperusteet.pdf.dto.PdfData;
+import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
@@ -28,11 +29,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -76,6 +82,8 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     @Autowired
     private RestClientFactory restClientFactory;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @PostConstruct
     protected void init() {
         restTemplate = restTemplateBuilder
@@ -85,53 +93,73 @@ public class CommonExternalServiceImpl implements CommonExternalService{
 
     @Override
     public InputStream getLiitetiedosto(Long id, UUID fileName, DokumenttiTyyppi tyyppi) {
-        try {
-            ResponseEntity<byte[]> response = dokumenttiUtilService.createRestTemplateWithImageConversionSupport().exchange(getLiitetiedostoUrl(tyyppi),
-                    HttpMethod.GET,
-                    httpEntity,
-                    byte[].class,
-                    id,
-                    fileName);
-            return new ByteArrayInputStream(Objects.requireNonNull(response.getBody()));
-        } catch (Exception e) {
-            throw new ServiceException("Liitetiedostoa ei saatu haettua: " + e.getMessage());
-        }
+        OphHttpClient client = restClientFactory.get(getDokumenttiApiBaseUrl(tyyppi), true);
+        String url = UriComponentsBuilder.fromUriString(getLiitetiedostoUrl(tyyppi)).build(id, fileName).toString();
+        OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
+
+        List<byte[]> liite = new ArrayList<>();
+        client.<byte[]>execute(request)
+                .handleErrorStatus(SC_FOUND, SC_UNAUTHORIZED, SC_FORBIDDEN, SC_METHOD_NOT_ALLOWED, SC_BAD_REQUEST, SC_INTERNAL_SERVER_ERROR)
+                .with(error -> {
+                    throw new RuntimeException("Virhe pdf:n lähetyksessä: " + error);
+                })
+                .expectedStatus(SC_OK, SC_CREATED)
+                .consumeStreamWith(content -> {
+                    try {
+                        liite.add(content.readAllBytes());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+        return new ByteArrayInputStream(Objects.requireNonNull(liite.get(0)));
     }
 
     @Override
-    public byte[] getDokumenttiKuva(Long opsId, Kuvatyyppi kuvatyyppi, Kieli kieli, DokumenttiTyyppi dokumenttityyppi, Long ktId) {
-        ResponseEntity<byte[]> response;
-        try {
-            response = dokumenttiUtilService.createRestTemplateWithImageConversionSupport().exchange(getDokumenttiKuvaUrl(dokumenttityyppi, ktId, opsId),
-                    HttpMethod.GET,
-                    httpEntity,
-                    byte[].class,
-                    opsId,
-                    kuvatyyppi,
-                    kieli);
-        } catch (Exception e) {
-            throw new ServiceException("Dokumenttikuvaa ei saatu haettua: " + e.getMessage());
-        }
-        if (response.getBody() == null) {
-            throw new ServiceException("Dokumenttikuvaa ei löytynyt");
-        } else {
-            return response.getBody();
-        }
+    public byte[] getDokumenttiKuva(Long opsId, Kuvatyyppi kuvatyyppi, Kieli kieli, DokumenttiTyyppi tyyppi, Long ktId) {
+        OphHttpClient client = restClientFactory.get(getDokumenttiApiBaseUrl(tyyppi), true);
+        String url = UriComponentsBuilder.fromUriString(getDokumenttiKuvaUrl(tyyppi))
+                .build(Map.of("opsId",opsId, "tyyppi", kuvatyyppi, "kieli", kieli, "ktid", ktId))
+                .toString();
+        OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
+
+        List<byte[]> kuva = new ArrayList<>();
+        client.<byte[]>execute(request)
+                .handleErrorStatus(SC_FOUND, SC_UNAUTHORIZED, SC_FORBIDDEN, SC_METHOD_NOT_ALLOWED, SC_BAD_REQUEST, SC_INTERNAL_SERVER_ERROR)
+                .with(error -> {
+                    throw new RuntimeException("Virhe pdf:n lähetyksessä: " + error);
+                })
+                .expectedStatus(SC_OK, SC_CREATED)
+                .consumeStreamWith(content -> {
+                    try {
+                        kuva.add(content.readAllBytes());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+        return kuva.get(0);
     }
 
     @Override
-    public TermiDto getTermi(Long id, String avain, DokumenttiTyyppi dokumenttityyppi) {
-        try {
-            ResponseEntity<TermiDto> response = restTemplate.exchange(getTermiUrl(dokumenttityyppi),
-                    HttpMethod.GET,
-                    httpEntity,
-                    TermiDto.class,
-                    id,
-                    avain);
-            return response.getBody();
-        } catch (Exception e) {
-            throw new ServiceException("Termiä ei saatu haettua: " + e.getMessage());
-        }
+    public TermiDto getTermi(Long id, String avain, DokumenttiTyyppi tyyppi) {
+        OphHttpClient client = restClientFactory.get(getDokumenttiApiBaseUrl(tyyppi), true);
+        String url = UriComponentsBuilder.fromUriString(getTermiUrl(tyyppi)).build(id, avain).toString();
+        OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
+
+        return client.<TermiDto>execute(request)
+                .handleErrorStatus(SC_FOUND, SC_UNAUTHORIZED, SC_FORBIDDEN, SC_METHOD_NOT_ALLOWED, SC_BAD_REQUEST, SC_INTERNAL_SERVER_ERROR)
+                .with(error -> {
+                    throw new RuntimeException("Virhe pdf:n lähetyksessä: " + error);
+                })
+                .expectedStatus(SC_OK, SC_CREATED)
+                .mapWith(text -> {
+                    try {
+                        return objectMapper.readValue(text, TermiDto.class);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).orElse(null);
     }
 
     @Override
@@ -161,7 +189,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
                     })
                     .expectedStatus(SC_OK, SC_CREATED)
                     .ignoreResponse();
-            log.info("dokumentti lähetetty palvelulle: {}, vastauksella:{}", getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/data/"+dokumenttiId);
+            log.info("dokumentti lähetetty palvelulle: {}", getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/data/"+dokumenttiId);
         } catch (Exception e) {
             throw new ServiceException("PDF-dataa ei saatu lähetettyä: " + e.getMessage());
         }
@@ -234,10 +262,9 @@ public class CommonExternalServiceImpl implements CommonExternalService{
         }
     }
 
-    private String getDokumenttiKuvaUrl(DokumenttiTyyppi tyyppi, Long ktId, Long opsId) {
+    private String getDokumenttiKuvaUrl(DokumenttiTyyppi tyyppi) {
         if (tyyppi.equals(DokumenttiTyyppi.AMOSAA)) {
-            // koska amosaan ja ylopsin urlien rakenne eroaa, ja amosaa vaatii opsId:n kahdesti, asetetaan tässä ensimmäinen kerta ja muut uriVariablet myöhemmin
-            return amosaaServiceUrl + "/api/koulutustoimijat/" + ktId + "/opetussuunnitelmat/" + opsId + "/dokumentti/kuva?opsId={opsId}&tyyppi={tyyppi}&kieli={kieli}";
+            return amosaaServiceUrl + "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/kuva?opsId={opsId}&tyyppi={tyyppi}&kieli={kieli}";
         } else if (tyyppi.equals(DokumenttiTyyppi.YLOPS)) {
             return ylopsServiceUrl + "/api/dokumentit/kuva?opsId={opsId}&tyyppi={tyyppi}&kieli={kieli}";
         } else {
