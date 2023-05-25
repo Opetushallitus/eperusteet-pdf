@@ -8,13 +8,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-@Profile({"dev", "local"})
+@Profile({"dev", "jar"})
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @EnableWebSecurity
 public class WebSecurityConfigurationDev extends WebSecurityConfigurerAdapter {
 
-    //TODO: väliaikaista devaukselle
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
