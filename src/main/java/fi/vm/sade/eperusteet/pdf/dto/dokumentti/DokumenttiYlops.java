@@ -9,5 +9,4 @@ import lombok.Setter;
 @Setter
 public class DokumenttiYlops extends DokumenttiBase {
     OpetussuunnitelmaExportDto ops;
-    PerusteKaikkiDto perusteDto;
 }

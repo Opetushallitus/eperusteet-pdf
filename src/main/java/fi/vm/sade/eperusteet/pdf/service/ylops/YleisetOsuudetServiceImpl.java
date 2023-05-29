@@ -65,7 +65,7 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
 
                         TekstiKappaleDto perusteenTekstikappale = null;
                         if (lapsi.getPerusteTekstikappaleId() != null) {
-                            perusteenTekstikappale = getPerusteTekstikappale(docBase.getPerusteDto(), lapsi.getPerusteTekstikappaleId());
+                            perusteenTekstikappale = getPerusteTekstikappale(docBase.getPeruste(), lapsi.getPerusteTekstikappaleId());
                             if (perusteenTekstikappale != null) {
                                 addHeader(docBase, getTextString(docBase, perusteenTekstikappale.getNimi()));
                             }
@@ -120,7 +120,7 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
         Long pTekstikappaleId = viite.getPerusteTekstikappaleId();
         if (viite.isNaytaPerusteenTeksti() && pTekstikappaleId != null) {
             try {
-                TekstiKappaleDto tekstikappale = getPerusteTekstikappale(docBase.getPerusteDto(), pTekstikappaleId);
+                TekstiKappaleDto tekstikappale = getPerusteTekstikappale(docBase.getPeruste(), pTekstikappaleId);
                 if (tekstikappale != null) {
                     return true;
                 }

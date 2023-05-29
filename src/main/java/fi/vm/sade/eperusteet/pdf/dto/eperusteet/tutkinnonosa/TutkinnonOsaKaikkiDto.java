@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.enums.TutkinnonOsaTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KevytTekstiKappaleDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ammattitaitovaatimukset.AmmattitaitovaatimusKohdealueetDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArviointiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
@@ -68,6 +69,11 @@ public class TutkinnonOsaKaikkiDto extends PerusteenOsaDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @ApiModelProperty("Vanhentunut rakenteeton ammattitaitovaatimukset. Ei käytössä uusissa reformin mukaisissa tutkinnon osissa.")
     private LokalisoituTekstiDto ammattitaitovaatimukset;
+
+    @Deprecated
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @ApiModelProperty("Vanhentunut rakenteeton ammattitaitovaatimukset. Ei käytössä uusissa reformin mukaisissa tutkinnon osissa.")
+    private List<AmmattitaitovaatimusKohdealueetDto> ammattitaitovaatimuksetLista;
 
     public LokalisoituTekstiDto getAmmattitaitovaatimukset() {
         if (ammattitaitovaatimukset == null && ammattitaitovaatimukset2019 != null) {

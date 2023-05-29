@@ -1,5 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.OsaamistasonKriteeriDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Reference;
@@ -15,6 +17,10 @@ import java.util.Set;
 public class ArvioinninKohdeDto {
     private LokalisoituTekstiDto otsikko;
     private LokalisoituTekstiDto selite;
+    @JsonProperty("_arviointiasteikko")
     private Reference arviointiAsteikko;
+
+    @JsonProperty("arviointiasteikko")
+    private ArviointiAsteikkoDto arviointiasteikkoDto;
     private Set<OsaamistasonKriteeriDto> osaamistasonKriteerit;
 }

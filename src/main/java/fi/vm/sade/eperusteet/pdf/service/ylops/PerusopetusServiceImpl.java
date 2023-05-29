@@ -69,7 +69,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
             String teksti = getTextString(docBase, vlk.getNimi());
             addHeader(docBase, !teksti.isEmpty() ? teksti : "Vuosiluokkakokonaisuuden otsikko puuttuu");
 
-            PerusopetuksenPerusteenSisaltoDto poPerusteenSisaltoDto = docBase.getPerusteDto().getPerusopetuksenPerusteenSisalto();
+            PerusopetuksenPerusteenSisaltoDto poPerusteenSisaltoDto = docBase.getPeruste().getPerusopetuksenPerusteenSisalto();
             Map<UUID, LaajaalainenOsaaminenDto> laajaAlaisetOsaamisetMap = poPerusteenSisaltoDto.getLaajaalaisetosaamiset().stream().collect(Collectors.toMap(LaajaalainenOsaaminenDto::getTunniste, v -> v));
             Map<UUID, VuosiluokkaKokonaisuusDto> perusteenVlkMap = poPerusteenSisaltoDto.getVuosiluokkakokonaisuudet().stream().collect(Collectors.toMap(VuosiluokkaKokonaisuusDto::getTunniste, v -> v));
             if (poPerusteenSisaltoDto != null && vlk.getTunniste().getId() != null) {
@@ -224,7 +224,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
 
                 if (optOaVlk.isPresent()) {
                     oaVlk = optOaVlk.get();
-                    Optional<OppiaineLaajaDto> optPerusteOppiaineDto = docBase.getPerusteDto().getPerusopetuksenPerusteenSisalto().getOppiaine(tunniste);
+                    Optional<OppiaineLaajaDto> optPerusteOppiaineDto = docBase.getPeruste().getPerusopetuksenPerusteenSisalto().getOppiaine(tunniste);
                     if (optPerusteOppiaineDto.isPresent()) {
                         perusteOppiaineDto = optPerusteOppiaineDto.get();
                         Optional<OppiaineenVuosiluokkaKokonaisuusDto> optPerusteOaVlkDto =
@@ -505,7 +505,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                 // Jos on koosteinen oppimäärä ja oppimäärälle ei löydy perustetta
                 // perusteen oppiaineesta, käytetään opsin perusteen oppiainetta
                 if (oppiaine.isKoosteinen() && perusteOppiaineDto == null) {
-                    Optional<OppiaineLaajaDto> optPerusteOppiaineDto = docBase.getPerusteDto().getPerusopetuksenPerusteenSisalto()
+                    Optional<OppiaineLaajaDto> optPerusteOppiaineDto = docBase.getPeruste().getPerusopetuksenPerusteenSisalto()
                             .getOppiaine(oppimaara.getTunniste());
                     if (optPerusteOppiaineDto.isPresent()) {
                         perusteOppiaineDto = optPerusteOppiaineDto.get();

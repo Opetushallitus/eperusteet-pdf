@@ -100,7 +100,7 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
         docBase.setKieli(generatorData.getKieli());
         docBase.setGeneratorData(generatorData);
         docBase.setOps(ops);
-        docBase.setPerusteDto(perusteKaikkiDto);
+        docBase.setPeruste(perusteKaikkiDto);
         docBase.setGenerator(new CharapterNumberGenerator());
 
         // Kansilehti & Infosivu

@@ -8,8 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Käytetään sisällön viemiseen rakenteisena
@@ -36,6 +40,7 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
     private KotoOpintoExportDto kotoOpinto;
     private KotoLaajaAlainenOsaaminenExportDto kotoLaajaAlainenOsaaminen;
     private Long perusteenOsaId;
+    private List<OmaOsaAlueExportDto> osaAlueet = new ArrayList<>();
 
     public LokalisoituTekstiDto getNimi() {
         if (koulutuksenosa != null) {
@@ -67,5 +72,13 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
         if (perusteenOsaDto instanceof fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.TekstiKappaleDto) {
             perusteteksti = ((fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.TekstiKappaleDto) perusteenOsaDto).getTeksti();
         }
+    }
+
+    public List<OmaOsaAlueExportDto> getOsaAlueet() {
+        if (CollectionUtils.isNotEmpty(this.osaAlueet)) {
+            return this.osaAlueet.stream().filter(osaAlue -> !osaAlue.isPiilotettu()).collect(Collectors.toList());
+        }
+
+        return Collections.emptyList();
     }
 }

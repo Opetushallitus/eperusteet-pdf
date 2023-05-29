@@ -17,7 +17,6 @@ public class DokumenttiPeruste extends DokumenttiBase {
     PerusteenOsaViiteDto sisalto;
     AIPEOpetuksenSisaltoDto aipeOpetuksenSisalto;
     KVLiiteJulkinenDto kvLiiteJulkinenDto;
-    PerusteKaikkiDto peruste;
 
     public LaajuusYksikko getLaajuusYksikko() {
         Set<SuoritustapaLaajaDto> suoritustavat = this.getPeruste().getSuoritustavat();
