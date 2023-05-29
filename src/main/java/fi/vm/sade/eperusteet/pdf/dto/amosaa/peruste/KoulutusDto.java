@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KoulutusDto {
+    private Long id;
     private LokalisoituTekstiDto nimi;
     private String koulutuskoodiArvo;
     private String koulutuskoodiUri;

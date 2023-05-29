@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class OpsVuosiluokkakokonaisuusDto {
     private boolean oma;
     private VuosiluokkakokonaisuusDto vuosiluokkakokonaisuus;
+    private OpsVuosiluokkakokonaisuusLisatietoDto lisatieto;
 }

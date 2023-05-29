@@ -78,8 +78,21 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
                         if (!opetussuunnitelmaVanhaaRakennetta(docBase)) {
 
                             // Perusteen teksti luvulle jos valittu esittäminen
-                            if (lapsi.isNaytaPerusteenTeksti() && perusteenTekstikappale != null) {
-                                addLokalisoituteksti(docBase, perusteenTekstikappale.getTeksti(),"cite");
+                            if (lapsi.isNaytaPerusteenTeksti()) {
+                                if (perusteenTekstikappale != null) {
+                                    addLokalisoituteksti(docBase, perusteenTekstikappale.getTeksti(),"cite");
+
+                                    if (perusteenTekstikappale.getTunniste() != null && perusteenTekstikappale.getTunniste().equals("laajaalainenosaaminen")) {
+                                        PerusteKaikkiDto peruste = docBase.getPeruste();
+                                        if (peruste.getAipeOpetuksenPerusteenSisalto() != null && peruste.getAipeOpetuksenPerusteenSisalto().getLaajaalaisetosaamiset() != null) {
+                                            peruste.getAipeOpetuksenPerusteenSisalto().getLaajaalaisetosaamiset().forEach(lao -> {
+                                                addLokalisoituteksti(docBase, lao.getNimi(),"h5i");
+                                                addLokalisoituteksti(docBase, lao.getKuvaus(),"cite");
+                                            });
+                                        }
+                                    }
+                                }
+
                             }
 
                             if (lapsi.isNaytaPohjanTeksti()) {
@@ -161,11 +174,24 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
     }
 
     public TekstiKappaleDto getPerusteTekstikappale(PerusteKaikkiDto perusteDto, Long tekstikappaleId) {
+        PerusteenOsaViiteDto.Laaja perusteenTekstikappaleViite = getPerusteTekstikappaleViite(perusteDto, tekstikappaleId);
+
+        if (perusteenTekstikappaleViite != null) {
+            fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto tk = (fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto) perusteenTekstikappaleViite.getPerusteenOsa();
+            return new TekstiKappaleDto(
+                    LokalisoituTekstiDto.of(tk.getNimi().getTekstit()),
+                    LokalisoituTekstiDto.of(tk.getTeksti().getTekstit()),
+                    null);
+        }
+        return null;
+    }
+
+    public PerusteenOsaViiteDto.Laaja getPerusteTekstikappaleViite(PerusteKaikkiDto perusteDto, Long tekstikappaleId) {
         PerusteenOsaViiteDto.Laaja sisalto = perusteDto.getSisallot().stream().findFirst().get().getSisalto();
 
         if (sisalto != null) {
-            PerusteenOsaViiteDto.Laaja perusteenTekstikappaleViite = CollectionUtil.treeToStream(
-                    sisalto, PerusteenOsaViiteDto.Laaja::getLapset)
+            return CollectionUtil.treeToStream(
+                            sisalto, PerusteenOsaViiteDto.Laaja::getLapset)
                     .filter(viiteDto -> {
                         if (viiteDto.getPerusteenOsa() instanceof fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto) {
                             fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto tk = (fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto) viiteDto.getPerusteenOsa();
@@ -178,13 +204,6 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
                     })
                     .findFirst()
                     .orElse(null);
-            if (perusteenTekstikappaleViite != null) {
-                fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto tk = (fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto) perusteenTekstikappaleViite.getPerusteenOsa();
-                return new TekstiKappaleDto(
-                        LokalisoituTekstiDto.of(tk.getNimi().getTekstit()),
-                        LokalisoituTekstiDto.of(tk.getTeksti().getTekstit()),
-                        null);
-            }
         }
         return null;
     }

@@ -610,7 +610,8 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
     }
 
     private void addTutkinnonosa(DokumenttiAmosaa docBase, SisaltoViiteExportDto sisaltoViiteDto) {
-        TutkinnonosaDto tutkinnonOsa = docBase.getOpetussuunnitelma().getTutkinnonOsat().stream().filter(tosaviite -> tosaviite.getId().equals(sisaltoViiteDto.getId())).findFirst().get().getTosa();
+        TutkinnonosaDto tutkinnonOsa = docBase.getOpetussuunnitelma().getTutkinnonOsat().stream()
+                .filter(tosaviite -> tosaviite.getTosa().getId().equals(sisaltoViiteDto.getTosa().getId())).findFirst().get().getTosa();
 
         switch (tutkinnonOsa.getTyyppi()) {
             case OMA:
@@ -1062,7 +1063,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
             if (arvioinninKohde.getSelite() != null) {
                 arvioinninKohteetBuilder.append("<p>");
-                arvioinninKohteetBuilder.append(arvioinninKohde.getSelite());
+                arvioinninKohteetBuilder.append(getTextString(docBase, arvioinninKohde.getSelite()));
                 arvioinninKohteetBuilder.append("</p>");
             }
 
