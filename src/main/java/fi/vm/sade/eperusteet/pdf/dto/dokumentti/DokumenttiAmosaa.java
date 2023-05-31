@@ -13,5 +13,4 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DokumenttiAmosaa extends DokumenttiBase {
     OpetussuunnitelmaKaikkiDto opetussuunnitelma;
-    PerusteKaikkiDto peruste;
 }

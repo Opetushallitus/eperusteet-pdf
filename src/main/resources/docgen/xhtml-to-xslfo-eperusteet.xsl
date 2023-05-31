@@ -4,7 +4,8 @@
                 xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <xsl:output method="xml"/>
     <xsl:param name="page-size" select="'a4'"/>
-
+    <xsl:param name="docgenPath"/>
+'
     <xsl:template match="html">
 
         <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
@@ -42,7 +43,7 @@
                                              extent="20mm"/>
                             <fo:region-start region-name="rs-left" extent="30mm"
                                              reference-orientation="90" display-align="before"
-                                             background-image="gradient.svg"
+                                             background-image="{$docgenPath}gradient.svg"
                                              background-repeat="no-repeat"
                                              background-position-horizontal="left"/>
                             <fo:region-end extent="30mm"/>
@@ -62,7 +63,7 @@
                             <fo:region-start extent="30mm"/>
                             <fo:region-end region-name="re-right" extent="30mm"
                                            reference-orientation="90" display-align="after"
-                                           background-image="gradient.svg"
+                                           background-image="{$docgenPath}gradient.svg"
                                            background-repeat="no-repeat"
                                            background-position-horizontal="right"/>
                         </fo:simple-page-master>
@@ -112,13 +113,13 @@
                     <fo:block text-align="center">
                         <xsl:choose>
                             <xsl:when test="/html/@lang='fi' or /html/@lang='sv'">
-                                <fo:external-graphic src="logos/oph_su_ru.svg"
+                                <fo:external-graphic src="{$docgenPath}logos/oph_su_ru.svg"
                                                      height="14mm"
                                                      content-height="scale-to-fit"
                                                      scaling="uniform"/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <fo:external-graphic src="logos/oph_en.svg"
+                                <fo:external-graphic src="{$docgenPath}logos/oph_en.svg"
                                                      height="14mm"
                                                      content-height="scale-to-fit"
                                                      scaling="uniform"/>

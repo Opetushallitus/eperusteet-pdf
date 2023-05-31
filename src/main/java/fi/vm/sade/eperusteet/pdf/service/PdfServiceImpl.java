@@ -4,6 +4,7 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiEventListener;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
@@ -35,11 +36,11 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+@Slf4j
 @Service
 public class PdfServiceImpl implements PdfService {
     private static final Logger LOG = LoggerFactory.getLogger(PdfServiceImpl.class);
@@ -56,32 +57,30 @@ public class PdfServiceImpl implements PdfService {
     @Value("classpath:docgen/kvliite.xsl")
     private Resource kvLiiteTemplate;
 
-    @Value("classpath:docgen/fop.xconf")
+    @Value("${fopConfiguration}")
     private Resource config;
+
+    @Value("${docgenPath: ''}")
+    private String docgenPath;
 
     @Override
     public byte[] xhtml2pdf(Document document, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi) throws IOException, TransformerException, SAXException, DokumenttiException {
-        return convertDocument2PDF(document, selectTemplate(tyyppi), meta, tyyppi);
-    }
-
-    private byte[] convertDocument2PDF(Document doc, File xslt, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi)
-            throws IOException, TransformerException, SAXException {
         // Alustetaan Streamit
         ByteArrayOutputStream xmlStream = new ByteArrayOutputStream();
         ByteArrayOutputStream foStream = new ByteArrayOutputStream();
         ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
 
         // Muunnetaan ops objekti xml muotoon
-        convertOps2XML(doc, xmlStream);
+        convertOps2XML(document, xmlStream);
 
         // Muunntetaan saatu xml malli fo:ksi
         InputStream xmlInputStream = new ByteArrayInputStream(xmlStream.toByteArray());
-        convertXML2FO(xmlInputStream, xslt, foStream);
+        convertXML2FO(xmlInputStream, selectTemplate(tyyppi), foStream);
 
         // Muunnetaan saatu fo malli pdf:ksi
         InputStream foInputStream = new ByteArrayInputStream(foStream.toByteArray());
 
-        convertFO2PDF(doc, foInputStream, pdfStream, meta, tyyppi);
+        convertFO2PDF(document, foInputStream, pdfStream, meta, tyyppi);
 
         return pdfStream.toByteArray();
     }
@@ -89,7 +88,7 @@ public class PdfServiceImpl implements PdfService {
     @SuppressWarnings("unchecked")
     private void convertFO2PDF(Document doc, InputStream fo, OutputStream pdf, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi)
             throws IOException, SAXException, TransformerException {
-        FopFactory fopFactory = FopFactory.newInstance(config.getFile());
+        FopFactory fopFactory = FopFactory.newInstance(config.getURI(), config.getInputStream());
 
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
         foUserAgent.setAccessibility(true);
@@ -104,7 +103,7 @@ public class PdfServiceImpl implements PdfService {
             foUserAgent.setSubject(meta.getSubject());
         }
 
-        if (DokumenttiTyyppi.OPS.equals(tyyppi)) {
+        if (DokumenttiTyyppi.AMOSAA.equals(tyyppi)) {
             // Override with document title
             try {
                 XPathFactory xPathfactory = XPathFactory.newInstance();
@@ -151,10 +150,11 @@ public class PdfServiceImpl implements PdfService {
         transformer.transform(src, res);
     }
 
-    private void convertXML2FO(InputStream xml, File xslt, OutputStream fo) throws IOException, TransformerException {
+    private void convertXML2FO(InputStream xml, InputStream xslt, OutputStream fo) throws IOException, TransformerException {
         try {
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transformer = factory.newTransformer(new StreamSource(xslt));
+            transformer.setParameter("docgenPath", docgenPath);
 
             Source src = new StreamSource(xml);
             Result res = new StreamResult(fo);
@@ -165,15 +165,15 @@ public class PdfServiceImpl implements PdfService {
         }
     }
 
-    private File selectTemplate(DokumenttiTyyppi tyyppi) throws IOException, DokumenttiException {
+    private InputStream selectTemplate(DokumenttiTyyppi tyyppi) throws IOException, DokumenttiException {
         if (tyyppi.equals(DokumenttiTyyppi.PERUSTE)) {
-            return eperusteetTemplate.getFile();
-        } else if (tyyppi.equals(DokumenttiTyyppi.OPS)) {
-            return amosaaTemplate.getFile();
-        } else if (tyyppi.equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
-            return ylopsTemplate.getFile();
+            return eperusteetTemplate.getInputStream();
+        } else if (tyyppi.equals(DokumenttiTyyppi.AMOSAA)) {
+            return amosaaTemplate.getInputStream();
+        } else if (tyyppi.equals(DokumenttiTyyppi.YLOPS)) {
+            return ylopsTemplate.getInputStream();
         } else if (tyyppi.equals(DokumenttiTyyppi.KVLIITE)) {
-            return kvLiiteTemplate.getFile();
+            return kvLiiteTemplate.getInputStream();
         } else {
             throw new DokumenttiException("Dokumentti-tyyppiä ei ole määritetty.");
         }

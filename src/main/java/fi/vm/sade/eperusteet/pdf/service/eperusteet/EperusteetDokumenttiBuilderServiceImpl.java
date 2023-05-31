@@ -70,6 +70,7 @@ import fi.vm.sade.eperusteet.pdf.utils.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -151,7 +152,9 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         docBase.setGenerator(new CharapterNumberGenerator());
         docBase.setKieli(generatorData.getKieli());
         docBase.setPeruste(perusteData);
-        docBase.setKvLiiteJulkinenDto(eperusteetService.getKvLiite(perusteData.getId()));
+        if (KoulutusTyyppi.of(perusteData.getKoulutustyyppi()).isAmmatillinen()) {
+            docBase.setKvLiiteJulkinenDto(eperusteetService.getKvLiite(perusteData.getId()));
+        }
         docBase.setGeneratorData(generatorData);
         docBase.setSisalto(perusteData.getSisallot().stream().findFirst().get().getSisalto());
         docBase.setAipeOpetuksenSisalto(perusteData.getAipeOpetuksenPerusteenSisalto());

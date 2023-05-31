@@ -4,8 +4,6 @@ import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.enums.GeneratorVersion;
-import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,5 +18,4 @@ public interface DokumenttiUtilService {
 
     TermiDto getTermiFromExternalService(Long id, String avain, DokumenttiTyyppi tyyppi);
 
-    GeneratorData createGeneratorData(Long perusteId, Long dokumenttiId, Kieli kieli, DokumenttiTyyppi tyyppi, GeneratorVersion versio, Long ktId);
 }

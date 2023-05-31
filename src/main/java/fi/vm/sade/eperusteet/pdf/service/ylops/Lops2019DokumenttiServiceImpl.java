@@ -83,7 +83,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
         addHeader(docBase, messages.translate("oppiaineet", docBase.getKieli()));
         docBase.getGenerator().increaseDepth();
 
-        Lops2019SisaltoDto perusteenSisalto = docBase.getPerusteDto().getLops2019Sisalto();
+        Lops2019SisaltoDto perusteenSisalto = docBase.getPeruste().getLops2019Sisalto();
         if (perusteenSisalto == null) {
             return;
         }
@@ -106,7 +106,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
         }
 
         List<Lops2019OppiaineKaikkiDto> perusteOppiaineet = getOppiaineet(
-                docBase.getPerusteDto().getLops2019Sisalto().getOppiaineet(),
+                docBase.getPeruste().getLops2019Sisalto().getOppiaineet(),
                 docBase.getOps().getPaikallisetOppiaineet(),
                 opintojaksotMap);
 
@@ -224,7 +224,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
             addLokalisoituteksti(docBase, tehtava.getKuvaus(), "cite");
         }
 
-        if (!docBase.getPerusteDto().getKoulutustyyppi().equals(KoulutusTyyppi.LUKIOVALMISTAVAKOULUTUS)) {
+        if (!docBase.getPeruste().getKoulutustyyppi().equals(KoulutusTyyppi.LUKIOVALMISTAVAKOULUTUS)) {
             // Laaja-alainen osaaminen
             Lops2019OppiaineLaajaAlainenOsaaminenDto laoKokonaisuus = oa.getLaajaAlaisetOsaamiset();
             if (laoKokonaisuus != null) {
@@ -322,7 +322,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
         List<Lops2019PaikallinenOppiaineDto> paikallisetOppimaarat = docBase.getOps().getPaikallisetOppiaineet().stream()
                 .filter(poa -> {
                     String parentKoodi = poa.getPerusteenOppiaineUri();
-                    Optional<Lops2019OppiaineKaikkiDto> orgOaOpt = docBase.getPerusteDto().getLops2019Sisalto().getOppiaineet().stream()
+                    Optional<Lops2019OppiaineKaikkiDto> orgOaOpt = docBase.getPeruste().getLops2019Sisalto().getOppiaineet().stream()
                             .filter(oaOrg -> oaOrg.getId().equals(oa.getId()))
                             .findAny();
                     if (parentKoodi != null) {
@@ -350,7 +350,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
                     return addOppiaine(docBase, (Lops2019OppiaineKaikkiDto) om, omKoodi != null ? opintojaksotMap.get(omKoodi.getUri()) : null, opintojaksotMap, oppiaineJarjestykset, moduulit);
                 },
                 pom -> {
-                    Lops2019OppiaineKaikkiDto perusteOa = docBase.getPerusteDto().getLops2019Sisalto().getOppiaineet().stream().filter(poa -> poa.getId().equals(oa.getId())).findFirst().get();
+                    Lops2019OppiaineKaikkiDto perusteOa = docBase.getPeruste().getLops2019Sisalto().getOppiaineet().stream().filter(poa -> poa.getId().equals(oa.getId())).findFirst().get();
                     ArrayList<Lops2019OppiaineKaikkiDto> oaJaOppimaarat = new ArrayList<>();
                     oaJaOppimaarat.add(perusteOa);
                     oaJaOppimaarat.addAll(perusteOa.getOppimaarat());
@@ -495,7 +495,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
             }
         }
 
-        if (!docBase.getPerusteDto().getKoulutustyyppi().equals(KoulutusTyyppi.LUKIOVALMISTAVAKOULUTUS)) { // Laaja-alainen osaaminen
+        if (!docBase.getPeruste().getKoulutustyyppi().equals(KoulutusTyyppi.LUKIOVALMISTAVAKOULUTUS)) { // Laaja-alainen osaaminen
 
             Lops2019OppiaineLaajaAlainenOsaaminenDto oppiaineenLaajaAlainenOsaaminen = oa != null ? oa.getLaajaAlaisetOsaamiset() : null;
             List<Lops2019PaikallinenLaajaAlainenDto> laajaAlainenOsaaminen = poa.getLaajaAlainenOsaaminen();
@@ -681,7 +681,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
         //addOpintojaksonOppiaineenLaajaAlainenOsaaminen(docBase, oppiaineet);
         //addOpintojaksonOppiaineenPaikallinenLaajaAlainenOsaaminen(docBase, paikallisetOppiaineet);
 
-        if (!docBase.getPerusteDto().getKoulutustyyppi().equals(KoulutusTyyppi.LUKIOVALMISTAVAKOULUTUS)) {
+        if (!docBase.getPeruste().getKoulutustyyppi().equals(KoulutusTyyppi.LUKIOVALMISTAVAKOULUTUS)) {
             addOpintojaksonLaajaAlainenOsaaminenPaikallinenLisays(docBase, oj);
         }
 
@@ -689,7 +689,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
         //addOpintojaksonArviointi(docBase, oppiaineet);
         addOpintojaksonArviointiPaikallinenLisays(docBase, oj);
 
-        if (docBase.getPerusteDto().getKoulutustyyppi().equals(KoulutusTyyppi.LUKIOVALMISTAVAKOULUTUS)) {
+        if (docBase.getPeruste().getKoulutustyyppi().equals(KoulutusTyyppi.LUKIOVALMISTAVAKOULUTUS)) {
             addOpintojaksonOpiskeluymparisoTyotavatPaikallinenLisays(docBase, oj);
         }
 
@@ -750,7 +750,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
                 .collect(Collectors.toList());
 
         // Haetaan perusteen oppiaineet
-        Lops2019SisaltoDto sisaltoDto = docBase.getPerusteDto().getLops2019Sisalto();
+        Lops2019SisaltoDto sisaltoDto = docBase.getPeruste().getLops2019Sisalto();
         List<Lops2019OppiaineKaikkiDto> oppiaineetKaikki = Stream.concat(
                 sisaltoDto.getOppiaineet().stream(),
                 sisaltoDto.getOppiaineet().stream().map(Lops2019OppiaineKaikkiDto::getOppimaarat).flatMap(Collection::stream))
@@ -806,7 +806,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
         //addOpintojaksonOppiaineenLaajaAlainenOsaaminen(docBase, oppiaineet);
         //addOpintojaksonOppiaineenPaikallinenLaajaAlainenOsaaminen(docBase, paikallisetOppiaineet);
 
-        if (!docBase.getPerusteDto().getKoulutustyyppi().equals(KoulutusTyyppi.LUKIOVALMISTAVAKOULUTUS)) {
+        if (!docBase.getPeruste().getKoulutustyyppi().equals(KoulutusTyyppi.LUKIOVALMISTAVAKOULUTUS)) {
             addOpintojaksonLaajaAlainenOsaaminenPaikallinenLisays(docBase, oj);
         }
 
@@ -814,7 +814,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
         //addOpintojaksonArviointi(docBase, oppiaineet);
         addOpintojaksonArviointiPaikallinenLisays(docBase, oj);
 
-        if (docBase.getPerusteDto().getKoulutustyyppi().equals(KoulutusTyyppi.LUKIOVALMISTAVAKOULUTUS)) {
+        if (docBase.getPeruste().getKoulutustyyppi().equals(KoulutusTyyppi.LUKIOVALMISTAVAKOULUTUS)) {
             addOpintojaksonOpiskeluymparisoTyotavatPaikallinenLisays(docBase, oj);
         }
 
@@ -1104,7 +1104,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
     }
 
     private LokalisoituTekstiDto getLaoNimi(DokumenttiYlops docBase, String koodiUri) {
-        Optional<Lops2019LaajaAlainenOsaaminenDto> perusteLaoDto = docBase.getPerusteDto().getLops2019Sisalto().getLaajaAlainenOsaaminen().getLaajaAlaisetOsaamiset().stream()
+        Optional<Lops2019LaajaAlainenOsaaminenDto> perusteLaoDto = docBase.getPeruste().getLops2019Sisalto().getLaajaAlainenOsaaminen().getLaajaAlaisetOsaamiset().stream()
                 .filter(perusteLao -> perusteLao.getKoodi().getUri().equals(koodiUri)).findFirst();
         if (perusteLaoDto.isPresent()) {
             return perusteLaoDto.get().getKoodi().getNimi();
@@ -1122,7 +1122,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
         List<Lops2019PaikallinenLaajaAlainenDto> laajaAlainenOsaaminen = oj.getLaajaAlainenOsaaminen();
         if (!ObjectUtils.isEmpty(laajaAlainenOsaaminen)) {
             addTeksti(docBase, messages.translate("paikallinen-lisays", docBase.getKieli()), "p");
-            laajaAlainenOsaaminen.forEach(laajaAlainenDto -> docBase.getPerusteDto().getLops2019Sisalto().getLaajaAlainenOsaaminen().getLaajaAlaisetOsaamiset().stream()
+            laajaAlainenOsaaminen.forEach(laajaAlainenDto -> docBase.getPeruste().getLops2019Sisalto().getLaajaAlainenOsaaminen().getLaajaAlaisetOsaamiset().stream()
                     .filter(lao -> lao.getKoodi() != null
                             && lao.getKoodi().getUri() != null
                             && Objects.equals(lao.getKoodi().getUri(), laajaAlainenDto.getKoodi()))
@@ -1150,7 +1150,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
                     addTeksti(docBase, StringUtils.isEmpty(nimi)
                             ? messages.translate("nimeton-opintojakso", docBase.getKieli())
                             : nimi, "p");
-                    paikallinenOpintojakso.getLaajaAlainenOsaaminen().forEach(laajaAlainenDto -> docBase.getPerusteDto().getLops2019Sisalto().getLaajaAlainenOsaaminen().getLaajaAlaisetOsaamiset().stream()
+                    paikallinenOpintojakso.getLaajaAlainenOsaaminen().forEach(laajaAlainenDto -> docBase.getPeruste().getLops2019Sisalto().getLaajaAlainenOsaaminen().getLaajaAlaisetOsaamiset().stream()
                             .filter(lao -> lao.getKoodi() != null
                                     && lao.getKoodi().getUri() != null
                                     && Objects.equals(lao.getKoodi().getUri(), laajaAlainenDto.getKoodi()))

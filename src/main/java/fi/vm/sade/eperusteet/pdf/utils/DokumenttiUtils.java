@@ -24,7 +24,7 @@ public class DokumenttiUtils {
     public static String selectSubjectTranslationKey(DokumenttiTyyppi tyyppi) {
         if (tyyppi.equals(DokumenttiTyyppi.PERUSTE)) {
             return "docgen.meta.subject.peruste";
-        } else if (tyyppi.equals(DokumenttiTyyppi.OPS) || tyyppi.equals(DokumenttiTyyppi.TOTEUTUSSUUNNITELMA)) {
+        } else if (tyyppi.equals(DokumenttiTyyppi.YLOPS) || tyyppi.equals(DokumenttiTyyppi.AMOSAA)) {
             return "docgen.meta.subject.ops";
         } else {
             return "docgen.meta.subject.kvliite";

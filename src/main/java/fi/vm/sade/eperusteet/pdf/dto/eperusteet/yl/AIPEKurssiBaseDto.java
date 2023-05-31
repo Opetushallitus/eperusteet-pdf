@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
@@ -17,6 +18,7 @@ public class AIPEKurssiBaseDto implements AIPEHasId {
     private Long id;
     private UUID tunniste;
     private Optional<LokalisoituTekstiDto> nimi;
+    @JsonProperty("_oppiaine")
     private Reference oppiaine;
     private KoodiDto koodi;
 }

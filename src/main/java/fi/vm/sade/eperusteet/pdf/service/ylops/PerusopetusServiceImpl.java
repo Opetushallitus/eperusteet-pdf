@@ -69,7 +69,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
             String teksti = getTextString(docBase, vlk.getNimi());
             addHeader(docBase, !teksti.isEmpty() ? teksti : "Vuosiluokkakokonaisuuden otsikko puuttuu");
 
-            PerusopetuksenPerusteenSisaltoDto poPerusteenSisaltoDto = docBase.getPerusteDto().getPerusopetuksenPerusteenSisalto();
+            PerusopetuksenPerusteenSisaltoDto poPerusteenSisaltoDto = docBase.getPeruste().getPerusopetuksenPerusteenSisalto();
             Map<UUID, LaajaalainenOsaaminenDto> laajaAlaisetOsaamisetMap = poPerusteenSisaltoDto.getLaajaalaisetosaamiset().stream().collect(Collectors.toMap(LaajaalainenOsaaminenDto::getTunniste, v -> v));
             Map<UUID, VuosiluokkaKokonaisuusDto> perusteenVlkMap = poPerusteenSisaltoDto.getVuosiluokkakokonaisuudet().stream().collect(Collectors.toMap(VuosiluokkaKokonaisuusDto::getTunniste, v -> v));
             if (poPerusteenSisaltoDto != null && vlk.getTunniste().getId() != null) {
@@ -189,11 +189,9 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                             && oa.getOppiaine().getNimi().getTekstit() != null
                             && oa.getOppiaine().getNimi().getTekstit().get(docBase.getKieli()) != null)
                     .sorted((oa1, oa2) -> {
-                        if (oa1.getOppiaine().getJnro() != null && oa2.getOppiaine().getJnro() != null) {
-                            return oa1.getOppiaine().getJnro().compareTo(oa2.getOppiaine().getJnro());
-                        } else {
-                            return 1;
-                        }
+                        Long jarj1 = oa1.getOppiaine().getJnro() != null ? oa1.getOppiaine().getJnro() : 1L;
+                        Long jarj2 = oa2.getOppiaine().getJnro() != null ? oa2.getOppiaine().getJnro() : 1L;
+                        return jarj1.compareTo(jarj2);
                     })
                     .collect(Collectors.toCollection(ArrayList::new));
 
@@ -224,7 +222,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
 
                 if (optOaVlk.isPresent()) {
                     oaVlk = optOaVlk.get();
-                    Optional<OppiaineLaajaDto> optPerusteOppiaineDto = docBase.getPerusteDto().getPerusopetuksenPerusteenSisalto().getOppiaine(tunniste);
+                    Optional<OppiaineLaajaDto> optPerusteOppiaineDto = docBase.getPeruste().getPerusopetuksenPerusteenSisalto().getOppiaine(tunniste);
                     if (optPerusteOppiaineDto.isPresent()) {
                         perusteOppiaineDto = optPerusteOppiaineDto.get();
                         Optional<OppiaineenVuosiluokkaKokonaisuusDto> optPerusteOaVlkDto =
@@ -505,7 +503,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                 // Jos on koosteinen oppimäärä ja oppimäärälle ei löydy perustetta
                 // perusteen oppiaineesta, käytetään opsin perusteen oppiainetta
                 if (oppiaine.isKoosteinen() && perusteOppiaineDto == null) {
-                    Optional<OppiaineLaajaDto> optPerusteOppiaineDto = docBase.getPerusteDto().getPerusopetuksenPerusteenSisalto()
+                    Optional<OppiaineLaajaDto> optPerusteOppiaineDto = docBase.getPeruste().getPerusopetuksenPerusteenSisalto()
                             .getOppiaine(oppimaara.getTunniste());
                     if (optPerusteOppiaineDto.isPresent()) {
                         perusteOppiaineDto = optPerusteOppiaineDto.get();
@@ -517,11 +515,14 @@ public class PerusopetusServiceImpl implements PerusopetusService {
         }
     }
 
-    private void addOppimaara(DokumenttiBase docBase, OppiaineLaajaDto perusteOppiaineDto,
+    private void addOppimaara(DokumenttiYlops docBase, OppiaineLaajaDto perusteOppiaineDto,
                               OppiaineExportDto oppiaine, VuosiluokkakokonaisuusDto vlk) {
         Optional<OppiaineenVuosiluokkakokonaisuusDto> optOaVlk
                 = oppiaine.getVuosiluokkakokonaisuus(vlk.getTunniste().getId());
         OppiaineenVuosiluokkakokonaisuusDto oaPohjanVlk = new OppiaineenVuosiluokkakokonaisuusDto();
+        OpsVuosiluokkakokonaisuusDto opsVuosiluokkakokonaisuus = docBase.getOps().getVuosiluokkakokonaisuudet().stream()
+                .filter(opsv -> opsv.getVuosiluokkakokonaisuus().getTunniste().getId().equals(vlk.getTunniste().getId())).findFirst().orElse(null);
+
         if (oppiaine.getPohjanOppiaine() != null) {
             oaPohjanVlk = oppiaine.getPohjanOppiaine()
                     .getVuosiluokkakokonaisuus(vlk.getTunniste().getId())
@@ -533,6 +534,12 @@ public class PerusopetusServiceImpl implements PerusopetusService {
         }
 
         if (optOaVlk.get().getPiilotettu() != null && optOaVlk.get().getPiilotettu()) {
+            return;
+        }
+
+        if (opsVuosiluokkakokonaisuus != null
+                && opsVuosiluokkakokonaisuus.getLisatieto() != null
+                && opsVuosiluokkakokonaisuus.getLisatieto().getPiilotetutOppiaineet().contains(oppiaine.getId())) {
             return;
         }
 

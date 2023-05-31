@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.KoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.Reference;
@@ -16,6 +17,7 @@ public class Lops2019OppiaineBaseDto implements ReferenceableDto, Lops2019Sortab
     private Long id;
     private LokalisoituTekstiDto nimi;
     private KoodiDto koodi;
+    @JsonProperty("_oppiaine")
     private Reference oppiaine;
     private Lops2019ArviointiDto arviointi;
     private Lops2019TehtavaDto tehtava;
