@@ -8,7 +8,6 @@ import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.enums.GeneratorVersion;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.OpetussuunnitelmaExportDto;
@@ -65,55 +64,62 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Async(value = "docTaskExecutor")
-    public void generateForEperusteet(Long dokumenttiId, Kieli kieli, GeneratorVersion versio, String perusteJson) {
-        GeneratorData generatorData = GeneratorData.of(DokumenttiTyyppi.PERUSTE);
+    public void generateForEperusteet(Long dokumenttiId, Kieli kieli, String perusteJson) {
         try {
             PerusteKaikkiDto peruste = objectMapper.readValue(perusteJson, PerusteKaikkiDto.class);
-            generatorData = GeneratorData.of(peruste.getId(), dokumenttiId, kieli, DokumenttiTyyppi.PERUSTE, versio, null);
+            GeneratorData generatorData = GeneratorData.of(peruste.getId(), dokumenttiId, kieli, DokumenttiTyyppi.PERUSTE, null);
 
-            Document doc;
             log.info("Luodaan PDF-dokumenttia (docId={}, {}, {})", dokumenttiId, generatorData.getTyyppi(), kieli);
-            if (DokumenttiTyyppi.PERUSTE.equals(generatorData.getTyyppi())) {
-                doc = eperusteetDokumenttiBuilderService.generateXML(peruste, generatorData);
-            } else {
-                doc = kvLiiteBuilderService.generateXML(peruste, generatorData.getKieli());
-            }
+            Document doc = eperusteetDokumenttiBuilderService.generateXML(peruste, generatorData);
             handleConversionAndSending(doc, generateMetaData(generatorData, peruste.getNimi()), generatorData);
         } catch (Exception ex) {
-            handleError(ex,dokumenttiId, generatorData.getTyyppi());
+            handleError(ex,dokumenttiId, DokumenttiTyyppi.PERUSTE);
+        }
+    }
+
+    @Override
+    @Async(value = "docTaskExecutor")
+    public void generateForEperusteetKvLiite(Long dokumenttiId, Kieli kieli, String perusteJson) {
+        try {
+            PerusteKaikkiDto peruste = objectMapper.readValue(perusteJson, PerusteKaikkiDto.class);
+            GeneratorData generatorData = GeneratorData.of(peruste.getId(), dokumenttiId, kieli, DokumenttiTyyppi.KVLIITE, null);
+
+            log.info("Luodaan PDF-dokumenttia (docId={}, {}, {})", dokumenttiId, generatorData.getTyyppi(), kieli);
+            Document doc = kvLiiteBuilderService.generateXML(peruste, generatorData.getKieli());
+            handleConversionAndSending(doc, generateMetaData(generatorData, peruste.getNimi()), generatorData);
+        } catch (Exception ex) {
+            handleError(ex,dokumenttiId, DokumenttiTyyppi.KVLIITE);
         }
     }
 
     @Override
     @Async(value = "docTaskExecutor")
     public void generateForAmosaa(Long dokumenttiId, Kieli kieli, Long ktId, String opsJson) {
-        GeneratorData generatorData = GeneratorData.of(DokumenttiTyyppi.AMOSAA);
         try {
             OpetussuunnitelmaKaikkiDto ops = objectMapper.readValue(opsJson, OpetussuunnitelmaKaikkiDto.class);
-            generatorData = GeneratorData.of(ops.getId(), dokumenttiId, kieli, DokumenttiTyyppi.AMOSAA, null, ktId);
+            GeneratorData generatorData = GeneratorData.of(ops.getId(), dokumenttiId, kieli, DokumenttiTyyppi.AMOSAA, ktId);
 
             log.info("Luodaan PDF-dokumenttia (docId={}, {}, {})", dokumenttiId, generatorData.getTyyppi(), kieli);
             Document doc = amosaaDokumenttiBuilderService.generateXML(ops, generatorData);
             handleConversionAndSending(doc, generateMetaData(generatorData, ops.getNimi()), generatorData);
         } catch (Exception ex) {
-            handleError(ex,dokumenttiId, generatorData.getTyyppi());
+            handleError(ex,dokumenttiId, DokumenttiTyyppi.AMOSAA);
         }
     }
 
     @Override
     @Async(value = "docTaskExecutor")
     public void generateForYlops(Long dokumenttiId, Kieli kieli, String opsJson) {
-        GeneratorData generatorData = GeneratorData.of(DokumenttiTyyppi.YLOPS);
         try {
             OpetussuunnitelmaExportDto ops = objectMapper.readValue(opsJson, OpetussuunnitelmaExportDto.class);
-            generatorData = GeneratorData.of(ops.getId(), dokumenttiId, kieli, DokumenttiTyyppi.YLOPS, null, null);
+            GeneratorData generatorData = GeneratorData.of(ops.getId(), dokumenttiId, kieli, DokumenttiTyyppi.YLOPS, null);
             PerusteKaikkiDto perusteKaikkiDto = eperusteetService.getPerusteKaikkiDto(ops.getPerusteenId(), null);
 
             log.info("Luodaan PDF-dokumenttia (docId={}, {}, {})", dokumenttiId, generatorData.getTyyppi(), kieli);
             Document doc = ylopsDokumenttiBuilderService.generateXML(ops, perusteKaikkiDto, generatorData);
             handleConversionAndSending(doc, generateMetaData(generatorData, ops.getNimi()), generatorData);
         } catch (Exception ex) {
-            handleError(ex,dokumenttiId, generatorData.getTyyppi());
+            handleError(ex,dokumenttiId, DokumenttiTyyppi.YLOPS);
         }
     }
 
