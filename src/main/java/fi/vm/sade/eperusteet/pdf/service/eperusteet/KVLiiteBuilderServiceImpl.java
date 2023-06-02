@@ -14,6 +14,7 @@ import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -35,6 +36,9 @@ public class KVLiiteBuilderServiceImpl implements KVLiiteBuilderService {
 
     @Autowired
     private EperusteetService eperusteetService;
+
+    @Value("${docgenPath: ''}")
+    private String docgenPath;
 
     @Override
     public Document generateXML(PerusteKaikkiDto peruste, Kieli kieli) throws ParserConfigurationException, JsonProcessingException {
@@ -105,7 +109,7 @@ public class KVLiiteBuilderServiceImpl implements KVLiiteBuilderService {
         europassTd.setAttribute("align", "left");
         Element europassImg = docBase.getDocument().createElement("img");
         europassTd.appendChild(europassImg);
-        europassImg.setAttribute("src", "kvliite/europass.jpg");
+        europassImg.setAttribute("src", docgenPath + "kvliite/europass.jpg");
 
         // Lisätään teksti
         Element titleTd = docBase.getDocument().createElement("td");
@@ -123,7 +127,7 @@ public class KVLiiteBuilderServiceImpl implements KVLiiteBuilderService {
         flagTd.setAttribute("align", "right");
         Element flagImg = docBase.getDocument().createElement("img");
         flagTd.appendChild(flagImg);
-        flagImg.setAttribute("src", "kvliite/fi.jpg");
+        flagImg.setAttribute("src", docgenPath + "kvliite/fi.jpg");
     }
 
     private void addTutkintoNimiSuomeksi(DokumenttiKVLiite docBase) {
