@@ -115,7 +115,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     public byte[] getDokumenttiKuva(GeneratorData generatorData, Kuvatyyppi kuvatyyppi) {
         OphHttpClient client = restClientFactory.get(getDokumenttiApiBaseUrl(generatorData.getTyyppi()), true);
         String url = UriComponentsBuilder.fromUriString(getDokumenttiKuvaUrl(generatorData.getTyyppi()))
-                .build(GeneratorData.uriParameters(generatorData, kuvatyyppi))
+                .build(generatorData.uriParameters(kuvatyyppi))
                 .toString();
         OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
 

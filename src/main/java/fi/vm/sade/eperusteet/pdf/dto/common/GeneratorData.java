@@ -35,10 +35,10 @@ public class GeneratorData {
         return generatorData;
     }
 
-    public static Map<String, ?> uriParameters(GeneratorData generatorData, Kuvatyyppi kuvatyyppi) {
-        if (generatorData.getKtId() != null) {
-            return Map.of("opsId", generatorData.getId(), "kieli", generatorData.getKieli(), "tyyppi", kuvatyyppi, "ktId", generatorData.getKtId());
+    public Map<String, ?> uriParameters(Kuvatyyppi kuvatyyppi) {
+        if (ktId != null) {
+            return Map.of("opsId", id, "kieli", kieli, "tyyppi", kuvatyyppi, "ktId", ktId);
         }
-        return Map.of("opsId", generatorData.getId(), "kieli", generatorData.getKieli(), "tyyppi", kuvatyyppi);
+        return Map.of("opsId", id, "kieli", kieli, "tyyppi", kuvatyyppi);
     }
 }
