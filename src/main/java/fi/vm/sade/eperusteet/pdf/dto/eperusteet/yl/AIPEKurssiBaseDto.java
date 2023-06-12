@@ -2,7 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Reference;
+import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

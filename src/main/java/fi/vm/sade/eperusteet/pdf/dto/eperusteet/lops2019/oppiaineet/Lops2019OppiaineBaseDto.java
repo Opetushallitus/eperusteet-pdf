@@ -2,8 +2,8 @@ package fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Reference;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ReferenceableDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
+import fi.vm.sade.eperusteet.pdf.dto.common.ReferenceableDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.KoodiDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

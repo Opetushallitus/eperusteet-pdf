@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.pdf.dto.eperusteet;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.TiedoteJulkaisuPaikka;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKevytDto;

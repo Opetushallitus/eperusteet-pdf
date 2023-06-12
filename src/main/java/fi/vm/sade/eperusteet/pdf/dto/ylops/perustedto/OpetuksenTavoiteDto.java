@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.perustedto;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.ReferenceableDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.ReferenceableDto;
 import lombok.Getter;
 import lombok.Setter;
 

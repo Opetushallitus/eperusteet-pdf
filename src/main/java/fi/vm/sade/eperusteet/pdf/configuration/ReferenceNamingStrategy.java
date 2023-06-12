@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.cfg.MapperConfig;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Reference;
+import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
 
 import java.lang.reflect.Type;
 import java.util.Optional;
