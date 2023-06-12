@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -16,4 +17,5 @@ public class LaajaalainenOsaaminenDto implements ReferenceableDto, AIPEHasId {
     private UUID tunniste;
     private LokalisoituTekstiDto nimi;
     private LokalisoituTekstiDto kuvaus;
+    private Date muokattu;
 }
