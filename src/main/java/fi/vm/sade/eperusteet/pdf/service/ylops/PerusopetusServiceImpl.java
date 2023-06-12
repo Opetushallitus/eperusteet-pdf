@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiRivi;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTaulukko;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.LaajaalainenOsaaminenDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineenVuosiluokkaKokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.PerusopetuksenPerusteenSisaltoDto;
@@ -253,7 +254,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                     Set<OppiaineExportDto> oppimaarat = oppiaine.getOppimaarat();
                     if (oppimaarat != null) {
 
-                        Set<OppiaineLaajaDto> perusteOppimaarat = null;
+                        Set<OppiaineDto> perusteOppimaarat = null;
                         if (perusteOppiaineDto != null) {
                             perusteOppimaarat = perusteOppiaineDto.getOppimaarat();
                         }
@@ -485,13 +486,13 @@ public class PerusopetusServiceImpl implements PerusopetusService {
         }
     }
 
-    private void addOppimaarat(DokumenttiYlops docBase, Set<OppiaineLaajaDto> perusteOppimaarat, OppiaineExportDto oppiaine,
+    private void addOppimaarat(DokumenttiYlops docBase, Set<OppiaineDto> perusteOppimaarat, OppiaineExportDto oppiaine,
                                Set<OppiaineExportDto> oppimaarat, VuosiluokkakokonaisuusDto vlk) {
         if (oppimaarat != null) {
             for (OppiaineExportDto oppimaara : oppimaarat) {
-                OppiaineLaajaDto perusteOppiaineDto = null;
+                OppiaineDto perusteOppiaineDto = null;
                 if (perusteOppimaarat != null) {
-                    Optional<OppiaineLaajaDto> optPerusteOppimaara = perusteOppimaarat.stream()
+                    Optional<OppiaineDto> optPerusteOppimaara = perusteOppimaarat.stream()
                             .filter(perusteOppiaine -> perusteOppiaine.getTunniste().equals(oppimaara.getTunniste()))
                             .findFirst();
 
@@ -503,8 +504,8 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                 // Jos on koosteinen oppimäärä ja oppimäärälle ei löydy perustetta
                 // perusteen oppiaineesta, käytetään opsin perusteen oppiainetta
                 if (oppiaine.isKoosteinen() && perusteOppiaineDto == null) {
-                    Optional<OppiaineLaajaDto> optPerusteOppiaineDto = docBase.getPeruste().getPerusopetuksenPerusteenSisalto()
-                            .getOppiaine(oppimaara.getTunniste());
+                    Optional<OppiaineDto> optPerusteOppiaineDto = docBase.getPeruste().getPerusopetuksenPerusteenSisalto()
+                            .getOppimaara(oppimaara.getTunniste());
                     if (optPerusteOppiaineDto.isPresent()) {
                         perusteOppiaineDto = optPerusteOppiaineDto.get();
                     }
@@ -515,7 +516,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
         }
     }
 
-    private void addOppimaara(DokumenttiYlops docBase, OppiaineLaajaDto perusteOppiaineDto,
+    private void addOppimaara(DokumenttiYlops docBase, OppiaineDto perusteOppiaineDto,
                               OppiaineExportDto oppiaine, VuosiluokkakokonaisuusDto vlk) {
         Optional<OppiaineenVuosiluokkakokonaisuusDto> optOaVlk
                 = oppiaine.getVuosiluokkakokonaisuus(vlk.getTunniste().getId());
@@ -549,8 +550,8 @@ public class PerusopetusServiceImpl implements PerusopetusService {
         docBase.getGenerator().increaseDepth();
 
         TekstiOsaDto perusteTehtavaDto = null;
-        if (perusteOppiaineDto != null && perusteOppiaineDto.getTehtava().isPresent()) {
-            perusteTehtavaDto = perusteOppiaineDto.getTehtava().get();
+        if (perusteOppiaineDto != null && perusteOppiaineDto.getTehtava() != null) {
+            perusteTehtavaDto = perusteOppiaineDto.getTehtava();
         }
 
         // Tehtävä

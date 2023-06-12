@@ -17,7 +17,7 @@ import java.util.UUID;
 public class OppiaineLaajaDto extends OppiaineBaseDto {
     private Optional<TekstiOsaDto> tehtava;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Set<OppiaineLaajaDto> oppimaarat;
+    private Set<OppiaineDto> oppimaarat;
     private Set<OpetuksenKohdealueDto> kohdealueet;
     private Set<OppiaineenVuosiluokkaKokonaisuusDto> vuosiluokkakokonaisuudet;
     private String koodiUri;
