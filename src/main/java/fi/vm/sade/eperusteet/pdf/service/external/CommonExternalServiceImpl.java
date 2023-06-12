@@ -3,11 +3,10 @@ package fi.vm.sade.eperusteet.pdf.service.external;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
 import fi.vm.sade.eperusteet.pdf.dto.PdfData;
-import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTila;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
@@ -24,9 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -38,7 +35,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -116,10 +112,10 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     }
 
     @Override
-    public byte[] getDokumenttiKuva(Long opsId, Kuvatyyppi kuvatyyppi, Kieli kieli, DokumenttiTyyppi tyyppi, Long ktId) {
-        OphHttpClient client = restClientFactory.get(getDokumenttiApiBaseUrl(tyyppi), true);
-        String url = UriComponentsBuilder.fromUriString(getDokumenttiKuvaUrl(tyyppi))
-                .build(Map.of("opsId",opsId, "tyyppi", kuvatyyppi, "kieli", kieli, "ktid", ktId))
+    public byte[] getDokumenttiKuva(GeneratorData generatorData, Kuvatyyppi kuvatyyppi) {
+        OphHttpClient client = restClientFactory.get(getDokumenttiApiBaseUrl(generatorData.getTyyppi()), true);
+        String url = UriComponentsBuilder.fromUriString(getDokumenttiKuvaUrl(generatorData.getTyyppi()))
+                .build(generatorData.uriParameters(kuvatyyppi))
                 .toString();
         OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
 
