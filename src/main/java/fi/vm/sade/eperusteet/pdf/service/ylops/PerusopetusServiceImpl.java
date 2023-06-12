@@ -139,11 +139,11 @@ public class PerusopetusServiceImpl implements PerusopetusService {
 
             List<VuosiluokkaKokonaisuudenLaajaalainenOsaaminenDto> perusteVlkLaajaalaisetOsaamiset = perusteVlk.getLaajaalaisetOsaamiset().stream()
                     .filter((lao -> lao.getLaajaalainenOsaaminen() != null))
-                    .sorted(Comparator.comparing(lao -> laajaAlaisetOsaamisetMap.get(UUID.fromString(lao.getLaajaalainenOsaaminen().getId())).getNimi().get(docBase.getKieli())))
+                    .sorted(Comparator.comparing(lao -> laajaAlaisetOsaamisetMap.get(lao.getLaajaalainenOsaaminenDto().getTunniste()).getNimi().get(docBase.getKieli())))
                     .collect(Collectors.toCollection(ArrayList::new));
 
             for (VuosiluokkaKokonaisuudenLaajaalainenOsaaminenDto perusteVlkLaajaalainenosaaminen : perusteVlkLaajaalaisetOsaamiset) {
-                LaajaalainenOsaaminenDto perusteLaajaalainenosaaminenDto = laajaAlaisetOsaamisetMap.get(perusteVlkLaajaalainenosaaminen.getLaajaalainenOsaaminen().getIdLong());
+                LaajaalainenOsaaminenDto perusteLaajaalainenosaaminenDto = laajaAlaisetOsaamisetMap.get(perusteVlkLaajaalainenosaaminen.getLaajaalainenOsaaminenDto().getTunniste());
 
                 if (perusteLaajaalainenosaaminenDto != null) {
                     docBase.getGenerator().increaseDepth();
@@ -160,7 +160,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                     // Opsin osa
                     if (perusteVlkLaajaalainenosaaminen.getLaajaalainenOsaaminen() != null) {
                         Optional<LaajaalainenosaaminenDto> optLaajaalainenosaaminen = vlk.getLaajaalaisetosaamiset().stream()
-                                .filter((l -> laajaAlaisetOsaamisetMap.get(UUID.fromString(l.getLaajaalainenosaaminen().getId())) != null))
+                                .filter((l -> laajaAlaisetOsaamisetMap.get(l.getLaajaalainenosaaminen()) != null))
                                 .findFirst();
 
                         optLaajaalainenosaaminen.ifPresent(laajaalainenosaaminen ->
