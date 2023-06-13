@@ -23,13 +23,9 @@ public class OppiaineLaajaDto extends OppiaineBaseDto {
     private String koodiUri;
     private String koodiArvo;
 
-    public Optional<OppiaineenVuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuus(String tunniste) {
-        return getVuosiluokkakokonaisuus(UUID.fromString(tunniste));
-    }
-
-    public Optional<OppiaineenVuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuus(UUID tunniste) {
+    public Optional<OppiaineenVuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuus(Long id) {
         return vuosiluokkakokonaisuudet.stream()
-                .filter(v -> v.getVuosiluokkaKokonaisuus().toString().equals(tunniste.toString()))
+                .filter(v -> v.getVuosiluokkaKokonaisuus().get().getIdLong().equals(id))
                 .findAny();
     }
 }
