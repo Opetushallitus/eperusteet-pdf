@@ -60,7 +60,6 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     @Value("${fi.vm.sade.eperusteet.pdf.eperusteet-service:''}")
     private String eperusteetServiceUrl;
 
-    private static final String AMOSAA_API = "/api/amosaa/";
     private static final String EPERUSTEET_API = "/api/perusteet/";
 
     private RestTemplate restTemplate = new RestTemplate();
@@ -238,7 +237,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
         if (tyyppi.equals(DokumenttiTyyppi.PERUSTE)) {
             return eperusteetServiceUrl + EPERUSTEET_API + "{id}/termisto/{avain}";
         } else if (tyyppi.equals(DokumenttiTyyppi.AMOSAA)) {
-            return amosaaServiceUrl + AMOSAA_API  + "koulutustoimijat/{id}/termisto/{avain}";
+            return amosaaServiceUrl + "/api/koulutustoimijat/{id}/termisto/{avain}";
         } else if (tyyppi.equals(DokumenttiTyyppi.YLOPS)) {
             return ylopsServiceUrl + "/api/opetussuunnitelmat/{id}/termi/{avain}";
         } else {
@@ -250,7 +249,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
         if (tyyppi.equals(DokumenttiTyyppi.PERUSTE)) {
             return eperusteetServiceUrl + EPERUSTEET_API + "{id}/liitteet/{fileName}";
         } else if (tyyppi.equals(DokumenttiTyyppi.AMOSAA)) {
-            return amosaaServiceUrl + AMOSAA_API + "liitetiedostot/opetussuunnitelmat/{id}/kuvat/{fileName}";
+            return amosaaServiceUrl + "/api/opetussuunnitelmat/{id}/kuvat/{fileName}";
         } else if (tyyppi.equals(DokumenttiTyyppi.YLOPS)) {
             return ylopsServiceUrl + "/api/opetussuunnitelmat/{id}/kuvat/{fileName}";
         } else {
