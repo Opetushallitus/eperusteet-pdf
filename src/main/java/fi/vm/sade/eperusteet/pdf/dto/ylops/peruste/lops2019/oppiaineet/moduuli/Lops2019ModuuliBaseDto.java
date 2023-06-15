@@ -2,7 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet.moduuli;
 
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.KoodiDto;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.ReferenceableDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.ReferenceableDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

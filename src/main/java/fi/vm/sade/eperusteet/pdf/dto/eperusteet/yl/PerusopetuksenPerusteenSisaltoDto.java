@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -25,10 +26,16 @@ public class PerusopetuksenPerusteenSisaltoDto implements PerusteenSisaltoDto {
 
     public Optional<OppiaineLaajaDto> getOppiaine(UUID tunniste) {
         return oppiaineet.stream()
-                .flatMap(oa -> Stream.concat(Stream.of(oa), Nulls.nullToEmpty(oa.getOppimaarat()).stream()))
                 .filter(oa -> Objects.equals(oa.getTunniste(), tunniste))
                 .findAny();
+    }
 
+    public Optional<OppiaineDto> getOppimaara(UUID tunniste) {
+        return oppiaineet.stream()
+                .map(oa -> Nulls.nullToEmpty(oa.getOppimaarat()))
+                .flatMap(Collection::stream)
+                .filter(oa -> Objects.equals(oa.getTunniste(), tunniste))
+                .findAny();
     }
 
     public Optional<VuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuudet(UUID tunniste) {

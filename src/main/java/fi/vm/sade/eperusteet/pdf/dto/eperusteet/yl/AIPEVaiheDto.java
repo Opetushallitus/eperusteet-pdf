@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl;
 
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KevytTekstiKappaleDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,4 +21,5 @@ public class AIPEVaiheDto extends AIPEVaiheSuppeaDto {
     private Optional<TekstiOsaDto> paikallisestiPaatettavatAsiat;
     private List<OpetuksenKohdealueDto> opetuksenKohdealueet;
     private List<AIPEOppiaineLaajaDto> oppiaineet;
+    private List<KevytTekstiKappaleDto> vapaatTekstit;
 }

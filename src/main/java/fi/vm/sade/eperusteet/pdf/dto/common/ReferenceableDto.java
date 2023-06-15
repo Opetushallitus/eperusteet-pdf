@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.pdf.dto.amosaa;
+package fi.vm.sade.eperusteet.pdf.dto.common;
 
 import java.io.Serializable;
 

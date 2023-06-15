@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KevytTekstiKappaleDto {
+    private Long id;
     private LokalisoituTekstiDto nimi;
     private LokalisoituTekstiDto teksti;
     private Integer jnro;

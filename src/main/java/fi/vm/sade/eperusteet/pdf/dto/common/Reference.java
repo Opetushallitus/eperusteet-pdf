@@ -1,19 +1,31 @@
-package fi.vm.sade.eperusteet.pdf.dto.ylops;
+package fi.vm.sade.eperusteet.pdf.dto.common;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ReferenceableEntity;
-import lombok.EqualsAndHashCode;
+import fi.vm.sade.eperusteet.pdf.dto.common.ReferenceableDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.ReferenceableEntity;
+import lombok.Data;
 
 import java.util.UUID;
 
 /**
  * Kuvaa viitettä toiseen entiteettiin.
  */
-@EqualsAndHashCode
+@Data
 public class Reference {
 
     private final String id;
+
+    @JsonCreator
+    public Reference(Long id) {
+        if (id != null) {
+            this.id = id.toString();
+        }
+        else {
+            this.id = null;
+        }
+    }
 
     @JsonCreator
     public Reference(String id) {
@@ -23,6 +35,11 @@ public class Reference {
     @JsonValue
     public String getId() {
         return id;
+    }
+
+    @JsonIgnore
+    public Long getIdLong() {
+        return id == null ? null : Long.valueOf(id);
     }
 
     public static Reference of(ReferenceableEntity e) {
@@ -46,5 +63,7 @@ public class Reference {
     public String toString() {
         return id;
     }
+
+
 
 }

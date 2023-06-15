@@ -17,19 +17,15 @@ import java.util.UUID;
 public class OppiaineLaajaDto extends OppiaineBaseDto {
     private Optional<TekstiOsaDto> tehtava;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Set<OppiaineLaajaDto> oppimaarat;
+    private Set<OppiaineDto> oppimaarat;
     private Set<OpetuksenKohdealueDto> kohdealueet;
     private Set<OppiaineenVuosiluokkaKokonaisuusDto> vuosiluokkakokonaisuudet;
     private String koodiUri;
     private String koodiArvo;
 
-    public Optional<OppiaineenVuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuus(String tunniste) {
-        return getVuosiluokkakokonaisuus(UUID.fromString(tunniste));
-    }
-
-    public Optional<OppiaineenVuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuus(UUID tunniste) {
+    public Optional<OppiaineenVuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuus(Long id) {
         return vuosiluokkakokonaisuudet.stream()
-                .filter(v -> v.getVuosiluokkaKokonaisuus().toString().equals(tunniste.toString()))
+                .filter(v -> v.getVuosiluokkaKokonaisuus().get().getIdLong().equals(id))
                 .findAny();
     }
 }

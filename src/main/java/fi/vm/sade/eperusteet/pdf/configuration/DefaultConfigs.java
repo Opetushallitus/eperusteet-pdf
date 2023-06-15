@@ -32,9 +32,6 @@ public class DefaultConfigs {
         return new RestClientFactory() {
             @Override
             public OphHttpClient get(String service, boolean requireCas) {
-
-                log.info("username: {}", username);
-
                 OphHttpClient client;
                 if (requireCas) {
                     CasAuthenticator casAuthenticator = new CasAuthenticator.Builder()

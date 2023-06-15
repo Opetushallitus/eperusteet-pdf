@@ -2,8 +2,8 @@ package fi.vm.sade.eperusteet.pdf.dto.ylops.ops;
 
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Tila;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.Reference;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.ReferenceableDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
+import fi.vm.sade.eperusteet.pdf.dto.common.ReferenceableDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiosaDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

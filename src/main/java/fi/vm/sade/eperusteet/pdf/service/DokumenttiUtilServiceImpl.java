@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service;
 
+import com.google.common.base.Throwables;
 import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
@@ -133,6 +134,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
 
         } catch (XPathExpressionException | IOException | NullPointerException e) {
             log.error(e.getLocalizedMessage());
+            log.error(Throwables.getStackTraceAsString(e));
         }
     }
 
@@ -146,8 +148,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
         try {
             kuva = commonExternalService.getDokumenttiKuva(generatorData, kuvatyyppi);
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.warn("Kuvaa ei löytynyt, id={}, tyyppi={}", generatorData.getId(), kuvatyyppi);
+            log.info("Kuvaa ei löytynyt, id={}, tyyppi={}", generatorData.getId(), kuvatyyppi);
             return;
         }
 
