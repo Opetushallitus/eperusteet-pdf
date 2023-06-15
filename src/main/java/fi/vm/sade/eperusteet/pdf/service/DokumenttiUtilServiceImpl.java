@@ -148,8 +148,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
         try {
             kuva = commonExternalService.getDokumenttiKuva(generatorData, kuvatyyppi);
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.warn("Kuvaa ei löytynyt, id={}, tyyppi={}", generatorData.getId(), kuvatyyppi);
+            log.info("Kuvaa ei löytynyt, id={}, tyyppi={}", generatorData.getId(), kuvatyyppi);
             return;
         }
 

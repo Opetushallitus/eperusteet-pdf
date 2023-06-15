@@ -502,8 +502,6 @@
 
     <xsl:template match="img">
         <fo:block space-after="12pt" text-align="center">
-            <!--<fo:external-graphic src="{@src}" content-width="scale-to-fit" content-height="100%"
-                                 width="100%" scaling="uniform"/>-->
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="proportional-column-width(1)"/>
                 <fo:table-body>
