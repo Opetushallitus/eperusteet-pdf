@@ -501,39 +501,41 @@
     </xsl:template>
 
     <xsl:template match="img">
-        <fo:block space-after="12pt" text-align="center">
-            <fo:table table-layout="fixed" width="100%">
-                <fo:table-column column-width="proportional-column-width(1)"/>
-                <fo:table-body>
-                    <fo:table-row keep-with-next="always">
-                        <fo:table-cell>
-                            <fo:block>
-                                <fo:external-graphic src="{@src}" content-width="scale-to-fit" content-height="100%"
-                                                     width="100%" scaling="uniform"/>
-                            </fo:block>
-                        </fo:table-cell>
-                    </fo:table-row>
-                    <fo:table-row>
-                        <fo:table-cell>
-                            <xsl:choose>
-                                <xsl:when test="@figcaption and not(@figcaption = '')">
-                                    <fo:block>
-                                        <xsl:value-of select="@figcaption"/>
-                                    </fo:block>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:if test="not(@alt = 'undefined')">
+        <xsl:if test="@src">
+            <fo:block space-after="12pt" text-align="center">
+                <fo:table table-layout="fixed" width="100%">
+                    <fo:table-column column-width="proportional-column-width(1)"/>
+                    <fo:table-body>
+                        <fo:table-row keep-with-next="always">
+                            <fo:table-cell>
+                                <fo:block>
+                                    <fo:external-graphic src="{@src}" content-width="scale-to-fit" content-height="100%"
+                                                         width="100%" scaling="uniform"/>
+                                </fo:block>
+                            </fo:table-cell>
+                        </fo:table-row>
+                        <fo:table-row>
+                            <fo:table-cell>
+                                <xsl:choose>
+                                    <xsl:when test="@figcaption and not(@figcaption = '')">
                                         <fo:block>
-                                            <xsl:value-of select="@alt"/>
+                                            <xsl:value-of select="@figcaption"/>
                                         </fo:block>
-                                    </xsl:if>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </fo:table-cell>
-                    </fo:table-row>
-                </fo:table-body>
-            </fo:table>
-        </fo:block>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:if test="not(@alt = 'undefined')">
+                                            <fo:block>
+                                                <xsl:value-of select="@alt"/>
+                                            </fo:block>
+                                        </xsl:if>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </fo:table-cell>
+                        </fo:table-row>
+                    </fo:table-body>
+                </fo:table>
+            </fo:block>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="ol">
