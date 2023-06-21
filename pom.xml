@@ -23,7 +23,7 @@
 		<slf4j.version>1.7.21</slf4j.version>
 		<jsoup.version>1.9.2</jsoup.version>
 		<fop.version>2.6</fop.version>
-		<springfox.version>2.7.0</springfox.version>
+		<springfox.version>2.10.0</springfox.version>
 		<jackson.version>2.11.4</jackson.version>
 		<ehcache.version>2.6.11</ehcache.version>
 	</properties>
@@ -162,7 +162,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>30.0-jre</version>
+			<version>32.0.0-jre</version>
 		</dependency>
 		<dependency>
 			<groupId>ma.glasnost.orika</groupId>
