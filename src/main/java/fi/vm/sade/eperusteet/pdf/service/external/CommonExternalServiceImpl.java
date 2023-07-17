@@ -184,7 +184,7 @@ public class CommonExternalServiceImpl implements CommonExternalService{
                     })
                     .expectedStatus(SC_OK, SC_CREATED)
                     .ignoreResponse();
-            log.info("dokumentti lähetetty palvelulle: {}", getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/data/"+dokumenttiId);
+            log.info("Dokumentti lähetetty palvelulle: {}", getDokumenttiApiBaseUrl(tyyppi) + "/api/dokumentit/pdf/data/"+dokumenttiId);
         } catch (Exception e) {
             throw new ServiceException("PDF-dataa ei saatu lähetettyä: " + e.getMessage());
         }

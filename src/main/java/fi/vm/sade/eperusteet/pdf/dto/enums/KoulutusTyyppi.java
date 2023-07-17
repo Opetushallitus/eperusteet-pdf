@@ -70,6 +70,10 @@ public enum KoulutusTyyppi {
         return isOneOf(AMMATTITUTKINTO, ERIKOISAMMATTITUTKINTO, PERUSTUTKINTO);
     }
 
+    public boolean isLukio() {
+        return isOneOf(LUKIOKOULUTUS, LUKIOVALMISTAVAKOULUTUS, AIKUISTENLUKIOKOULUTUS, AIKUISLUKIOKOULUTUS);
+    }
+
     public boolean isVapaaSivistystyo() {
         return isOneOf(VAPAASIVISTYSTYO, VAPAASIVISTYSTYOLUKUTAITO);
     }
