@@ -7,6 +7,7 @@ import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.MuodostumisSaantoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiPeruste;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiRivi;
@@ -76,6 +77,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.AIPEKurssiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.AIPEOpetuksenSisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.AIPEOppiaineLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.AIPEVaiheDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.KeskeinenSisaltoalueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.LaajaalainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OpetuksenTavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineDto;
@@ -935,9 +937,8 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
                                         // Oppiaineen vuosiluokkakokonaisuus
                                         oppiaine.getVuosiluokkakokonaisuus(vuosiluokka.getId())
-                                                .ifPresent(oppiaineenVuosiluokkaKokonaisuusDto ->  {
-                                                    addVuosiluokkakokonaisuus(docBase, oppiaineenVuosiluokkaKokonaisuusDto);
-                                                });
+                                                .ifPresent(oppiaineenVuosiluokkaKokonaisuusDto -> addVuosiluokkakokonaisuus(docBase, oppiaineenVuosiluokkaKokonaisuusDto));
+
                                         // Oppimäärät
                                         addOppimaarat(docBase, oppiaine.getOppimaarat(), vuosiluokka.getId());
 
@@ -957,9 +958,13 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             oppimaarat.stream()
                     .sorted(Comparator.comparing(OppiaineDto::getId))
                     .forEach(oppimaara -> {
+                        // Oppimäärän nimi
                         addTeksti(docBase, getTextString(docBase, getOptionalValue(oppimaara.getNimi())), "h5");
                         // Tekstikappale
-                        oppimaara.getVapaatTekstit().forEach(vt -> addLokalisoituteksti(docBase, vt.getTeksti(), "div"));
+                        oppimaara.getVapaatTekstit().forEach(vt -> {
+                            addTeksti(docBase, getTextString(docBase, vt.getNimi()), "h6");
+                            addLokalisoituteksti(docBase, vt.getTeksti(), "div");
+                        });
 
                         // Oppimäärän vuosiluokkakokonaisuus
                         OppiaineenVuosiluokkaKokonaisuusDto vuosiluokkaKokonaisuus = oppimaara.getVuosiluokkakokonaisuudet().stream()
@@ -980,19 +985,49 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 addTeksti(docBase, getTextString(docBase, vt.getTeksti()), "div");
             });
 
-            // Tavoitteet
-//            vuosiluokkaKokonaisuus.getTavoitteet().forEach(tavoite -> {
-//                addTeksti(docBase, getTextString(docBase, getOptionalValue(tavoite.getTavoite())), "h6");
+            // TODO: ei tietoa näytetäänkö lopulta taulukkona kuten esimerkissä, tässä vasta testailtu
+            if (!ObjectUtils.isEmpty(vuosiluokkaKokonaisuus.getTavoitteet())) {
+                addTeksti(docBase, messages.translate("opetuksen-tavoitteet", docBase.getKieli()), "h6");
 
-                // TODO: miten esitetään?
-                // Tavoitteen sisältöalueet
-//                vuosiluokkaKokonaisuus.getSisaltoalueet().forEach(sa -> tavoite.getSisaltoalueet().forEach(tavoiteSa -> {
-//                    if (sa.getId().equals(tavoiteSa.getIdLong())) {
-//                        addTeksti(docBase, getTextString(docBase, getOptionalValue(sa.getNimi())), "h6");
-//                        addTeksti(docBase, getTextString(docBase, getOptionalValue(sa.getKuvaus())), "div");
-//                    }
-//                }));
-//            });
+                Element taulukko = docBase.getDocument().createElement("table-vuosiluokkakokonaisuus");
+                taulukko.setAttribute("border", "1");
+                docBase.getBodyElement().appendChild(taulukko);
+                Element tbody = docBase.getDocument().createElement("tbody");
+                taulukko.appendChild(tbody);
+
+                Element tr = docBase.getDocument().createElement("tr");
+                tr.setAttribute("bgcolor", "#EEEEEE");
+                tbody.appendChild(tr);
+
+                Element th1 = docBase.getDocument().createElement("th");
+                Element th2 = docBase.getDocument().createElement("th");
+                Element th3 = docBase.getDocument().createElement("th");
+
+                th1.appendChild(newBoldElement(docBase.getDocument(), messages.translate("docgen.opetuksen-tavoitteet.title", docBase.getKieli())));
+                th2.appendChild(newBoldElement(docBase.getDocument(), messages.translate("tavoitteisiin-liittyvat-sisaltoalueet", docBase.getKieli())));
+                th3.appendChild(newBoldElement(docBase.getDocument(), messages.translate("laaja-alainen-osaaminen", docBase.getKieli())));
+                tr.appendChild(th1);
+                tr.appendChild(th2);
+                tr.appendChild(th3);
+
+                // Tavoitteet
+                vuosiluokkaKokonaisuus.getTavoitteet().forEach(tavoite -> {
+                    Element tr1 = docBase.getDocument().createElement("tr");
+                    tbody.appendChild(tr1);
+
+                    Element solu1 = docBase.getDocument().createElement("td");
+                    solu1.setTextContent(getTextString(docBase, getOptionalValue(tavoite.getTavoite())));
+                    tr1.appendChild(solu1);
+
+                    Element solu2 = docBase.getDocument().createElement("td");
+                    solu2.setTextContent(addSisaltoalueetList(docBase, vuosiluokkaKokonaisuus.getSisaltoalueet(), tavoite));
+                    tr1.appendChild(solu2);
+
+                    Element solu3 = docBase.getDocument().createElement("td");
+                    solu3.setTextContent(addLaajaAlaisetList(docBase, tavoite.getLaajattavoitteet()));
+                    tr1.appendChild(solu3);
+                });
+            }
 
             // Sisältöalueet
             vuosiluokkaKokonaisuus.getSisaltoalueet().forEach(sisaltoalue -> {
@@ -1000,6 +1035,28 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 addTeksti(docBase, getTextString(docBase, getOptionalValue(sisaltoalue.getKuvaus())), "div");
             });
         }
+    }
+
+    private String addSisaltoalueetList(DokumenttiPeruste docBase, List<KeskeinenSisaltoalueDto> sisaltoalueet, OpetuksenTavoiteDto tavoite) {
+        StringBuilder builder = new StringBuilder(" ");
+        sisaltoalueet.forEach(sa -> tavoite.getSisaltoalueet().forEach(tavoiteSa -> {
+            if (sa.getId().equals(tavoiteSa.getIdLong())) {
+                builder.append(getTextString(docBase, getOptionalValue(sa.getNimi())));
+                builder.append(" ");
+            }
+        }));
+        return builder.toString();
+    }
+
+    private String addLaajaAlaisetList(DokumenttiPeruste docBase, Set<Reference> laajattavoitteet) {
+        StringBuilder builder = new StringBuilder(" ");
+        docBase.getPerusopetuksenPerusteenSisaltoDto().getLaajaalaisetosaamiset().forEach(lao -> laajattavoitteet.forEach(laoRef -> {
+            if (lao.getId().equals(laoRef.getIdLong())) {
+                builder.append(getTextString(docBase, lao.getNimi()));
+                builder.append(" ");
+            }
+        }));
+        return builder.toString();
     }
 
     private void addPerusteenOsat(DokumenttiPeruste docBase, PerusteenOsaViiteDto.Laaja parent) {
