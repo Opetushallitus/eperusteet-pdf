@@ -825,9 +825,9 @@
         <fo:table table-layout="fixed" inline-progression-dimension="100%"
                   space-after="12pt" font-size="8pt"
                   page-break-inside="avoid" keep-together.within-column="1">
-            <fo:table-column column-width="70mm"/>
-            <fo:table-column column-width="40mm"/>
-            <fo:table-column column-width="40mm"/>
+            <fo:table-column column-width="90mm"/>
+            <fo:table-column column-width="30mm"/>
+            <fo:table-column column-width="30mm"/>
             <xsl:if test="caption">
                 <fo:table-header>
                     <fo:table-cell>

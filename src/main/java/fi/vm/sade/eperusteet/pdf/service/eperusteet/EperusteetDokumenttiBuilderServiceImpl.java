@@ -688,10 +688,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         addHeader(docBase, messages.translate("oppiaineet", docBase.getKieli()));
         docBase.getGenerator().increaseDepth();
 
-        // TODO: tässä lisätään laaja-alaiset sen rakenteesta, mutta esim. https://virkailija.testiopintopolku.fi/eperusteet-ylops-app/uusi/#/fi/opetussuunnitelmat/26883192/tekstikappaleet/26918550
-        // laaja-alaisista on tehty oma tekstikappale, jossa on alussa myös kuva ja tarkempaa kuvausta. Selvitettävä, miten näiden kanssa toimitaan.
-        addLaajaAlainenOsaaminen(docBase);
-
         List<Lops2019OppiaineKaikkiDto> oppiaineet = docBase.getPeruste().getLops2019Sisalto().getOppiaineet();
         if (!ObjectUtils.isEmpty(oppiaineet)) {
             oppiaineet.forEach(oa -> {
@@ -702,20 +698,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
         docBase.getGenerator().decreaseDepth();
         docBase.getGenerator().increaseNumber();
-    }
-
-    private void addLaajaAlainenOsaaminen(DokumenttiPeruste docBase) {
-        Lops2019LaajaAlainenOsaaminenKokonaisuusDto laajaAlainen = docBase.getPeruste().getLops2019Sisalto().getLaajaAlainenOsaaminen();
-
-        if (laajaAlainen != null && !ObjectUtils.isEmpty(laajaAlainen.getLaajaAlaisetOsaamiset())) {
-            addHeader(docBase, messages.translate("laaja-alainen-osaaminen", docBase.getKieli()));
-
-            laajaAlainen.getLaajaAlaisetOsaamiset().forEach(lao -> {
-                addLokalisoituteksti(docBase, lao.getNimi(), "h5");
-                addLokalisoituteksti(docBase, lao.getKuvaus(), "div");
-            });
-            docBase.getGenerator().increaseNumber();
-        }
     }
 
     private void addOppiaine(DokumenttiPeruste docBase, Lops2019OppiaineKaikkiDto oa) {
@@ -986,6 +968,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             });
 
             // TODO: ei tietoa näytetäänkö lopulta taulukkona kuten esimerkissä, tässä vasta testailtu
+            // tavoitealueella ryhmittely puuttuu
             if (!ObjectUtils.isEmpty(vuosiluokkaKokonaisuus.getTavoitteet())) {
                 addTeksti(docBase, messages.translate("opetuksen-tavoitteet", docBase.getKieli()), "h6");
 
@@ -1038,25 +1021,27 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     }
 
     private String addSisaltoalueetList(DokumenttiPeruste docBase, List<KeskeinenSisaltoalueDto> sisaltoalueet, OpetuksenTavoiteDto tavoite) {
-        StringBuilder builder = new StringBuilder(" ");
+        StringJoiner joiner = new StringJoiner (", ");
         sisaltoalueet.forEach(sa -> tavoite.getSisaltoalueet().forEach(tavoiteSa -> {
             if (sa.getId().equals(tavoiteSa.getIdLong())) {
-                builder.append(getTextString(docBase, getOptionalValue(sa.getNimi())));
-                builder.append(" ");
+                String nimi = getTextString(docBase, getOptionalValue(sa.getNimi()));
+                // TODO: otetaan tavoitteista ja laajiksista vain etutunnisteet eli S1, L1 jne. Voiko näihin luottaa?
+                joiner.add(nimi.substring(0, 2));
             }
         }));
-        return builder.toString();
+        return joiner.toString();
     }
 
     private String addLaajaAlaisetList(DokumenttiPeruste docBase, Set<Reference> laajattavoitteet) {
-        StringBuilder builder = new StringBuilder(" ");
-        docBase.getPerusopetuksenPerusteenSisaltoDto().getLaajaalaisetosaamiset().forEach(lao -> laajattavoitteet.forEach(laoRef -> {
+        StringJoiner joiner = new StringJoiner (", ");
+        docBase.getPeruste().getPerusopetuksenPerusteenSisalto().getLaajaalaisetosaamiset().forEach(lao -> laajattavoitteet.forEach(laoRef -> {
             if (lao.getId().equals(laoRef.getIdLong())) {
-                builder.append(getTextString(docBase, lao.getNimi()));
-                builder.append(" ");
+                String nimi = getTextString(docBase, lao.getNimi());
+                // TODO: otetaan tavoitteista ja laajiksista vain etutunnisteet eli S1, L1 jne. Voiko näihin luottaa?
+                joiner.add(nimi.substring(0, 2));
             }
         }));
-        return builder.toString();
+        return joiner.toString();
     }
 
     private void addPerusteenOsat(DokumenttiPeruste docBase, PerusteenOsaViiteDto.Laaja parent) {
