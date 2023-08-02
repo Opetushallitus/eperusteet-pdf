@@ -1,6 +1,5 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija;
 
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TutkinnonosaViiteExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteExportOpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SuorituspolkuRakenneDto;
@@ -19,7 +18,7 @@ import java.util.List;
 public class OpetussuunnitelmaKaikkiDto extends OpetussuunnitelmaDto {
     SisaltoViiteExportDto sisalto;
     List<SuorituspolkuRakenneDto> suorituspolut;
-    List<TutkinnonosaViiteExportDto> tutkinnonOsat;
+    List<SisaltoViiteExportDto> tutkinnonOsat;
     List<SisaltoViiteExportOpintokokonaisuusDto> opintokokonaisuudet;
 
     public KoulutusTyyppi getKoulutustyyppi() {
