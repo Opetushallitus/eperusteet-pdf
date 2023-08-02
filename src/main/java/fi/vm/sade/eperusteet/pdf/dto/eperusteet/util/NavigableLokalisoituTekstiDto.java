@@ -35,17 +35,6 @@ public class NavigableLokalisoituTekstiDto extends LokalisoituTekstiDto {
                         viite.getId()));
     }
 
-    // Vaatii joitain muutoksia, koska PerusteenOsaDto ei sisällä navigationTypeä ja viitteitä
-//    public NavigableLokalisoituTekstiDto(PerusteenOsaDto perusteenOsa) {
-//        this(
-//                perusteenOsa.getNimi() != null ? perusteenOsa.getNimi().getId() : null,
-//                perusteenOsa.getNimi() != null ? perusteenOsa.getNimi().getTekstit() : null,
-//                NavigationNodeDto.of(
-//                        perusteenOsa.getNavigationType(),
-//                        perusteenOsa.getNimi() != null ? LokalisoituTekstiDto.of(perusteenOsa.getNimi().getTekstit()) : null,
-//                        perusteenOsa.getViitteet().stream().findFirst().get().getId()));
-//    }
-
     public NavigableLokalisoituTekstiDto(Long id, UUID tunniste, Map<Kieli, String> values) {
         super(id, tunniste, values);
     }

@@ -21,9 +21,12 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.dto.enums.TavoiteAlueTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.TutkinnonOsaTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerisenArvioinninOsaamistasonKriteeriDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerisenArvioinninOsaamistasonKriteeriKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KevytTekstiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.OsaamistasonKriteeriDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ammattitaitovaatimukset.AmmattitaitovaatimusKohdealueetDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArvioinninKohdeDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArvioinninKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArviointiDto;
@@ -31,22 +34,24 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteJulkinenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaViiteDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.SuoritustapaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.SuoritustapaLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TutkintonimikeKoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.Ammattitaitovaatimukset2019Dto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.Ammattitaitovaatimus2019Dto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.AmmattitaitovaatimustenKohdealue2019Dto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaAlueKokonaanDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaAlueLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaamisenTavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaamistavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaamistavoiteLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.ValmaTelmaSisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteSuppeaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.TuvaLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoKielitaitotasoDto;
@@ -68,9 +73,9 @@ import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.utils.CharapterNumberGenerator;
 import fi.vm.sade.eperusteet.pdf.utils.Pair;
 import lombok.extern.slf4j.Slf4j;
+import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -99,6 +104,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeader;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addTeksti;
@@ -119,6 +125,9 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
     @Autowired
     private DokumenttiUtilService dokumenttiUtilService;
+
+    @Autowired
+    private MapperFacade mapper;
 
     @Override
     public Document generateXML(PerusteKaikkiDto perusteData, GeneratorData generatorData) throws ParserConfigurationException, JsonProcessingException {
@@ -156,8 +165,8 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             docBase.setKvLiiteJulkinenDto(eperusteetService.getKvLiite(perusteData.getId()));
         }
         docBase.setGeneratorData(generatorData);
-        docBase.setSisalto(perusteData.getSisallot().stream().findFirst().get().getSisalto());
-        docBase.setAipeOpetuksenSisalto(perusteData.getAipeOpetuksenPerusteenSisalto());
+//        docBase.setSisalto(perusteData.getSisallot().stream().findFirst().get().getSisalto());
+//        docBase.setAipeOpetuksenSisalto(perusteData.getAipeOpetuksenPerusteenSisalto());
 
         // Tästä aloitetaan varsinaisen dokumentin muodostus
         addMetaPages(docBase); // Kansilehti & Infosivu
@@ -367,7 +376,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     }
 
     private void addAipeSisalto(DokumenttiPeruste docBase) {
-        AIPEOpetuksenSisaltoDto aipeSisalto = docBase.getAipeOpetuksenSisalto();
+        AIPEOpetuksenSisaltoDto aipeSisalto = docBase.getPeruste().getAipeOpetuksenPerusteenSisalto();
         if (aipeSisalto != null) {
             addVaiheet(docBase, aipeSisalto);
         }
@@ -432,9 +441,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     }
 
     private void addTutkinnonMuodostuminen(DokumenttiPeruste docBase) {
-        if (Optional.ofNullable(docBase.getSisalto())
-                .map(PerusteenOsaViiteDto::getSuoritustapa)
-                .map(SuoritustapaDto::getRakenne).isEmpty()) {
+        if (docBase.getSuoritustapa().map(SuoritustapaLaajaDto::getRakenne).isEmpty()) {
             return;
         }
 
@@ -445,7 +452,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             addHeader(docBase, messages.translate("docgen.tutkinnon_muodostuminen.title", docBase.getKieli()));
         }
 
-        RakenneModuuliDto rakenne = docBase.getSisalto().getSuoritustapa().getRakenne();
+        RakenneModuuliDto rakenne = docBase.getSuoritustapa().get().getRakenne();
         String kuvaus = getTextString(docBase, rakenne.getKuvaus());
         if (!ObjectUtils.isEmpty(kuvaus)) {
             addTeksti(docBase, kuvaus, "div");
@@ -477,7 +484,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             // Tutkinnon osa
             RakenneOsaDto rakenneOsa = (RakenneOsaDto) osa;
 
-            String nimi = getOtsikko(docBase, rakenneOsa.getTutkinnonOsaViite(), false);
+            String nimi = getOtsikko(docBase, docBase.getTutkinnonosaViite(rakenneOsa.getTutkinnonOsaViite().getIdLong()).get(), false);
             String kuvaus = getTextString(docBase, rakenneOsa.getKuvaus());
 
             Element tr = docBase.getDocument().createElement("tr");
@@ -560,14 +567,13 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     }
 
     private void addTutkinnonosat(DokumenttiPeruste docBase) {
-        Set<SuoritustapaLaajaDto> suoritustavat = docBase.getPeruste().getSuoritustavat();
-        if (CollectionUtils.isEmpty(suoritustavat)) {
+        if (docBase.getSuoritustapa().map(SuoritustapaLaajaDto::getTutkinnonOsat).isEmpty()) {
             return;
         }
 
-        Set<TutkinnonOsaViiteDto> osat = new TreeSet<>((o1, o2) -> {
-            String nimi1 = getTextString(docBase, o1.getTutkinnonOsaDto().getNimi());
-            String nimi2 = getTextString(docBase, o2.getTutkinnonOsaDto().getNimi());
+        Set<TutkinnonOsaViiteSuppeaDto> osat = new TreeSet<>((o1, o2) -> {
+            String nimi1 = getTextString(docBase, docBase.getTutkinnonOsa(o1.getTutkinnonOsa().getIdLong()).get().getNimi());
+            String nimi2 = getTextString(docBase, docBase.getTutkinnonOsa(o2.getTutkinnonOsa().getIdLong()).get().getNimi());
 
             // Ensisijaisesti järjestysnumeron mukaan
             int o1i = o1.getJarjestys() != null ? o1.getJarjestys() : Integer.MAX_VALUE;
@@ -595,13 +601,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             return 0;
         });
 
-        Optional.ofNullable(docBase.getSisalto())
-                .map(PerusteenOsaViiteDto::getSuoritustapa)
-                .map(SuoritustapaDto::getSuoritustapakoodi)
-                .ifPresent(suoritustapakoodi-> suoritustavat.stream()
-                        .filter(suoritustapa -> suoritustapa.getSuoritustapakoodi()
-                                .equals(suoritustapakoodi))
-                        .forEach(suoritustapa -> osat.addAll(suoritustapa.getTutkinnonOsat())));
+        osat.addAll(docBase.getSuoritustapa().get().getTutkinnonOsat());
         if (KoulutusTyyppi.of(docBase.getPeruste().getKoulutustyyppi()).equals(KoulutusTyyppi.VALMA)
                 || KoulutusTyyppi.of(docBase.getPeruste().getKoulutustyyppi()).equals(KoulutusTyyppi.TELMA)) {
             addHeader(docBase, messages.translate("docgen.koulutuksen_osat.title", docBase.getKieli()));
@@ -612,7 +612,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         docBase.getGenerator().increaseDepth();
 
         osat.forEach(viite -> {
-            TutkinnonOsaDto osa = viite.getTutkinnonOsaDto();
+            TutkinnonOsaKaikkiDto osa = docBase.getTutkinnonOsa(viite.getTutkinnonOsa().getIdLong()).get();
 
             String otsikko = getOtsikko(docBase, viite);
             addHeader(docBase, otsikko);
@@ -644,7 +644,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     }
 
     private void addPerusteenOsat(DokumenttiPeruste docBase) {
-        PerusteenOsaViiteDto.Laaja sisalto = (PerusteenOsaViiteDto.Laaja) docBase.getSisalto();
+        PerusteenOsaViiteDto.Laaja sisalto = docBase.getSisalto();
         if (sisalto == null) {
             return;
         }
@@ -753,8 +753,8 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             docBase.getGenerator().decreaseDepth();
             docBase.getGenerator().increaseNumber();
 
-        } else if (tunniste == PerusteenOsaTunniste.LAAJAALAINENOSAAMINEN && docBase.getAipeOpetuksenSisalto() != null) {
-            AIPEOpetuksenSisaltoDto aipeOpetuksenSisalto = docBase.getAipeOpetuksenSisalto();
+        } else if (tunniste == PerusteenOsaTunniste.LAAJAALAINENOSAAMINEN && docBase.getPeruste().getAipeOpetuksenPerusteenSisalto() != null) {
+            AIPEOpetuksenSisaltoDto aipeOpetuksenSisalto = docBase.getPeruste().getAipeOpetuksenPerusteenSisalto();
 
             List<LaajaalainenOsaaminenDto> laajaalaisetosaamiset = aipeOpetuksenSisalto.getLaajaalaisetosaamiset();
             if (laajaalaisetosaamiset.size() > 0) {
@@ -1101,7 +1101,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     private void addAmmattitaitovaatimukset(
             DokumenttiPeruste docBase,
             Ammattitaitovaatimukset2019Dto ammattitaitovaatimukset2019,
-            List<AmmattitaitovaatimuksenKohdealueDto> ammattitaitovaatimuksetLista,
+            List<AmmattitaitovaatimusKohdealueetDto> ammattitaitovaatimuksetLista,
             LokalisoituTekstiDto ammattitaitovaatimukset) {
 
         String ammattitaitovaatimuksetText = getTextString(docBase, ammattitaitovaatimukset);
@@ -1285,7 +1285,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         }
     }
 
-    private void addAmmattitaidonOsoittamistavat(DokumenttiPeruste docBase, TutkinnonOsaDto osa) {
+    private void addAmmattitaidonOsoittamistavat(DokumenttiPeruste docBase, TutkinnonOsaKaikkiDto osa) {
         String ammattitaidonOsoittamistavatText = getTextString(docBase, osa.getAmmattitaidonOsoittamistavat());
         if (ObjectUtils.isEmpty(ammattitaidonOsoittamistavatText)) {
             return;
@@ -1295,7 +1295,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         addTeksti(docBase, ammattitaidonOsoittamistavatText, "div");
     }
 
-    private void addVapaatTekstit(DokumenttiPeruste docBase, TutkinnonOsaDto osa) {
+    private void addVapaatTekstit(DokumenttiPeruste docBase, TutkinnonOsaKaikkiDto osa) {
         List<KevytTekstiKappaleDto> vapaatTekstit = osa.getVapaatTekstit();
         vapaatTekstit.forEach(vapaaTeksti -> {
             addTeksti(docBase, getTextString(docBase, vapaaTeksti.getNimi()), "h5");
@@ -1303,12 +1303,12 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         });
     }
 
-    private void addGeneerinenArviointi(DokumenttiPeruste docBase, GeneerinenArviointiasteikkoDto geneerinenArviointiasteikko) {
+    private void addGeneerinenArviointi(DokumenttiPeruste docBase, GeneerinenArviointiasteikkoKaikkiDto geneerinenArviointiasteikko) {
         if (geneerinenArviointiasteikko != null) {
             addTeksti(docBase, messages.translate("docgen.geneerinen-arviointi.title", docBase.getKieli()), "h5");
 
             LokalisoituTekstiDto kohde = geneerinenArviointiasteikko.getKohde();
-            Set<GeneerisenArvioinninOsaamistasonKriteeriDto> osaamistasonKriteerit = geneerinenArviointiasteikko.getOsaamistasonKriteerit();
+            Set<GeneerisenArvioinninOsaamistasonKriteeriKaikkiDto> osaamistasonKriteerit = geneerinenArviointiasteikko.getOsaamistasonKriteerit();
 
             Element taulukko = docBase.getDocument().createElement("table");
             taulukko.setAttribute("border", "1");
@@ -1469,7 +1469,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         }
     }
 
-    private void addTavoitteet(DokumenttiPeruste docBase, TutkinnonOsaDto osa) {
+    private void addTavoitteet(DokumenttiPeruste docBase, TutkinnonOsaKaikkiDto osa) {
         String TavoitteetText = getTextString(docBase, osa.getTavoitteet());
         if (ObjectUtils.isEmpty(TavoitteetText)) {
             return;
@@ -1479,8 +1479,8 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         addTeksti(docBase, TavoitteetText, "div");
     }
 
-    private void addTutke2Osat(DokumenttiPeruste docBase, TutkinnonOsaDto osa) {
-        List<OsaAlueLaajaDto> osaAlueet = osa.getOsaAlueet();
+    private void addTutke2Osat(DokumenttiPeruste docBase, TutkinnonOsaKaikkiDto osa) {
+        List<OsaAlueKokonaanDto> osaAlueet = osa.getOsaAlueet();
 
         osaAlueet.forEach(osaAlue -> {
                     String nimi = getTextString(docBase, osaAlue.getNimi());
@@ -1542,7 +1542,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                             String tavoitteet = getTextString(docBase, tavoite.getTavoitteet());
                             ArviointiDto arviointi = tavoite.getArviointi();
                             LokalisoituTekstiDto tunnustaminen = tavoite.getTunnustaminen();
-                            List<AmmattitaitovaatimuksenKohdealueDto> ammattitaitovaatimukset = tavoite.getAmmattitaitovaatimuksetLista();
+                            List<AmmattitaitovaatimusKohdealueetDto> ammattitaitovaatimukset = tavoite.getAmmattitaitovaatimuksetLista();
 
                             if (!ObjectUtils.isEmpty(tavoitteet) || tunnustaminen != null) {
                                 addTeksti(docBase, otsikko, "h5");
@@ -1581,7 +1581,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                         addTeksti(docBase, otsikko, "h5");
                         addAmmattitaitovaatimukset2019(docBase, osaAlue.getValinnaisetOsaamistavoitteet().getTavoitteet2020());
                     }
-                    addGeneerinenArviointi(docBase, osaAlue.getGeneerinenArviointiasteikko());
+                    addGeneerinenArviointi(docBase, mapper.map(osaAlue.getGeneerinenArviointiasteikko(), GeneerinenArviointiasteikkoKaikkiDto.class));
 
                 });
     }
@@ -1827,12 +1827,12 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         return laajuusBuilder.toString();
     }
 
-    private String getOtsikko(DokumenttiPeruste docBase, TutkinnonOsaViiteDto viite) {
+    private String getOtsikko(DokumenttiPeruste docBase, TutkinnonOsaViiteSuppeaDto viite) {
         return getOtsikko(docBase, viite, true);
     }
 
-    private String getOtsikko(DokumenttiPeruste docBase, TutkinnonOsaViiteDto viite, boolean withKoodi) {
-        TutkinnonOsaDto osa = viite.getTutkinnonOsaDto();
+    private String getOtsikko(DokumenttiPeruste docBase, TutkinnonOsaViiteSuppeaDto viite, boolean withKoodi) {
+        TutkinnonOsaKaikkiDto osa = docBase.getTutkinnonOsa(viite.getTutkinnonOsa().getIdLong()).get();;
         StringBuilder otsikkoBuilder = new StringBuilder();
         otsikkoBuilder.append(getTextString(docBase, osa.getNimi()));
 

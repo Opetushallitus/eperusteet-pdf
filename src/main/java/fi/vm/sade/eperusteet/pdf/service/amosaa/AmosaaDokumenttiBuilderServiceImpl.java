@@ -37,6 +37,7 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.TutkinnonOsaTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.OsaamistasonKriteeriDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ammattitaitovaatimukset.AmmattitaitovaatimusKohdealueetDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArvioinninKohdeDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArvioinninKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArviointiDto;
@@ -50,6 +51,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaKaikkiD
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.ValmaTelmaSisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteSuppeaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoKielitaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoLaajaAlaisenOsaamisenAlueDto;
@@ -580,7 +582,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
     private void addSuorituspolunTutkinnonOsa(DokumenttiBase docBase,
                                               TutkinnonOsaKaikkiDto tutkinnonOsaKaikkiDto,
-                                              TutkinnonOsaViiteDto tutkinnonOsaViiteDto,
+                                              TutkinnonOsaViiteSuppeaDto tutkinnonOsaViiteDto,
                                               Element tbody,
                                               int depth) {
         Element tr = docBase.getDocument().createElement("tr");
@@ -1195,8 +1197,8 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                                 addTeksti(docBase, getTextString(docBase, osaamistavoite.getTunnustaminen()), "div");
 
                                 // Ammattitaitovaatimukset
-                                List<AmmattitaitovaatimuksenKohdealueDto> ammattitaitovaatimukset = osaamistavoite.getAmmattitaitovaatimuksetLista();
-                                ammattitaitovaatimukset.forEach(dto -> addAmmattitaitovaatimuksenKohdealue(docBase,dto));
+                                List<AmmattitaitovaatimusKohdealueetDto> ammattitaitovaatimukset = osaamistavoite.getAmmattitaitovaatimuksetLista();
+                                ammattitaitovaatimukset.forEach(dto -> addAmmattitaitovaatimuksenKohdealue(docBase, mapper.map(dto, AmmattitaitovaatimuksenKohdealueDto.class)));
                             });
                         }
 
