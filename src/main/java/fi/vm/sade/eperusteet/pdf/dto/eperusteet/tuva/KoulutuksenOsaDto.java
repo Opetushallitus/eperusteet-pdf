@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusOsanKoulutustyyppi;
@@ -19,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonTypeName("koulutuksenosa")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class KoulutuksenOsaDto extends PerusteenOsaDto.Laaja {
 
     private KoodiDto nimiKoodi;
