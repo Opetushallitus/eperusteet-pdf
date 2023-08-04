@@ -57,6 +57,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.TuvaLaajaAlainenOsaaminenDt
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoKielitaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoOpintoDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoSisalto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.OpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.TavoitesisaltoalueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.AIPEKurssiDto;
@@ -680,7 +681,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 KotoKielitaitotasoDto kotoKielitaitotaso = (KotoKielitaitotasoDto) po;
                 addKotoSisalto(docBase, kotoKielitaitotaso, po, lapsi);
             } else if (po instanceof KotoOpintoDto) {
-                KotoKielitaitotasoDto kotoOpinto = (KotoKielitaitotasoDto) po;
+                KotoOpintoDto kotoOpinto = (KotoOpintoDto) po;
                 addKotoSisalto(docBase, kotoOpinto, po, lapsi);
             } else if (po instanceof KotoLaajaAlainenOsaaminenDto) {
                 KotoLaajaAlainenOsaaminenDto kotoLao = (KotoLaajaAlainenOsaaminenDto) po;
@@ -988,7 +989,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         docBase.getGenerator().increaseNumber();
     }
 
-    private void addKotoSisalto(DokumenttiPeruste docBase, KotoKielitaitotasoDto kotoSisalto, PerusteenOsaDto po,
+    private void addKotoSisalto(DokumenttiPeruste docBase, KotoSisalto kotoSisalto, PerusteenOsaDto po,
                                 PerusteenOsaViiteDto.Laaja lapsi) {
 
         KoodiDto nimiKoodi = kotoSisalto.getNimiKoodi();
