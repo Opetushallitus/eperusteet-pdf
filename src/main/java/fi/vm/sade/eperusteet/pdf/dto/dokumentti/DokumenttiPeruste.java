@@ -12,18 +12,20 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 @Getter
 @Setter
 public class DokumenttiPeruste extends DokumenttiBase {
-//    PerusteenOsaViiteDto sisalto;
-//    AIPEOpetuksenSisaltoDto aipeOpetuksenSisalto;
     KVLiiteJulkinenDto kvLiiteJulkinenDto;
 
     public Optional<SuoritustapaLaajaDto> getSuoritustapa() {
-        return this.getPeruste().getSuoritustavat().stream().findAny();
+        if (this.getPeruste().getSuoritustavat() == null) {
+            return Optional.empty();
+        }
+        return this.getPeruste().getSuoritustavat().stream().findFirst();
     }
 
     public PerusteenOsaViiteDto.Laaja getSisalto() {

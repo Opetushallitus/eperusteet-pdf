@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonTypeName("koto_kielitaitotaso")
-public class KotoKielitaitotasoDto extends PerusteenOsaDto.Laaja {
+public class KotoKielitaitotasoDto extends PerusteenOsaDto.Laaja implements KotoSisalto {
 
     private KoodiDto nimiKoodi;
     private LokalisoituTekstiDto kuvaus;
