@@ -726,7 +726,7 @@
                     </xsl:choose>
                 </fo:block>
             </fo:list-item-label>
-            <fo:list-item-body start-indent="body-start()"> 
+            <fo:list-item-body start-indent="body-start()">
                 <fo:block font-size="10pt">
                     <xsl:apply-templates select="*|text()"/>
                 </fo:block>
@@ -805,6 +805,33 @@
                 <fo:table-header>
                     <fo:table-cell>
                         <fo:block font-weight="bold" font-size="12pt" text-align="center">
+                            <xsl:value-of select="caption"/>
+                        </fo:block>
+                    </fo:table-cell>
+                </fo:table-header>
+            </xsl:if>
+            <fo:table-body>
+                <fo:table-row>
+                    <fo:table-cell>
+                        <fo:block/>
+                    </fo:table-cell>
+                </fo:table-row>
+                <xsl:apply-templates select="thead|tbody|tr"/>
+            </fo:table-body>
+        </fo:table>
+    </xsl:template>
+
+    <xsl:template match="table-vuosiluokkakokonaisuus">
+        <fo:table table-layout="fixed" inline-progression-dimension="100%"
+                  space-after="12pt" font-size="8pt"
+                  page-break-inside="avoid" keep-together.within-column="1">
+            <fo:table-column column-width="90mm"/>
+            <fo:table-column column-width="30mm"/>
+            <fo:table-column column-width="30mm"/>
+            <xsl:if test="caption">
+                <fo:table-header>
+                    <fo:table-cell>
+                        <fo:block font-weight="bold" font-size="8pt">
                             <xsl:value-of select="caption"/>
                         </fo:block>
                     </fo:table-cell>

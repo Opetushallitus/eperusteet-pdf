@@ -1,12 +1,14 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl;
 
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.dto.enums.Vuosiluokka;
 import fi.vm.sade.eperusteet.pdf.dto.common.ReferenceableDto;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Vuosiluokka;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KevytTekstiKappaleDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,4 +26,5 @@ public class VuosiluokkaKokonaisuusDto implements ReferenceableDto {
     private TekstiOsaDto laajaalainenOsaaminen;
     private Set<VuosiluokkaKokonaisuudenLaajaalainenOsaaminenDto> laajaalaisetOsaamiset;
     private TekstiOsaDto paikallisestiPaatettavatAsiat;
+    private List<KevytTekstiKappaleDto> vapaatTekstit;
 }

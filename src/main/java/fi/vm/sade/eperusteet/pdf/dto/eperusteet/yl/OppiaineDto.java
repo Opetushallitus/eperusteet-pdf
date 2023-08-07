@@ -1,11 +1,15 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KevytTekstiKappaleDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -19,6 +23,16 @@ public class OppiaineDto extends OppiaineBaseUpdateDto {
     private Set<OppiaineSuppeaDto> oppimaarat;
     private Set<OpetuksenKohdealueDto> kohdealueet;
     private Set<OppiaineenVuosiluokkaKokonaisuusDto> vuosiluokkakokonaisuudet;
+    private KoodiDto koodi;
+    private List<KevytTekstiKappaleDto> vapaatTekstit;
+
+    public Optional<LokalisoituTekstiDto> getNimi() {
+        if (koodi != null) {
+            return Optional.of(koodi.getNimi());
+        }
+
+        return super.getNimi();
+    }
 
     public Optional<OppiaineenVuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuus(String tunniste) {
         return getVuosiluokkakokonaisuus(UUID.fromString(tunniste));
