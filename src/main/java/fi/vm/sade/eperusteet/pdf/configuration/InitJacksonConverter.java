@@ -27,6 +27,7 @@ public class InitJacksonConverter {
         mapper.registerModule(createMappingModule());
         mapper.setPropertyNamingStrategy(new ReferenceNamingStrategy());
         mapper.enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     static public ObjectMapper createMapper() {
