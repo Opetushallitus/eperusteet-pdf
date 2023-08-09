@@ -29,7 +29,7 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
     private boolean naytaPerusteenTeksti;
     private LokalisoituTekstiDto perusteteksti;
     private TekstiKappaleDto pohjanTekstikappale;
-    private TutkinnonosaDto tosa;
+    private TutkinnonosaExportDto tosa;
     private SuorituspolkuExportDto suorituspolku;
     private TekstiKappaleJulkinenDto tekstiKappale;
     private List<SisaltoViiteExportDto> lapset;
