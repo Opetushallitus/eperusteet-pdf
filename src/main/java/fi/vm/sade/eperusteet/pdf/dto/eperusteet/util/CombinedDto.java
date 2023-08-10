@@ -5,12 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- *
- * @author nkala
- * @param <A> First dto to be combined
- * @param <B> Second dto
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

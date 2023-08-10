@@ -1,33 +1,19 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.ArviointiDto;
-import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArviointiDto;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
-import java.util.List;
+import lombok.experimental.SuperBuilder;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OmaTutkinnonosaDto {
-    private Long id;
-    private String koodi;
-    private BigDecimal laajuus;
+public class OmaTutkinnonosaDto extends OmaTutkinnonosaBaseDto{
     private ArviointiDto arviointi;
-    private Long geneerinenarviointi;
-    private PaikallisetAmmattitaitovaatimukset2019Dto ammattitaitovaatimukset;
-    private LokalisoituTekstiDto ammattitaidonOsoittamistavat;
-
-    @Deprecated
-    private List<AmmattitaitovaatimuksenKohdealueDto> ammattitaitovaatimuksetLista;
-
-    @Deprecated
-    private LokalisoituTekstiDto tavoitteet;
 }

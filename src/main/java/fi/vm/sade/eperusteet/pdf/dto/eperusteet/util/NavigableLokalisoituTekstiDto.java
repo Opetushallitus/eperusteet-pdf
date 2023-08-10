@@ -21,7 +21,7 @@ public class NavigableLokalisoituTekstiDto extends LokalisoituTekstiDto {
     private NavigationNodeDto navigationNode;
 
     public NavigableLokalisoituTekstiDto(Long id, Map<Kieli, String> values, NavigationNodeDto navigationNode) {
-        super(id, values);
+        super(id, null, values);
         this.navigationNode = navigationNode;
     }
 
@@ -44,7 +44,7 @@ public class NavigableLokalisoituTekstiDto extends LokalisoituTekstiDto {
     }
 
     public NavigableLokalisoituTekstiDto(Long id, Map<Kieli, String> values) {
-        super(id, values);
+        super(id, null, values);
     }
 
     @Override
