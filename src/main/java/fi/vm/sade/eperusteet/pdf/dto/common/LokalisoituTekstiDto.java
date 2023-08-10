@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.util.ObjectUtils;
 
@@ -20,27 +22,19 @@ import java.util.stream.Stream;
 
 @ToString
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class LokalisoituTekstiDto {
     private static final Map<Kieli,String> emptyMap = new EnumMap<>(Kieli.class);
 
     @Getter
-    private final Long id;
+    private Long id;
 
     @Getter
     private UUID tunniste;
 
     @Getter
-    private final Map<Kieli, String> tekstit;
-
-    public LokalisoituTekstiDto(Long id, Map<Kieli, String> values) {
-        this(id, null, values);
-    }
-
-    public LokalisoituTekstiDto(Long id, UUID tunniste, Map<Kieli, String> values) {
-        this.id = id;
-        this.tunniste = tunniste;
-        this.tekstit = values == null ? null : new EnumMap<>(values);
-    }
+    private Map<Kieli, String> tekstit;
 
     static public LokalisoituTekstiDto of(String teksti) {
         return of(Kieli.FI, teksti);
@@ -49,7 +43,7 @@ public class LokalisoituTekstiDto {
     static public LokalisoituTekstiDto of(Kieli kieli, String teksti) {
         Map<Kieli, String> kaannokset = new HashMap<>();
         kaannokset.put(kieli, teksti);
-        return new LokalisoituTekstiDto(null, kaannokset);
+        return new LokalisoituTekstiDto(null, null, kaannokset);
     }
 
     static public String getOrDefault(LokalisoituTekstiDto tk, Kieli kieli, String otherwise) {

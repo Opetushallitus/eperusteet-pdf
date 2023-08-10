@@ -292,7 +292,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             if (sisaltoViiteDto.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)
                     && sisaltoViiteDto.getTosa() != null
                     && docBase.getOpetussuunnitelma().getTutkinnonOsat().stream().anyMatch(tosaviite -> tosaviite.getId().equals(sisaltoViiteDto.getId()))) {
-                TutkinnonosaDto tosa = docBase.getOpetussuunnitelma().getTutkinnonOsat().stream().filter(tosaviite -> tosaviite.getId().equals(sisaltoViiteDto.getId())).findFirst().get().getTosa();
+                TutkinnonosaExportDto tosa = docBase.getOpetussuunnitelma().getTutkinnonOsat().stream().filter(tosaviite -> tosaviite.getId().equals(sisaltoViiteDto.getId())).findFirst().get().getTosa();
                 switch (tosa.getTyyppi()) {
                     case OMA:
                         if (tosa.getOmatutkinnonosa() == null
