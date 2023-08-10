@@ -23,8 +23,7 @@ public class DokumenttiEventListener implements EventListener {
         String msg = EventFormatter.format(event);
         EventSeverity severity = event.getSeverity();
         if (severity == EventSeverity.INFO) {
-            // ei lokiteta infoja, koska niitä tulee satoja rivejä
-            // LOG.info(msg);
+             LOG.info(msg);
         } else if (severity == EventSeverity.WARN) {
             LOG.warn(msg);
         } else if (severity == EventSeverity.ERROR) {
