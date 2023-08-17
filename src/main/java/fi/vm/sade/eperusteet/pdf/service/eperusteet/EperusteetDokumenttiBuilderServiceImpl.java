@@ -199,7 +199,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         if (KoulutusTyyppi.of(perusteData.getKoulutustyyppi()).isLukio()) {
             addPerusteenOsat(docBase, sisalto); // Tekstikappaleet
             addLukioOppiaineet(docBase);
-        } else if (KoulutusTyyppi.of(perusteData.getKoulutustyyppi()).isPerusopetus()) {
+        } else if (KoulutusTyyppi.of(perusteData.getKoulutustyyppi()).equals(KoulutusTyyppi.PERUSOPETUS)) {
             addPerusteenOsat(docBase, sisalto); // Tekstikappaleet
             addPerusopetus(docBase);
         } else {
@@ -1992,14 +1992,8 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     private void addOppiaine(DokumenttiPeruste docBase, AIPEOppiaineLaajaDto oppiaine) {
         StringBuilder nimiBuilder = new StringBuilder();
         nimiBuilder.append(getTextString(docBase, getOptionalValue(oppiaine.getNimi())));
-        if (oppiaine.getKoodi().isPresent() && oppiaine.getKoodi().get().getUri() != null) {
-            String uri = oppiaine.getKoodi().get().getUri();
-            String[] splitArray = uri.split("_");
-            if (splitArray.length > 0) {
-                nimiBuilder.append(" (");
-                nimiBuilder.append(splitArray[splitArray.length - 1].toUpperCase());
-                nimiBuilder.append(")");
-            }
+        if (oppiaine.getKoodi().isPresent() && oppiaine.getKoodi().get().getArvo() != null) {
+            nimiBuilder.append(" (" + oppiaine.getKoodi().get().getArvo() + ")");
         }
 
         if (oppiaine.getNimi().isPresent()) {
@@ -2012,6 +2006,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
         docBase.getGenerator().increaseDepth();
 
+        addTekstiOsa(docBase, oppiaine.getTehtava());
         addTekstiOsa(docBase, oppiaine.getTyotavat());
         addTekstiOsa(docBase, oppiaine.getOhjaus());
         addTekstiOsa(docBase, oppiaine.getArviointi());

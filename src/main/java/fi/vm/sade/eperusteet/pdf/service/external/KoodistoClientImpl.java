@@ -54,14 +54,9 @@ public class KoodistoClientImpl implements KoodistoClient {
     }
 
     @Override
+    @Cacheable(value = "koodistot")
     public List<KoodistoKoodiDto> getAll(String koodisto) {
-        return self.getAll(koodisto, false);
-    }
-
-    @Override
-    @Cacheable(value = "koodistot", key = "'koodistot'")
-    public List<KoodistoKoodiDto> getAll(String koodisto, boolean onlyValidKoodis) {
-        String url = koodistoServiceUrl + KOODISTO_API + koodisto + "/koodi?onlyValidKoodis=" + onlyValidKoodis;
+        String url = koodistoServiceUrl + KOODISTO_API + koodisto + "/koodi?onlyValidKoodis=" + false;
         try {
             ResponseEntity<KoodistoKoodiDto[]> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, KoodistoKoodiDto[].class);
             List<KoodistoKoodiDto> koodistoDtot = List.of(response.getBody());
@@ -77,25 +72,9 @@ public class KoodistoClientImpl implements KoodistoClient {
         Optional<KoodistoKoodiDto> koodistoKoodi = this.self.getAll(koodistoUri).stream()
                 .filter(koodi -> koodi.getKoodiUri().equals(koodiUri))
                 .findFirst();
-        return koodistoKoodi.orElseGet(() -> self.get(koodistoUri, koodiUri, null));
+        return koodistoKoodi.orElseGet(() -> null);
     }
-
-    @Override
-    @Cacheable(value = "koodistokoodit", key = "#p0 + #p1", unless="#result == null")
-    public KoodistoKoodiDto get(String koodistoUri, String koodiUri, Long versio) {
-        if (koodistoUri == null || koodiUri == null) {
-            return null;
-        }
-        RestTemplate restTemplate = new RestTemplate();
-        String url = koodistoServiceUrl + KOODISTO_API + koodistoUri + "/koodi/" + koodiUri + (versio != null ? "?koodistoVersio=" + versio : "");
-        try {
-            ResponseEntity<KoodistoKoodiDto> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, KoodistoKoodiDto.class);
-            return response.getBody();
-        } catch (RestClientException ex) {
-            return null;
-        }
-    }
-
+    
     @Override
     public KoodistoKoodiDto getByUri(String uri) {
         String[] splitted = uri.split("_");

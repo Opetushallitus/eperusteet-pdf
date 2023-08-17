@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.ops.SuorituspolkuRiviDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimuksenKohdeDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimuksenKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimusDto;
@@ -11,7 +12,6 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KotoTaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KotoTaitotasoLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.OmaOsaAlueExportDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.OmaTutkinnonosaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.OmaTutkinnonosaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.OpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.PaikallinenAmmattitaitovaatimus2019Dto;
@@ -21,7 +21,6 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SuorituspolkuExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TekstiKappaleJulkinenDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TekstiosaDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TutkinnonosaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TutkinnonosaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TuvaLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
@@ -54,8 +53,6 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaAlueKokonaanDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaamisenTavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.ValmaTelmaSisaltoDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.RakenneOsaDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteSuppeaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoKielitaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoLaajaAlainenOsaaminenDto;
@@ -504,7 +501,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                                 PerusteKaikkiDto peruste = docBase.getPeruste();
                                 if (peruste != null) {
                                     peruste.getTutkinnonOsat().stream()
-                                            .filter(tutkinnonOsaDto -> tutkinnonOsaDto.getId().equals(dto.getTutkinnonOsa()))
+                                            .filter(tutkinnonOsaDto -> tutkinnonOsaDto.getId().equals(dto.getTutkinnonOsa().getIdLong()))
                                             .findAny()
                                             .ifPresent(tutkinnonOsaKaikkiDto -> addSuorituspolunTutkinnonOsa(
                                                     docBase, tutkinnonOsaKaikkiDto, dto, tbody, depth + 1));
