@@ -1834,7 +1834,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                         .sorted(Comparator.comparing(k -> k.getOsaamistaso().getId()))
                         .forEach(kriteeri -> {
 
-                            String ktaso = getTextString(docBase, kriteeri.getOsaamistaso().getOtsikko());
+                            String ktaso = getTextString(docBase, kriteeri.getOsaamistasoDto().getOtsikko());
                             Element kriteeriRivi = docBase.getDocument().createElement("tr");
                             tbody.appendChild(kriteeriRivi);
 

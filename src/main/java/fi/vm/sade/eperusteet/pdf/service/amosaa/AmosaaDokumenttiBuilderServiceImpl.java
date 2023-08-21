@@ -1171,7 +1171,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 .forEach(osaamistasonKriteeri -> {
                     DokumenttiRivi rivi = new DokumenttiRivi();
 
-                    rivi.addSarake(getTextString(docBase, osaamistasonKriteeri.getOsaamistaso().getOtsikko()));
+                    rivi.addSarake(getTextString(docBase, osaamistasonKriteeri.getOsaamistasoDto().getOtsikko()));
 
                     StringBuilder kriteeritBuilder = new StringBuilder();
                     kriteeritBuilder.append("<ul>");
