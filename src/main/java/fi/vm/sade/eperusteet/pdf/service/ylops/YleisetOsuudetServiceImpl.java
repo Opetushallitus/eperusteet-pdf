@@ -208,7 +208,6 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
         return null;
     }
 
-    // TODO is vanhempi liite
     private boolean isLiite(TekstiKappaleViiteExportDto.Puu viite, DokumenttiYlops docBase) {
         return viite.isLiite()
                 || (viite.getTekstiKappale() != null
@@ -216,7 +215,7 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
                 && viite.getTekstiKappale().getNimi().getTekstit() != null
                 && viite.getTekstiKappale().getNimi().getTekstit().get(docBase.getKieli()) != null
                 && viite.getTekstiKappale().getNimi().getTekstit().get(docBase.getKieli())
-                .equals(messages.translate("liitteet", docBase.getKieli())));
-                //|| (viite.getVanhempi() != null && isLiite(viite.getVanhempi(), docBase));
+                .equals(messages.translate("liitteet", docBase.getKieli())))
+                || (docBase.getVanhempi(viite).isPresent() && isLiite(docBase.getVanhempi(viite).get(), docBase));
     }
 }
