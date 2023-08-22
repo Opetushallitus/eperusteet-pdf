@@ -94,6 +94,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
                 catch (Exception e) {
                     log.error(e.getMessage());
                     log.error("Liitettä ei löytynyt, id={}, UUID={}", generatorData.getId(), uuid);
+                    element.removeAttribute("src");
                     return;
                 }
 
