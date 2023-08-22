@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.pdf.service.ylops;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
 import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.TekstiKappaleViiteExportDto;
@@ -63,7 +64,7 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
                 } else {
                     if (hasTekstiSisalto(docBase, lapsi) || hasTekstiSisaltoRecursive(docBase, lapsi)) {
 
-                        TekstiKappaleDto perusteenTekstikappale = null;
+                        fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto perusteenTekstikappale = null;
                         if (lapsi.getPerusteTekstikappaleId() != null) {
                             perusteenTekstikappale = getPerusteTekstikappale(docBase.getPeruste(), lapsi.getPerusteTekstikappaleId());
                             if (perusteenTekstikappale != null) {
@@ -82,7 +83,7 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
                                 if (perusteenTekstikappale != null) {
                                     addLokalisoituteksti(docBase, perusteenTekstikappale.getTeksti(),"cite");
 
-                                    if (perusteenTekstikappale.getTunniste() != null && perusteenTekstikappale.getTunniste().equals("laajaalainenosaaminen")) {
+                                    if (perusteenTekstikappale.getTunniste() != null && perusteenTekstikappale.getTunniste().equals(PerusteenOsaTunniste.LAAJAALAINENOSAAMINEN)) {
                                         PerusteKaikkiDto peruste = docBase.getPeruste();
                                         if (peruste.getAipeOpetuksenPerusteenSisalto() != null && peruste.getAipeOpetuksenPerusteenSisalto().getLaajaalaisetosaamiset() != null) {
                                             peruste.getAipeOpetuksenPerusteenSisalto().getLaajaalaisetosaamiset().forEach(lao -> {
@@ -133,8 +134,7 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
         Long pTekstikappaleId = viite.getPerusteTekstikappaleId();
         if (viite.isNaytaPerusteenTeksti() && pTekstikappaleId != null) {
             try {
-                TekstiKappaleDto tekstikappale = getPerusteTekstikappale(docBase.getPeruste(), pTekstikappaleId);
-                if (tekstikappale != null) {
+                if (getPerusteTekstikappale(docBase.getPeruste(), pTekstikappaleId) != null) {
                     return true;
                 }
             } catch (BusinessRuleViolationException | NotExistsException e) {
@@ -173,15 +173,11 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
         }
     }
 
-    public TekstiKappaleDto getPerusteTekstikappale(PerusteKaikkiDto perusteDto, Long tekstikappaleId) {
+    public fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto getPerusteTekstikappale(PerusteKaikkiDto perusteDto, Long tekstikappaleId) {
         PerusteenOsaViiteDto.Laaja perusteenTekstikappaleViite = getPerusteTekstikappaleViite(perusteDto, tekstikappaleId);
 
         if (perusteenTekstikappaleViite != null) {
-            fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto tk = (fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto) perusteenTekstikappaleViite.getPerusteenOsa();
-            return new TekstiKappaleDto(
-                    LokalisoituTekstiDto.of(tk.getNimi().getTekstit()),
-                    LokalisoituTekstiDto.of(tk.getTeksti().getTekstit()),
-                    null);
+            return (fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto)perusteenTekstikappaleViite.getPerusteenOsa();
         }
         return null;
     }
@@ -196,7 +192,7 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
                         if (viiteDto.getPerusteenOsa() instanceof fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto) {
                             fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto tk = (fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto) viiteDto.getPerusteenOsa();
 
-                            if (tk.getTeksti() != null && tk.getId().equals(tekstikappaleId)) {
+                            if (tk.getId().equals(tekstikappaleId)) {
                                 return true;
                             }
                         }
