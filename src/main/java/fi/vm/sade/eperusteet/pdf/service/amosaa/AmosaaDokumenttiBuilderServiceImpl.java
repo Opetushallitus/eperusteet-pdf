@@ -27,6 +27,7 @@ import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.MuodostumisSaantoDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.OsaamistasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
@@ -1171,7 +1172,9 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 .forEach(osaamistasonKriteeri -> {
                     DokumenttiRivi rivi = new DokumenttiRivi();
 
-                    rivi.addSarake(getTextString(docBase, osaamistasonKriteeri.getOsaamistasoDto().getOtsikko()));
+                    if (Optional.ofNullable(osaamistasonKriteeri.getOsaamistasoDto()).map(OsaamistasoDto::getOtsikko).isPresent()) {
+                        rivi.addSarake(getTextString(docBase, osaamistasonKriteeri.getOsaamistasoDto().getOtsikko()));
+                    }
 
                     StringBuilder kriteeritBuilder = new StringBuilder();
                     kriteeritBuilder.append("<ul>");

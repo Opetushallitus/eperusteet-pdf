@@ -101,6 +101,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
                 BufferedImage bufferedImage = ImageIO.read(in);
                 if (bufferedImage == null) {
                     log.error("Liitettä ei löytynyt, id={}, UUID={}", generatorData.getId(), uuid);
+                    element.removeAttribute("src");
                     return;
                 }
 
