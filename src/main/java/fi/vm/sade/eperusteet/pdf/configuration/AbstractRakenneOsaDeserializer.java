@@ -6,9 +6,9 @@ import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.RakenneOsaDto;
 
 import java.io.IOException;
 

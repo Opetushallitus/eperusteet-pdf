@@ -56,7 +56,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaamistavoiteLaaja
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.ValmaTelmaSisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.RakenneOsaDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteSuppeaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.TuvaLaajaAlainenOsaaminenDto;

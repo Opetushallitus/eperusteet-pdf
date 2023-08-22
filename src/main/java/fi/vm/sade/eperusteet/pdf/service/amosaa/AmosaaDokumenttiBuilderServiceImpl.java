@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.ops.SuorituspolkuRiviDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimuksenKohdeDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimuksenKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimusDto;
@@ -29,6 +28,7 @@ import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.MuodostumisSaantoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiAmosaa;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
@@ -495,7 +495,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 RakenneOsaDto lapsiDto = (RakenneOsaDto) lapsi;
                 if (lapsiDto.getTutkinnonOsaViite() != null) {
                     suoritustapaLaajaDto.getTutkinnonOsat().stream()
-                            .filter(dto -> dto.getId().equals(lapsiDto.getTutkinnonOsaViite()))
+                            .filter(dto -> dto.getId().equals(lapsiDto.getTutkinnonOsaViite().getIdLong()))
                             .findAny()
                             .ifPresent(dto -> {
                                 PerusteKaikkiDto peruste = docBase.getPeruste();

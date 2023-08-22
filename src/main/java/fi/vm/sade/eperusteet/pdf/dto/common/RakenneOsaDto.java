@@ -1,8 +1,5 @@
-package fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne;
+package fi.vm.sade.eperusteet.pdf.dto.common;
 
-import fi.vm.sade.eperusteet.pdf.dto.common.AbstractRakenneOsaDto;
-import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
-import fi.vm.sade.eperusteet.pdf.dto.common.ReferenceableDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
