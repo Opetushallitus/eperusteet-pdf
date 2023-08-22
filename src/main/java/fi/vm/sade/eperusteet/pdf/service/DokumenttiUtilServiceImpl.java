@@ -99,6 +99,10 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
 
                 // Tehdään muistissa olevasta datasta kuva
                 BufferedImage bufferedImage = ImageIO.read(in);
+                if (bufferedImage == null) {
+                    log.error("Liitettä ei löytynyt, id={}, UUID={}", generatorData.getId(), uuid);
+                    return;
+                }
 
                 int width = bufferedImage.getWidth();
                 int height = bufferedImage.getHeight();
