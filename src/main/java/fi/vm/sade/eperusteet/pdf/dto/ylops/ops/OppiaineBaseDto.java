@@ -23,7 +23,6 @@ public abstract class OppiaineBaseDto {
     private OppiaineValinnainenTyyppi valinnainenTyyppi = OppiaineValinnainenTyyppi.EI_MAARITETTY;
     @JsonProperty("_liittyvaOppiaine")
     private Reference liittyvaOppiaine;
-    private Long jnro;
     private String laajuus;
     private boolean koosteinen;
     private LokalisoituTekstiDto nimi;
