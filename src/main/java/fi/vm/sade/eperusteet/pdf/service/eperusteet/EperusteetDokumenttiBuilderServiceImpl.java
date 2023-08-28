@@ -36,6 +36,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019Oppi
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019OppiaineTavoitealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019OppiaineTavoitteetDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019TehtavaDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.moduuli.Lops2019ModuuliBaseDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.moduuli.Lops2019ModuuliDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.moduuli.Lops2019ModuuliSisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.moduuli.Lops2019ModuuliTavoiteDto;
@@ -91,6 +92,7 @@ import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -120,6 +122,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeader;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addLokalisoituteksti;
@@ -145,6 +148,9 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
     @Autowired
     private MapperFacade mapper;
+
+    @Value("${fi.vm.sade.eperusteet.pdf.eperusteet-service:''}")
+    private String eperusteetServiceUrl;
 
     @Override
     public Document generateXML(PerusteKaikkiDto perusteData, GeneratorData generatorData) throws ParserConfigurationException, JsonProcessingException {
@@ -340,11 +346,11 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 Element muutosmaaraysEl = docBase.getDocument().createElement("muutosmaarays");
 
                 Element linkki = docBase.getDocument().createElement("a");
-                linkki.setAttribute("href", getTextString(docBase, muutosmaarays.getUrl()));
+                linkki.setAttribute("href", getTextString(docBase, muutosmaarays.getUrl(eperusteetServiceUrl, docBase.getPeruste().getId())));
                 if (muutosmaarays.getNimi() != null) {
                     linkki.setTextContent(getTextString(docBase, muutosmaarays.getNimi()));
                 } else {
-                    linkki.setTextContent(getTextString(docBase, muutosmaarays.getUrl()));
+                    linkki.setTextContent(getTextString(docBase, muutosmaarays.getUrl(eperusteetServiceUrl, docBase.getPeruste().getId())));
                 }
                 muutosmaaraysEl.appendChild(linkki);
                 muutosmaaraykset.appendChild(muutosmaaraysEl);
@@ -682,7 +688,9 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
         List<Lops2019OppiaineKaikkiDto> oppiaineet = docBase.getPeruste().getLops2019Sisalto().getOppiaineet();
         if (!ObjectUtils.isEmpty(oppiaineet)) {
-            oppiaineet.forEach(oa -> {
+            oppiaineet.stream()
+                    .sorted()
+                    .forEach(oa -> {
                 addOppiaine(docBase, oa);
                 docBase.getGenerator().increaseNumber();
             });
@@ -709,23 +717,14 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         // Tehtävä
         Lops2019TehtavaDto tehtava = oa.getTehtava();
         if (tehtava != null && tehtava.getKuvaus() != null) {
-            addTeksti(docBase, messages.translate("oppiaineen-tehtava", docBase.getKieli()), "h6");
+            addTeksti(docBase, messages.translate("oppiaine-ja-tehtava", docBase.getKieli()), "h6");
             addLokalisoituteksti(docBase, tehtava.getKuvaus(), "div");
         }
 
-        if (!docBase.getPeruste().getKoulutustyyppi().equals(KoulutusTyyppi.LUKIOVALMISTAVAKOULUTUS)) {
-            // Laaja-alainen osaaminen
-            Lops2019OppiaineLaajaAlainenOsaaminenDto laoKokonaisuus = oa.getLaajaAlaisetOsaamiset();
-            if (laoKokonaisuus != null && laoKokonaisuus.getKuvaus() != null) {
-                addTeksti(docBase, messages.translate("laaja-alainen-osaaminen", docBase.getKieli()), "h6");
-                addLokalisoituteksti(docBase, laoKokonaisuus.getKuvaus(), "div");
-            }
-        } else {
-            Lops2019OpiskeluymparistoTyotavatDto opiskeluymparistoTyotavat = oa.getOpiskeluymparistoTyotavat();
-            if (opiskeluymparistoTyotavat != null && opiskeluymparistoTyotavat.getKuvaus() != null) {
-                addTeksti(docBase, messages.translate("opiskeluymparisto-ja-tyotavat", docBase.getKieli()), "h6");
-                addLokalisoituteksti(docBase, opiskeluymparistoTyotavat.getKuvaus(), "div");
-            }
+        Lops2019OpiskeluymparistoTyotavatDto opiskeluymparistoTyotavat = oa.getOpiskeluymparistoTyotavat();
+        if (opiskeluymparistoTyotavat != null && opiskeluymparistoTyotavat.getKuvaus() != null) {
+            addTeksti(docBase, messages.translate("opiskeluymparisto-ja-tyotavat", docBase.getKieli()), "h6");
+            addLokalisoituteksti(docBase, opiskeluymparistoTyotavat.getKuvaus(), "div");
         }
 
         // Tavoitteet
@@ -768,7 +767,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
         // Arviointi
         Lops2019ArviointiDto arviointi = oa.getArviointi();
-        if (arviointi != null) {
+        if (Optional.ofNullable(arviointi).map(Lops2019ArviointiDto::getKuvaus).isPresent()) {
             addTeksti(docBase, messages.translate("arviointi", docBase.getKieli()), "h6");
             addLokalisoituteksti(docBase, arviointi.getKuvaus(), "div");
         }
@@ -776,15 +775,30 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         docBase.getGenerator().increaseDepth();
 
         // oppimäärät
-        oa.getOppimaarat().forEach(om -> {
+        oa.getOppimaarat().stream()
+                .sorted()
+                .forEach(om -> {
             addOppiaine(docBase, om);
             docBase.getGenerator().increaseNumber();
         });
 
         // moduulit
-        oa.getModuulit().forEach(moduuli -> {
-            addModuuli(docBase, moduuli);
-        });
+
+        if (oa.getModuulit().stream().anyMatch(Lops2019ModuuliBaseDto::getPakollinen)) {
+            addTeksti(docBase, messages.translate("pakolliset-opinnot", docBase.getKieli()), "h5");
+
+            oa.getModuulit().stream().filter(Lops2019ModuuliBaseDto::getPakollinen).forEach(moduuli -> {
+                addModuuli(docBase, moduuli);
+            });
+        }
+
+        if (oa.getModuulit().stream().anyMatch(moduuli -> !moduuli.getPakollinen())) {
+            addTeksti(docBase, messages.translate("valtakunnalliset-valinnaiset-opinnot", docBase.getKieli()), "h5");
+
+            oa.getModuulit().stream().filter(moduuli -> !moduuli.getPakollinen()).forEach(moduuli -> {
+                addModuuli(docBase, moduuli);
+            });
+        }
 
         docBase.getGenerator().increaseNumber();
         docBase.getGenerator().decreaseDepth();
@@ -837,16 +851,16 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             sisallot.stream()
                     .filter(Objects::nonNull)
                     .forEach(sisalto -> {
-                        if (!ObjectUtils.isEmpty(sisalto.getSisallot())) {
+                        LokalisoituTekstiDto kohde = sisalto.getKohde();
+                        if (kohde != null) {
+                            // Kohde
+                            Element kohdeEl = docBase.getDocument().createElement("p");
+                            kohdeEl.setTextContent(getTextString(docBase, kohde));
+                            div.appendChild(kohdeEl);
+                        }
 
-                            LokalisoituTekstiDto kohde = sisalto.getKohde();
-                            if (kohde != null) {
-                                // Kohde
-                                Element kohdeEl = docBase.getDocument().createElement("p");
-                                kohdeEl.setTextContent(getTextString(docBase, kohde));
-                                div.appendChild(kohdeEl);
-                            }
-                            // Sisallöt
+                        // Sisallöt
+                        if (!ObjectUtils.isEmpty(sisalto.getSisallot())) {
                             div.appendChild(getList(docBase, sisalto.getSisallot()));
                         }
                     });

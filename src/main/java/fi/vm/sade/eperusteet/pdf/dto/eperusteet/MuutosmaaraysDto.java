@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -18,4 +19,17 @@ public class MuutosmaaraysDto {
     private LokalisoituTekstiDto nimi;
     private LokalisoituTekstiDto url;
     private Map<Kieli, LiiteBaseDto> liitteet = new HashMap<>();
+
+    public LokalisoituTekstiDto getUrl(String service, Long perusteId) {
+        if (url != null) {
+            return url;
+        }
+
+        return LokalisoituTekstiDto.of(liitteet.keySet().stream()
+                        .collect(Collectors.toMap((kieli -> kieli), (kieli -> String.format("%s/api/perusteet/%d/liitteet/%s",
+                                service,
+                                perusteId,
+                                liitteet.get(kieli).getId().toString()
+                                )))));
+    }
 }
