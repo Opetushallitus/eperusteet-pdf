@@ -1,10 +1,12 @@
 package fi.vm.sade.eperusteet.pdf.service.ylops;
 
+import com.google.common.collect.ComparisonChain;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiRivi;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTaulukko;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.LaajaalainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineLaajaDto;
@@ -190,11 +192,8 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                             && oa.getOppiaine().getNimi() != null
                             && oa.getOppiaine().getNimi().getTekstit() != null
                             && oa.getOppiaine().getNimi().getTekstit().get(docBase.getKieli()) != null)
-                    .sorted((oa1, oa2) -> {
-                        Long jarj1 = oa1.getOppiaine().getJnro() != null ? oa1.getOppiaine().getJnro() : 1L;
-                        Long jarj2 = oa2.getOppiaine().getJnro() != null ? oa2.getOppiaine().getJnro() : 1L;
-                        return jarj1.compareTo(jarj2);
-                    })
+                    .sorted(Comparator.comparing(o -> o.getOppiaine().getNimi().get(docBase.getKieli())))
+                    .sorted(Comparator.comparing(o -> o.getJnro() != null ? o.getJnro() : Integer.MAX_VALUE))
                     .collect(Collectors.toCollection(ArrayList::new));
 
             docBase.getGenerator().increaseDepth();

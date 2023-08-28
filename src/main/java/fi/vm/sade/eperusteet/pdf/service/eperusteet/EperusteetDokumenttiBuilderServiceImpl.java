@@ -1,7 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.service.eperusteet;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimuksenKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
@@ -21,9 +20,7 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.dto.enums.TavoiteAlueTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.TutkinnonOsaTyyppi;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoKaikkiDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerisenArvioinninOsaamistasonKriteeriDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerisenArvioinninOsaamistasonKriteeriKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KevytTekstiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.OsaamistasonKriteeriDto;
@@ -33,7 +30,6 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArvioinninKohdealueDto
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArviointiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.Lops2019OppiaineKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.Lops2019SisaltoDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.laajaalainenosaaminen.Lops2019LaajaAlainenOsaaminenKokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019ArviointiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019OpiskeluymparistoTyotavatDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019OppiaineLaajaAlainenOsaaminenDto;
@@ -54,16 +50,13 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.Ammattitaitovaatimu
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.Ammattitaitovaatimus2019Dto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.AmmattitaitovaatimustenKohdealue2019Dto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaAlueKokonaanDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaAlueLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaamisenTavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaamistavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaamistavoiteLaajaDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.ValmaTelmaSisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.RakenneOsaDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteSuppeaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.TuvaLaajaAlainenOsaaminenDto;
@@ -127,7 +120,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeader;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addLokalisoituteksti;
@@ -199,7 +191,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         if (KoulutusTyyppi.of(perusteData.getKoulutustyyppi()).isLukio()) {
             addPerusteenOsat(docBase, sisalto); // Tekstikappaleet
             addLukioOppiaineet(docBase);
-        } else if (KoulutusTyyppi.of(perusteData.getKoulutustyyppi()).isPerusopetus()) {
+        } else if (KoulutusTyyppi.of(perusteData.getKoulutustyyppi()).equals(KoulutusTyyppi.PERUSOPETUS)) {
             addPerusteenOsat(docBase, sisalto); // Tekstikappaleet
             addPerusopetus(docBase);
         } else {
@@ -1129,7 +1121,8 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
     private void addTekstikappale(DokumenttiPeruste docBase, TekstiKappaleDto tk, PerusteenOsaDto po, PerusteenOsaViiteDto.Laaja lapsi) {
         PerusteenOsaTunniste tunniste = po.getTunniste();
-        if (tunniste != PerusteenOsaTunniste.NORMAALI && tunniste != PerusteenOsaTunniste.LAAJAALAINENOSAAMINEN
+        if (tunniste != PerusteenOsaTunniste.NORMAALI
+                && tunniste != PerusteenOsaTunniste.LAAJAALAINENOSAAMINEN
                 && tunniste != PerusteenOsaTunniste.RAKENNE) {
             String nimi = getTextString(docBase, tk.getNimi());
             addHeader(docBase, nimi);
@@ -1834,7 +1827,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                         .sorted(Comparator.comparing(k -> k.getOsaamistaso().getId()))
                         .forEach(kriteeri -> {
 
-                            String ktaso = getTextString(docBase, kriteeri.getOsaamistaso().getOtsikko());
+                            String ktaso = getTextString(docBase, kriteeri.getOsaamistasoDto().getOtsikko());
                             Element kriteeriRivi = docBase.getDocument().createElement("tr");
                             tbody.appendChild(kriteeriRivi);
 
@@ -1992,14 +1985,8 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     private void addOppiaine(DokumenttiPeruste docBase, AIPEOppiaineLaajaDto oppiaine) {
         StringBuilder nimiBuilder = new StringBuilder();
         nimiBuilder.append(getTextString(docBase, getOptionalValue(oppiaine.getNimi())));
-        if (oppiaine.getKoodi().isPresent() && oppiaine.getKoodi().get().getUri() != null) {
-            String uri = oppiaine.getKoodi().get().getUri();
-            String[] splitArray = uri.split("_");
-            if (splitArray.length > 0) {
-                nimiBuilder.append(" (");
-                nimiBuilder.append(splitArray[splitArray.length - 1].toUpperCase());
-                nimiBuilder.append(")");
-            }
+        if (oppiaine.getKoodi().isPresent() && oppiaine.getKoodi().get().getArvo() != null) {
+            nimiBuilder.append(" (" + oppiaine.getKoodi().get().getArvo() + ")");
         }
 
         if (oppiaine.getNimi().isPresent()) {
@@ -2012,6 +1999,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
         docBase.getGenerator().increaseDepth();
 
+        addTekstiOsa(docBase, oppiaine.getTehtava());
         addTekstiOsa(docBase, oppiaine.getTyotavat());
         addTekstiOsa(docBase, oppiaine.getOhjaus());
         addTekstiOsa(docBase, oppiaine.getArviointi());

@@ -11,7 +11,6 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KotoTaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KotoTaitotasoLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.OmaOsaAlueExportDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.OmaTutkinnonosaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.OmaTutkinnonosaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.OpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.PaikallinenAmmattitaitovaatimus2019Dto;
@@ -21,7 +20,6 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SuorituspolkuExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TekstiKappaleJulkinenDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TekstiosaDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TutkinnonosaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TutkinnonosaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TuvaLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
@@ -29,7 +27,9 @@ import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.MuodostumisSaantoDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.OsaamistasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiAmosaa;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
@@ -54,8 +54,6 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaAlueKokonaanDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaamisenTavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.ValmaTelmaSisaltoDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.RakenneOsaDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteSuppeaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoKielitaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoLaajaAlainenOsaaminenDto;
@@ -498,13 +496,13 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 RakenneOsaDto lapsiDto = (RakenneOsaDto) lapsi;
                 if (lapsiDto.getTutkinnonOsaViite() != null) {
                     suoritustapaLaajaDto.getTutkinnonOsat().stream()
-                            .filter(dto -> dto.getId().equals(lapsiDto.getTutkinnonOsaViite()))
+                            .filter(dto -> dto.getId().equals(lapsiDto.getTutkinnonOsaViite().getIdLong()))
                             .findAny()
                             .ifPresent(dto -> {
                                 PerusteKaikkiDto peruste = docBase.getPeruste();
                                 if (peruste != null) {
                                     peruste.getTutkinnonOsat().stream()
-                                            .filter(tutkinnonOsaDto -> tutkinnonOsaDto.getId().equals(dto.getTutkinnonOsa()))
+                                            .filter(tutkinnonOsaDto -> tutkinnonOsaDto.getId().equals(dto.getTutkinnonOsa().getIdLong()))
                                             .findAny()
                                             .ifPresent(tutkinnonOsaKaikkiDto -> addSuorituspolunTutkinnonOsa(
                                                     docBase, tutkinnonOsaKaikkiDto, dto, tbody, depth + 1));
@@ -1174,7 +1172,9 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 .forEach(osaamistasonKriteeri -> {
                     DokumenttiRivi rivi = new DokumenttiRivi();
 
-                    rivi.addSarake(getTextString(docBase, osaamistasonKriteeri.getOsaamistaso().getOtsikko()));
+                    if (Optional.ofNullable(osaamistasonKriteeri.getOsaamistasoDto()).map(OsaamistasoDto::getOtsikko).isPresent()) {
+                        rivi.addSarake(getTextString(docBase, osaamistasonKriteeri.getOsaamistasoDto().getOtsikko()));
+                    }
 
                     StringBuilder kriteeritBuilder = new StringBuilder();
                     kriteeritBuilder.append("<ul>");

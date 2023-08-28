@@ -11,6 +11,7 @@ import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiosaDto;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
+import org.jsoup.parser.Parser;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -42,7 +43,7 @@ public class DokumenttiUtils {
     public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTekstiDto lTeksti, String tagi, Element el) {
         if (lTeksti != null && lTeksti.getTekstit() != null && lTeksti.getTekstit().get(docBase.getKieli()) != null) {
             String teksti = lTeksti.getTekstit().get(docBase.getKieli());
-            teksti = "<" + tagi + ">" + unescapeHtml5(teksti) + "</" + tagi + ">";
+            teksti = "<" + tagi + ">" + cleanHtml(teksti) + "</" + tagi + ">";
 
             Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(teksti));
             Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
@@ -73,7 +74,7 @@ public class DokumenttiUtils {
 
     public static void addTeksti(Document doc, String teksti, String tagi, Element element) {
         if (teksti != null) {
-            teksti = unescapeHtml5(teksti);
+            teksti = cleanHtml(teksti);
             teksti = "<" + tagi + ">" + teksti + "</" + tagi + ">";
 
             Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(teksti));
@@ -86,7 +87,7 @@ public class DokumenttiUtils {
     public static String tagTeksti(String teksti, String tagi) {
         if (teksti != null) {
 
-            teksti = unescapeHtml5(teksti);
+            teksti = cleanHtml(teksti);
             return "<" + tagi + ">" + teksti + "</" + tagi + ">";
         }
         return "<" + tagi + "></" + tagi + ">";
@@ -133,7 +134,7 @@ public class DokumenttiUtils {
         if (lokalisoituTekstiDto != null && lokalisoituTekstiDto.getTekstit() != null && kieli != null
                 && lokalisoituTekstiDto.getTekstit().containsKey(kieli)
                 && lokalisoituTekstiDto.getTekstit().get(kieli) != null) {
-            return unescapeHtml5(lokalisoituTekstiDto.getTekstit().get(kieli));
+            return cleanHtml(lokalisoituTekstiDto.getTekstit().get(kieli));
         } else {
             return "";
         }
@@ -143,7 +144,7 @@ public class DokumenttiUtils {
         if (lokalisoituTekstiDto != null && lokalisoituTekstiDto.getTekstit() != null && kieli != null
                 && lokalisoituTekstiDto.getTekstit().containsKey(kieli)
                 && lokalisoituTekstiDto.getTekstit().get(kieli) != null) {
-            return unescapeHtml5(lokalisoituTekstiDto.getTekstit().get(kieli));
+            return cleanHtml(lokalisoituTekstiDto.getTekstit().get(kieli));
         } else {
             return "";
         }
@@ -174,8 +175,10 @@ public class DokumenttiUtils {
         docBase.getBodyElement().appendChild(docBase.getDocument().createElement("br"));
     }
 
-    public static String unescapeHtml5(String string) {
-        return StringEscapeUtils.unescapeHtml4((Jsoup.clean(stripNonValidXMLCharacters(string), ValidHtml.WhitelistType.NORMAL_PDF.getWhitelist())));
+    private static String removeInternalLink(String text) {
+        org.jsoup.nodes.Document stringRoutenodeCleaned = Jsoup.parse(text, "", Parser.xmlParser());
+        stringRoutenodeCleaned.select("a[routenode]").forEach(org.jsoup.nodes.Node::unwrap);
+        return stringRoutenodeCleaned.toString();
     }
 
     public static String stripNonValidXMLCharacters(String in) {
@@ -206,7 +209,7 @@ public class DokumenttiUtils {
     public static Element newItalicElement(DokumenttiBase docBase, String teksti) {
         Element emphasis = docBase.getDocument().createElement("em");
 
-        Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(unescapeHtml5(teksti)));
+        Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(cleanHtml(teksti)));
         Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
 
         emphasis.appendChild(docBase.getDocument().importNode(node, true));
@@ -253,6 +256,7 @@ public class DokumenttiUtils {
         if (string == null) {
             return "";
         }
+        string = removeInternalLink(string);
         String cleanXmlString = Jsoup.clean(stripNonValidXMLCharacters(string), ValidHtml.WhitelistType.NORMAL_PDF.getWhitelist());
         return StringEscapeUtils.unescapeHtml4(cleanXmlString.replace("&nbsp;", " "));
     }

@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class OpsOppiaineExportDto {
     private boolean oma;
     private OppiaineExportDto oppiaine;
+    private Integer jnro;
 }

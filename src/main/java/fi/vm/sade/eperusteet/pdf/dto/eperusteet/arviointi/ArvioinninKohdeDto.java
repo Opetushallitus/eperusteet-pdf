@@ -19,7 +19,9 @@ import java.util.Set;
 public class ArvioinninKohdeDto {
     private LokalisoituTekstiDto otsikko;
     private LokalisoituTekstiDto selite;
-    @JsonProperty("_arviointiasteikko")
-    private Reference arviointiasteikko;
+    @JsonProperty("_arviointiAsteikko")
+    private Reference arviointiAsteikko;
+    @JsonProperty("arviointiAsteikko")
+    private ArviointiAsteikkoDto arviointiAsteikkoDto;
     private Set<OsaamistasonKriteeriDto> osaamistasonKriteerit;
 }
