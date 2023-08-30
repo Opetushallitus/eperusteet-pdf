@@ -17,6 +17,7 @@ import fi.vm.sade.eperusteet.pdf.service.eperusteet.EperusteetDokumenttiBuilderS
 import fi.vm.sade.eperusteet.pdf.service.eperusteet.KVLiiteBuilderService;
 import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
 import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
+import fi.vm.sade.eperusteet.pdf.service.external.YlopsService;
 import fi.vm.sade.eperusteet.pdf.service.ylops.YlopsDokumenttiBuilderService;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
@@ -61,6 +62,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Autowired
     private EperusteetService eperusteetService;
+
+    @Autowired
+    private YlopsService ylopsService;
 
     @Override
     @Async(value = "docTaskExecutor")
@@ -113,7 +117,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         try {
             OpetussuunnitelmaExportDto ops = objectMapper.readValue(opsJson, OpetussuunnitelmaExportDto.class);
             GeneratorData generatorData = GeneratorData.of(ops.getId(), dokumenttiId, kieli, DokumenttiTyyppi.YLOPS, null);
-            PerusteKaikkiDto perusteKaikkiDto = eperusteetService.getPerusteKaikkiDto(ops.getPerusteenId(), null);
+            PerusteKaikkiDto perusteKaikkiDto = ylopsService.getPerusteKaikkiDto(ops.getPerusteenId());
 
             log.info("Luodaan PDF-dokumenttia (docId={}, {}, {})", dokumenttiId, generatorData.getTyyppi(), kieli);
             Document doc = ylopsDokumenttiBuilderService.generateXML(ops, perusteKaikkiDto, generatorData);

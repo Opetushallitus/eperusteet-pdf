@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,7 +26,7 @@ public class OppiaineLaajaDto extends OppiaineBaseDto {
 
     public Optional<OppiaineenVuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuus(Long id) {
         return vuosiluokkakokonaisuudet.stream()
-                .filter(v -> v.getVuosiluokkaKokonaisuus().get().getIdLong().equals(id))
+                .filter(v -> Optional.ofNullable(v.getVuosiluokkaKokonaisuus()).orElse(Optional.of(Reference.of(0L))).map(Reference::getIdLong).orElse(0L).equals(id))
                 .findAny();
     }
 }

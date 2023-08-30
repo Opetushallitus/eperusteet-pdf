@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.pdf.service.external;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiKappaleViiteDto;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
@@ -85,6 +86,20 @@ public class YlopsServiceImpl implements YlopsService {
             return objectMapper.readValue(response.getBody(), OrganisaatioDto.class);
         } catch (Exception e) {
             throw new ServiceException("Organisaatiota ei saatu haettua: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public PerusteKaikkiDto getPerusteKaikkiDto(Long perusteId) {
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API + "ulkopuoliset/peruste/{perusteId}",
+                    HttpMethod.GET,
+                    httpEntity,
+                    String.class,
+                    perusteId);
+            return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
+        } catch (Exception e) {
+            throw new ServiceException("Perustedataa ei saatu haettua: " + e.getMessage());
         }
     }
 }
