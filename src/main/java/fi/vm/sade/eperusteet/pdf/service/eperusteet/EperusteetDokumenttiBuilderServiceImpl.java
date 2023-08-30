@@ -1504,18 +1504,19 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             LokalisoituTekstiDto ammattitaitovaatimukset) {
 
         String ammattitaitovaatimuksetText = getTextString(docBase, ammattitaitovaatimukset);
-        // Ohitetaan jos ammattitaitovaatimuksia ei ole määritelty millään tavoilla
-        if (ObjectUtils.isEmpty(ammattitaitovaatimuksetText) && CollectionUtils.isEmpty(ammattitaitovaatimuksetLista) && ammattitaitovaatimukset2019 == null) {
-            return;
+
+        if (!ObjectUtils.isEmpty(ammattitaitovaatimuksetText) || !CollectionUtils.isEmpty(ammattitaitovaatimuksetLista) || ammattitaitovaatimukset2019 != null) {
+            addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset.title", docBase.getKieli()), "h5");
         }
 
-        addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset.title", docBase.getKieli()), "h5");
+        if (ammattitaitovaatimukset2019 != null) {
+            addAmmattitaitovaatimukset2019(docBase, ammattitaitovaatimukset2019);
+            return;
+        }
 
         if (!ObjectUtils.isEmpty(ammattitaitovaatimuksetText)) {
             addTeksti(docBase, ammattitaitovaatimuksetText, "div");
         }
-
-        addAmmattitaitovaatimukset2019(docBase, ammattitaitovaatimukset2019);
 
         if (ammattitaitovaatimuksetLista != null) {
             ammattitaitovaatimuksetLista.forEach(ka -> {
