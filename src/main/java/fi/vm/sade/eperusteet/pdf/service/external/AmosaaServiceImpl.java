@@ -48,13 +48,13 @@ public class AmosaaServiceImpl implements AmosaaService {
     }
 
     @Override
-    public PerusteKaikkiDto getPerusteKaikkiDto(Long id) {
+    public PerusteKaikkiDto getPerusteKaikkiDto(Long cachedPerusteId) {
         try {
             ResponseEntity<String> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_PERUSTEET_API + "{id}/kaikki",
                     HttpMethod.GET,
                     httpEntity,
                     String.class,
-                    id);
+                    cachedPerusteId);
             return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
         } catch (Exception e) {
             throw new ServiceException("Perustedataa ei saatu haettua: " + e.getMessage());

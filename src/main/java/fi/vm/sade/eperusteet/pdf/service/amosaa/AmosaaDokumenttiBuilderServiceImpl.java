@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.ops.SuorituspolkuRiviDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.CachedPerusteBaseDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.CachedPerusteKevytDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimuksenKohdeDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimuksenKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimusDto;
@@ -172,7 +174,15 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         if (ops.getPeruste() != null) {
             PerusteKaikkiDto perusteKaikkiDto = amosaaService.getPerusteKaikkiDto(ops.getPeruste().getId());
             docBase.setPeruste(perusteKaikkiDto);
+            docBase.getTutkinnonOsienPerusteet().add(perusteKaikkiDto);
         }
+
+        docBase.getTutkinnonOsienPerusteet().addAll(
+                CollectionUtil.treeToStream(ops.getSisalto(), SisaltoViiteExportDto::getLapset)
+                    .filter(sv -> sv.getPeruste() != null)
+                    .map(sv -> sv.getPeruste().getId())
+                    .map(cachedPerusteId -> amosaaService.getPerusteKaikkiDto(cachedPerusteId))
+                    .collect(Collectors.toList()));
 
         // Kansilehti & Infosivu
         addMetaPages(docBase);
@@ -306,15 +316,17 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                         break;
                     case PERUSTEESTA:
                         Long perusteenTutkinnonosaId = tosa.getPerusteentutkinnonosa();
-                        PerusteKaikkiDto peruste = docBase.getPeruste();
-                        if (perusteenTutkinnonosaId == null || peruste == null) {
+                        if (perusteenTutkinnonosaId == null || CollectionUtils.isEmpty(docBase.getTutkinnonOsienPerusteet())) {
                             break;
-                        }
 
-                        peruste.getTutkinnonOsat().stream()
+                        }
+                        Optional<TutkinnonOsaKaikkiDto> perusteTosa = docBase.getTutkinnonOsienPerusteet().stream()
+                                .map(PerusteKaikkiDto::getTutkinnonOsat)
+                                .flatMap(Collection::stream)
                                 .filter(dto -> dto.getId().equals(perusteenTutkinnonosaId))
-                                .findAny()
-                                .ifPresent(dto -> otsikkoBuilder
+                                .findAny();
+
+                        perusteTosa.ifPresent(dto -> otsikkoBuilder
                                         .append(" (")
                                         .append(dto.getKoodiArvo())
                                         .append(")"));
@@ -637,7 +649,10 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 break;
             case PERUSTEESTA:
                 if (tutkinnonOsa.getPerusteentutkinnonosa() != null) {
-                    addPerusteenTutkinnonOsa(docBase, tutkinnonOsa.getPerusteentutkinnonosa());
+                    PerusteKaikkiDto perusteKaikkiDto = docBase.getTutkinnonOsienPerusteet().stream()
+                            .filter(peruste -> peruste.getTutkinnonOsat().stream().anyMatch(dto -> dto.getId().equals(tutkinnonOsa.getPerusteentutkinnonosa())))
+                            .findFirst().get();
+                    addPerusteenTutkinnonOsa(docBase, tutkinnonOsa.getPerusteentutkinnonosa(), perusteKaikkiDto);
                 }
                 break;
             default:
@@ -743,16 +758,17 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             sisaltoViiteDto.getOsaAlueet().stream()
                     .sorted(Comparator.comparingInt(OmaOsaAlueExportDto::sort) )
                     .forEach(osaAlue -> {
-                addOmaOsaAlue(docBase, osaAlue);
+                PerusteKaikkiDto tosaPeruste = docBase.getTutkinnonOsienPerusteet().stream()
+                                                        .filter(peruste -> peruste.getId().equals(Optional.ofNullable(sisaltoViiteDto.getPeruste()).map(CachedPerusteBaseDto::getPerusteId).orElse(0L)))
+                                                        .findAny().orElse(docBase.getPeruste());
+                addOmaOsaAlue(docBase, osaAlue, tosaPeruste);
                 docBase.getGenerator().increaseNumber();
             });
             docBase.getGenerator().decreaseDepth();
         }
     }
 
-    private void addOmaOsaAlue(DokumenttiAmosaa docBase, OmaOsaAlueExportDto omaOsaAlueDto) {
-        PerusteKaikkiDto peruste = docBase.getPeruste();
-
+    private void addOmaOsaAlue(DokumenttiAmosaa docBase, OmaOsaAlueExportDto omaOsaAlueDto, PerusteKaikkiDto peruste) {
         StringBuilder otsikko = new StringBuilder(getTextString(docBase, omaOsaAlueDto.getNimi()));
         if (omaOsaAlueDto.getKoodiArvo() != null)  {
             otsikko.append(" (" + omaOsaAlueDto.getKoodiArvo().toUpperCase() + ")");
@@ -809,57 +825,57 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                     addLokalisoituteksti(docBase, vapaaTeksti.getTeksti(), "div");
                 });
             });
+        }
 
-            StringBuilder sisaltoOtsikko = new StringBuilder();
-            OsaAlueKokonaanDto perusteenOsaAlue = null;
+        StringBuilder sisaltoOtsikko = new StringBuilder();
+        OsaAlueKokonaanDto perusteenOsaAlue = null;
 
-            if (omaOsaAlueDto.getPerusteenOsaAlueId() != null) {
-                perusteenOsaAlue = peruste.getTutkinnonOsat().stream()
-                        .map(TutkinnonOsaKaikkiDto::getOsaAlueet)
-                        .flatMap(Collection::stream)
-                        .filter(posaAlue -> posaAlue.getId().equals(omaOsaAlueDto.getPerusteenOsaAlueId()))
-                        .findFirst().orElse(null);
+        if (omaOsaAlueDto.getPerusteenOsaAlueId() != null) {
+            perusteenOsaAlue = peruste.getTutkinnonOsat().stream()
+                    .map(TutkinnonOsaKaikkiDto::getOsaAlueet)
+                    .flatMap(Collection::stream)
+                    .filter(posaAlue -> posaAlue.getId().equals(omaOsaAlueDto.getPerusteenOsaAlueId()))
+                    .findFirst().orElse(null);
 
-                if (perusteenOsaAlue == null) {
-                    return;
-                }
+            if (perusteenOsaAlue == null) {
+                return;
+            }
+        }
+
+        if (perusteenOsaAlue != null) {
+            addTeksti(docBase, messages.translate("docgen.perusteen-sisalto", docBase.getKieli()), "h5");
+            if (omaOsaAlueDto.getTyyppi().equals(OmaOsaAlueTyyppi.PAKOLLINEN)) {
+                sisaltoOtsikko.append(messages.translate("docgen.tutke2.pakolliset_osaamistavoitteet.title", docBase.getKieli()));
+                sisaltoOtsikko.append(", " + perusteenOsaAlue.getPakollisetOsaamistavoitteet().getLaajuus());
             }
 
-            if (perusteenOsaAlue != null) {
-                addTeksti(docBase, messages.translate("docgen.perusteen-sisalto", docBase.getKieli()), "h5");
-                if (omaOsaAlueDto.getTyyppi().equals(OmaOsaAlueTyyppi.PAKOLLINEN)) {
-                    sisaltoOtsikko.append(messages.translate("docgen.tutke2.pakolliset_osaamistavoitteet.title", docBase.getKieli()));
-                    sisaltoOtsikko.append(", " + perusteenOsaAlue.getPakollisetOsaamistavoitteet().getLaajuus());
-                }
+            if (omaOsaAlueDto.getTyyppi().equals(OmaOsaAlueTyyppi.VALINNAINEN)) {
+                sisaltoOtsikko.append(messages.translate("docgen.tutke2.valinnaiset_osaamistavoitteet.title", docBase.getKieli()));
+                sisaltoOtsikko.append(", " + perusteenOsaAlue.getValinnaisetOsaamistavoitteet().getLaajuus());
+            }
+        } else {
+            addTeksti(docBase, messages.translate("docgen.sisalto", docBase.getKieli()), "h5");
+            sisaltoOtsikko.append(messages.translate("docgen.osaamistavoitteet", docBase.getKieli()));
+            sisaltoOtsikko.append(", " + omaOsaAlueDto.getLaajuus());
+        }
 
-                if (omaOsaAlueDto.getTyyppi().equals(OmaOsaAlueTyyppi.VALINNAINEN)) {
-                    sisaltoOtsikko.append(messages.translate("docgen.tutke2.valinnaiset_osaamistavoitteet.title", docBase.getKieli()));
-                    sisaltoOtsikko.append(", " + perusteenOsaAlue.getValinnaisetOsaamistavoitteet().getLaajuus());
-                }
-            } else {
-                addTeksti(docBase, messages.translate("docgen.sisalto", docBase.getKieli()), "h5");
-                sisaltoOtsikko.append(messages.translate("docgen.osaamistavoitteet", docBase.getKieli()));
-                sisaltoOtsikko.append(", " + omaOsaAlueDto.getLaajuus());
+        sisaltoOtsikko.append(" " + messages.translate("docgen.laajuus.osp", docBase.getKieli()));
+        addTeksti(docBase, sisaltoOtsikko.toString(), "h6");
+
+        if (perusteenOsaAlue != null) {
+
+            if (omaOsaAlueDto.getTyyppi().equals(OmaOsaAlueTyyppi.PAKOLLINEN)) {
+                addAmmattitaitovaatimuksenKohdealue(docBase, perusteenOsaAlue.getPakollisetOsaamistavoitteet().getTavoitteet());
             }
 
-            sisaltoOtsikko.append(" " + messages.translate("docgen.laajuus.osp", docBase.getKieli()));
-            addTeksti(docBase, sisaltoOtsikko.toString(), "h6");
-
-            if (perusteenOsaAlue != null) {
-
-                if (omaOsaAlueDto.getTyyppi().equals(OmaOsaAlueTyyppi.PAKOLLINEN)) {
-                    addAmmattitaitovaatimuksenKohdealue(docBase, perusteenOsaAlue.getPakollisetOsaamistavoitteet().getTavoitteet());
-                }
-
-                if (omaOsaAlueDto.getTyyppi().equals(OmaOsaAlueTyyppi.VALINNAINEN)) {
-                    addAmmattitaitovaatimuksenKohdealue(docBase, perusteenOsaAlue.getValinnaisetOsaamistavoitteet().getTavoitteet());
-                }
-
-                addGeneerinenArviointi(docBase, mapper.map(perusteenOsaAlue.getArviointi(), GeneerinenArviointiasteikkoKaikkiDto.class));
-            } else {
-                addAmmattitaitovaatimuksenKohdealue(docBase, mapper.map(omaOsaAlueDto.getOsaamistavoitteet(), Ammattitaitovaatimukset2019Dto.class));
-                addGeneerinenArviointi(docBase, omaOsaAlueDto.getGeneerinenArviointiasteikko());
+            if (omaOsaAlueDto.getTyyppi().equals(OmaOsaAlueTyyppi.VALINNAINEN)) {
+                addAmmattitaitovaatimuksenKohdealue(docBase, perusteenOsaAlue.getValinnaisetOsaamistavoitteet().getTavoitteet());
             }
+
+            addGeneerinenArviointi(docBase, mapper.map(perusteenOsaAlue.getArviointi(), GeneerinenArviointiasteikkoKaikkiDto.class));
+        } else {
+            addAmmattitaitovaatimuksenKohdealue(docBase, mapper.map(omaOsaAlueDto.getOsaamistavoitteet(), Ammattitaitovaatimukset2019Dto.class));
+            addGeneerinenArviointi(docBase, omaOsaAlueDto.getGeneerinenArviointiasteikko());
         }
     }
 
@@ -1039,6 +1055,10 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
     private void addAmmattitaitovaatimuksenKohdealue(DokumenttiBase docBase,
                                                      Ammattitaitovaatimukset2019Dto ammattitaitovaatimukset2019Dto) {
+        if (ammattitaitovaatimukset2019Dto == null) {
+            return;
+        }
+
         DokumenttiTaulukko taulukko = new DokumenttiTaulukko();
         StringBuilder vaatimuksenKohteetBuilder = new StringBuilder();
         ammattitaitovaatimukset2019Dto.getKohdealueet().forEach(ammattitaitovaatimuksenKohde -> {
@@ -1192,8 +1212,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         arvioinninKohteetBuilder.append(taulukko.toString());
     }
 
-    private void addPerusteenTutkinnonOsa(DokumenttiAmosaa docBase, Long perusteenTutkinnonosaId) {
-        PerusteKaikkiDto peruste = docBase.getPeruste();
+    private void addPerusteenTutkinnonOsa(DokumenttiAmosaa docBase, Long perusteenTutkinnonosaId, PerusteKaikkiDto peruste) {
         if (peruste == null) {
             return;
         }
