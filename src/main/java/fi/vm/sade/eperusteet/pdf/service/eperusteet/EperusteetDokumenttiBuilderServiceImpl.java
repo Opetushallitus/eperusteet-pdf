@@ -785,7 +785,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         // moduulit
 
         if (oa.getModuulit().stream().anyMatch(Lops2019ModuuliBaseDto::getPakollinen)) {
-            addTeksti(docBase, messages.translate("pakolliset-opinnot", docBase.getKieli()), "h5");
+            addTeksti(docBase, messages.translate("pakolliset-moduulit", docBase.getKieli()), "h5");
 
             oa.getModuulit().stream().filter(Lops2019ModuuliBaseDto::getPakollinen).forEach(moduuli -> {
                 addModuuli(docBase, moduuli);
@@ -793,7 +793,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         }
 
         if (oa.getModuulit().stream().anyMatch(moduuli -> !moduuli.getPakollinen())) {
-            addTeksti(docBase, messages.translate("valtakunnalliset-valinnaiset-opinnot", docBase.getKieli()), "h5");
+            addTeksti(docBase, messages.translate("valinnaiset-moduulit", docBase.getKieli()), "h5");
 
             oa.getModuulit().stream().filter(moduuli -> !moduuli.getPakollinen()).forEach(moduuli -> {
                 addModuuli(docBase, moduuli);
