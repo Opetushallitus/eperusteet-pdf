@@ -1224,6 +1224,8 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         if (optPerusteenTutkinnonosa.isPresent()) {
             TutkinnonOsaKaikkiDto perusteenTutkinnonosa = optPerusteenTutkinnonosa.get();
 
+            addLokalisoituteksti(docBase, perusteenTutkinnonosa.getKuvaus(), "div");
+
             if (perusteenTutkinnonosa.getTyyppi().equals(TutkinnonOsaTyyppi.NORMAALI)) {
 
                 // Tavoitteet
@@ -1231,7 +1233,6 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                     addTeksti(docBase, messages.translate("docgen.tavoitteet", docBase.getKieli()), "h5");
                     addLokalisoituteksti(docBase, perusteenTutkinnonosa.getTavoitteet(), "div");
                 }
-
 
                 // Ammattitaitovaatimukset
                 if (perusteenTutkinnonosa.getAmmattitaitovaatimuksetLista() != null) {
@@ -1269,41 +1270,41 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                             .filter(osaAlue -> osaAlue.getNimi() != null)
                             .forEach(osaAlue -> {
 
-                        // Nimi
-                        addTeksti(docBase, getTextString(docBase, osaAlue.getNimi()), "h5");
+                                // Nimi
+                                addTeksti(docBase, getTextString(docBase, osaAlue.getNimi()), "h5");
 
-                        // Kuvaus
-                        if (osaAlue.getKuvaus() != null) {
-                            addTeksti(docBase, getTextString(docBase, osaAlue.getKuvaus()), "div");
-                        }
+                                // Kuvaus
+                                if (osaAlue.getKuvaus() != null) {
+                                    addTeksti(docBase, getTextString(docBase, osaAlue.getKuvaus()), "div");
+                                }
 
-                        // Osaamistavoitteet
-                        if (!ObjectUtils.isEmpty(osaAlue.getOsaamistavoitteet())) {
-                            osaAlue.getOsaamistavoitteet().forEach(osaamistavoite -> {
+                                // Osaamistavoitteet
+                                if (!ObjectUtils.isEmpty(osaAlue.getOsaamistavoitteet())) {
+                                    osaAlue.getOsaamistavoitteet().forEach(osaamistavoite -> {
 
-                                addTeksti(docBase, getTextString(docBase, osaamistavoite.getNimi()), "h5");
+                                        addTeksti(docBase, getTextString(docBase, osaamistavoite.getNimi()), "h5");
 
-                                String otsikkoAvain = osaamistavoite.isPakollinen() ? "docgen.tutke2.pakolliset_osaamistavoitteet.title"
-                                        : "docgen.tutke2.valinnaiset_osaamistavoitteet.title";
-                                String otsikko = messages.translate(otsikkoAvain, docBase.getKieli());
-                                addTeksti(docBase, otsikko, "h5");
+                                        String otsikkoAvain = osaamistavoite.isPakollinen() ? "docgen.tutke2.pakolliset_osaamistavoitteet.title"
+                                                : "docgen.tutke2.valinnaiset_osaamistavoitteet.title";
+                                        String otsikko = messages.translate(otsikkoAvain, docBase.getKieli());
+                                        addTeksti(docBase, otsikko, "h5");
 
-                                addTeksti(docBase, getTextString(docBase, osaamistavoite.getTavoitteet()), "div");
+                                        addTeksti(docBase, getTextString(docBase, osaamistavoite.getTavoitteet()), "div");
 
-                                // Arviointi
-                                addTeksti(docBase, messages.translate("docgen.tutke2.arvioinnin_kohteet.title", docBase.getKieli()), "h6");
-                                ArviointiDto arviointi = osaamistavoite.getArviointi();
-                                arviointi.getArvioinninKohdealueet().forEach(dto -> addArvioinninKohdealue(docBase, dto));
+                                        // Arviointi
+                                        addTeksti(docBase, messages.translate("docgen.tutke2.arvioinnin_kohteet.title", docBase.getKieli()), "h6");
+                                        ArviointiDto arviointi = osaamistavoite.getArviointi();
+                                        arviointi.getArvioinninKohdealueet().forEach(dto -> addArvioinninKohdealue(docBase, dto));
 
-                                // Tunnustaminen
-                                addTeksti(docBase, messages.translate("docgen.tutke2.tunnustaminen.title", docBase.getKieli()), "h6");
-                                addTeksti(docBase, getTextString(docBase, osaamistavoite.getTunnustaminen()), "div");
+                                        // Tunnustaminen
+                                        addTeksti(docBase, messages.translate("docgen.tutke2.tunnustaminen.title", docBase.getKieli()), "h6");
+                                        addTeksti(docBase, getTextString(docBase, osaamistavoite.getTunnustaminen()), "div");
 
-                                // Ammattitaitovaatimukset
-                                List<AmmattitaitovaatimusKohdealueetDto> ammattitaitovaatimukset = osaamistavoite.getAmmattitaitovaatimuksetLista();
-                                ammattitaitovaatimukset.forEach(dto -> addAmmattitaitovaatimuksenKohdealue(docBase, mapper.map(dto, AmmattitaitovaatimuksenKohdealueDto.class)));
-                            });
-                        }
+                                        // Ammattitaitovaatimukset
+                                        List<AmmattitaitovaatimusKohdealueetDto> ammattitaitovaatimukset = osaamistavoite.getAmmattitaitovaatimuksetLista();
+                                        ammattitaitovaatimukset.forEach(dto -> addAmmattitaitovaatimuksenKohdealue(docBase, mapper.map(dto, AmmattitaitovaatimuksenKohdealueDto.class)));
+                                    });
+                                }
 
                                 if (osaAlue.getValmaTelmaSisalto() != null) {
                                     addValmatelmaSisalto(docBase, osaAlue.getValmaTelmaSisalto());
