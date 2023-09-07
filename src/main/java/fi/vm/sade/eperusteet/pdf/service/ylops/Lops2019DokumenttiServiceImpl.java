@@ -34,6 +34,7 @@ import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.pdf.utils.Lops2019Utils;
 import fi.vm.sade.eperusteet.pdf.utils.Pair;
 import lombok.extern.slf4j.Slf4j;
+import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,9 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
 
     @Autowired
     private LocalizedMessagesService messages;
+
+    @Autowired
+    private MapperFacade mapper;
 
     @Override
     public void addLops2019Sisalto(DokumenttiYlops docBase) {
@@ -153,8 +157,8 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
             List<Lops2019PaikallinenOppiaineExportDto> paikallisetOppiaineet,
             Map<String, List<Lops2019OpintojaksoDto>> opintojaksotMap
     ) {
-
-        return perusteOppiaineet.stream()
+        List<Lops2019OppiaineKaikkiDto> copyList = mapper.mapAsList(perusteOppiaineet, Lops2019OppiaineKaikkiDto.class);
+        return copyList.stream()
                 .peek(oppiaine -> {
                     if (!CollectionUtils.isEmpty(oppiaine.getOppimaarat())) {
                         // Piilotetaan oppimäärät, joilla ei ole opintojaksoja
@@ -350,7 +354,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
                     return addOppiaine(docBase, (Lops2019OppiaineKaikkiDto) om, omKoodi != null ? opintojaksotMap.get(omKoodi.getUri()) : null, opintojaksotMap, oppiaineJarjestykset, moduulit);
                 },
                 pom -> {
-                    Lops2019OppiaineKaikkiDto perusteOa = docBase.getPeruste().getLops2019Sisalto().getOppiaineet().stream().filter(poa -> poa.getId().equals(oa.getId())).findFirst().get();
+                    Lops2019OppiaineKaikkiDto perusteOa = docBase.getPerusteOppiaineetAndOppimaarat().stream().filter(poa -> poa.getId().equals(oa.getId())).findFirst().get();
                     ArrayList<Lops2019OppiaineKaikkiDto> oaJaOppimaarat = new ArrayList<>();
                     oaJaOppimaarat.add(perusteOa);
                     oaJaOppimaarat.addAll(perusteOa.getOppimaarat());

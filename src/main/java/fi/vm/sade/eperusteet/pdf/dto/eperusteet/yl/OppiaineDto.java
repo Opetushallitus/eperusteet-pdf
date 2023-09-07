@@ -27,11 +27,11 @@ public class OppiaineDto extends OppiaineBaseUpdateDto {
     private List<KevytTekstiKappaleDto> vapaatTekstit;
 
     public Optional<LokalisoituTekstiDto> getNimi() {
-        if (koodi != null) {
-            return Optional.of(koodi.getNimi());
+        if (super.getNimi().isPresent()) {
+            return super.getNimi();
         }
 
-        return super.getNimi();
+        return Optional.of(koodi).map(KoodiDto::getNimi);
     }
 
     public Optional<OppiaineenVuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuus(String tunniste) {
