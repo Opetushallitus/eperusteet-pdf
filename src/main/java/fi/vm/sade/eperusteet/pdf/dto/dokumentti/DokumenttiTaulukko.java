@@ -91,6 +91,17 @@ public class DokumenttiTaulukko {
 
         builder.append("<table border=\"1\">");
 
+        // Otsikko rivi
+        if (otsikkoSarakkeet.size() > 0) {
+            builder.append("<tr bgcolor=\"" + TABLE_HEADER_BGCOLOR + " \">");
+            otsikkoSarakkeet.forEach(sarake -> {
+                builder.append("<th>");
+                builder.append(sarake);
+                builder.append("</th>");
+            });
+            builder.append("</tr>");
+        }
+
         rivit.forEach((rivi) -> {
             builder.append(String.format("<tr bgcolor=\"%s\" fontcolor=\"%s\">", rivi.getBackgroundColor(), rivi.getFontColor()));
             builder.append(rivi.toString());

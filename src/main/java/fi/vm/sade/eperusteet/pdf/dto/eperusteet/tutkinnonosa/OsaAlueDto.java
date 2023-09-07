@@ -32,7 +32,6 @@ public class OsaAlueDto {
     private ValmaTelmaSisaltoDto valmaTelmaSisalto;
     private OsaamistavoiteDto pakollisetOsaamistavoitteet;
     private OsaamistavoiteDto valinnaisetOsaamistavoitteet;
-    private GeneerinenArviointiasteikkoDto geneerinenArviointiasteikko;
 
     public String getKoodiUri() {
         KoodiDto koodi = this.getKoodi();

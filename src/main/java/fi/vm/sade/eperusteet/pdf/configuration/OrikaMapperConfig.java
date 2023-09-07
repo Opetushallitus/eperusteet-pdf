@@ -8,6 +8,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Arviointi2020Dto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ammattitaitovaatimukset.AmmattitaitovaatimusKohdealueetDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.Lops2019OppiaineKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.Ammattitaitovaatimukset2019Dto;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
@@ -27,6 +28,7 @@ public class OrikaMapperConfig {
         mapperFactory.classMap(ArviointiDto.class, fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArviointiDto.class).byDefault();
         mapperFactory.classMap(AmmattitaitovaatimusKohdealueetDto.class, AmmattitaitovaatimuksenKohdealueDto.class).byDefault();
         mapperFactory.classMap(LokalisoituTekstiDto.class, LokalisoituTekstiDto.class).byDefault();
+        mapperFactory.classMap(Lops2019OppiaineKaikkiDto.class, Lops2019OppiaineKaikkiDto.class).byDefault();
 
         return mapperFactory.getMapperFacade();
     }

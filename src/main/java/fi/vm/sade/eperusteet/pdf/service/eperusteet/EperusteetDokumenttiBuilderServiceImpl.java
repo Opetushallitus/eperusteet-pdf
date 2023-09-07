@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.MuodostumisSaantoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiPeruste;
@@ -16,6 +17,7 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.pdf.dto.enums.LaajuusYksikko;
+import fi.vm.sade.eperusteet.pdf.dto.enums.OsaAlueTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.dto.enums.TavoiteAlueTyyppi;
@@ -32,7 +34,6 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.Lops2019OppiaineKaikkiD
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.Lops2019SisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019ArviointiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019OpiskeluymparistoTyotavatDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019OppiaineLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019OppiaineTavoitealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019OppiaineTavoitteetDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019TehtavaDto;
@@ -50,14 +51,14 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TutkintonimikeKoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.Ammattitaitovaatimukset2019Dto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.Ammattitaitovaatimus2019Dto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.AmmattitaitovaatimustenKohdealue2019Dto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaAlueKokonaanDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaAlueKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaamisenTavoiteDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.Osaamistavoite2020Dto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaamistavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaamistavoiteLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.ValmaTelmaSisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
-import fi.vm.sade.eperusteet.pdf.dto.common.RakenneOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteSuppeaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.TuvaLaajaAlainenOsaaminenDto;
@@ -122,7 +123,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeader;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addLokalisoituteksti;
@@ -1880,110 +1880,133 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     }
 
     private void addTutke2Osat(DokumenttiPeruste docBase, TutkinnonOsaKaikkiDto osa) {
-        List<OsaAlueKokonaanDto> osaAlueet = osa.getOsaAlueet();
+        List<OsaAlueKaikkiDto> osaAlueet = osa.getOsaAlueet();
 
         osaAlueet.forEach(osaAlue -> {
-                    String nimi = getTextString(docBase, osaAlue.getNimi());
-                    addTeksti(docBase, nimi, "h5");
+            String nimi = getTextString(docBase, osaAlue.getNimi());
+            addTeksti(docBase, nimi, "h5");
 
-                    List<OsaamistavoiteLaajaDto> osaamistavoitteet = osaAlue.getOsaamistavoitteet();
-                    ValmaTelmaSisaltoDto valmatelma = osaAlue.getValmaTelmaSisalto();
+            List<OsaamistavoiteLaajaDto> osaamistavoitteet = osaAlue.getOsaamistavoitteet();
+            ValmaTelmaSisaltoDto valmatelma = osaAlue.getValmaTelmaSisalto();
 
-                    addValmatelmaSisalto(docBase, valmatelma);
+            addValmatelmaSisalto(docBase, valmatelma);
 
-                    // Parita pakollinen ja valinnainen osaamistavoite
-                    Map<Long, Pair<OsaamistavoiteDto, OsaamistavoiteDto>> tavoiteParit = new LinkedHashMap<>();
+            if (OsaAlueTyyppi.OSAALUE2020.equals(osaAlue.getTyyppi())) {
+                boolean pakollistaSisaltoa = osaamistavoitteellaSisaltoa(osaAlue.getPakollisetOsaamistavoitteet(), docBase.getKieli());
+                boolean valinnaistaSisaltoa = osaamistavoitteellaSisaltoa(osaAlue.getValinnaisetOsaamistavoitteet(), docBase.getKieli());
 
-                    if (osaamistavoitteet != null) {
-                        for (OsaamistavoiteLaajaDto tavoite : osaamistavoitteet) {
-                            Long key = tavoite.isPakollinen()
-                                    ? tavoite.getId()
-                                    : (tavoite.getEsitieto() != null ? tavoite.getEsitieto().getId() : tavoite.getId());
+                if (pakollistaSisaltoa) {
+                    String otsikko = messages.translate("docgen.tutke2.pakolliset_osaamistavoitteet.title", docBase.getKieli())
+                            + getLaajuusSuffiksi(osaAlue.getPakollisetOsaamistavoitteet().getLaajuus(), docBase.getLaajuusYksikko(), docBase.getKieli());
+                    addTeksti(docBase, otsikko, "h5");
 
-                            if (tavoiteParit.containsKey(key)) {
-                                Pair<OsaamistavoiteDto, OsaamistavoiteDto> pari = tavoiteParit.get(key);
-                                pari = tavoite.isPakollinen()
-                                        ? Pair.of(tavoite, pari.getSecond()) : Pair.of(pari.getFirst(), tavoite);
-                                tavoiteParit.put(key, pari);
+                    addAmmattitaitovaatimukset2019(docBase, osaAlue.getPakollisetOsaamistavoitteet().getTavoitteet());
+                }
 
-                            } else {
-                                Pair<OsaamistavoiteDto, OsaamistavoiteDto> pari = tavoite.isPakollinen()
-                                        ? Pair.of(tavoite, (OsaamistavoiteDto) null) : Pair
-                                        .of((OsaamistavoiteDto) null, tavoite);
-                                tavoiteParit.put(key, pari);
-                            }
+                if (valinnaistaSisaltoa) {
+                    String otsikko = messages.translate("docgen.tutke2.valinnaiset_osaamistavoitteet.title", docBase.getKieli())
+                            + getLaajuusSuffiksi(osaAlue.getValinnaisetOsaamistavoitteet().getLaajuus(), docBase.getLaajuusYksikko(), docBase.getKieli());
+                    addTeksti(docBase, otsikko, "h5");
+
+                    addAmmattitaitovaatimukset2019(docBase, osaAlue.getValinnaisetOsaamistavoitteet().getTavoitteet());
+                }
+
+                if (pakollistaSisaltoa || valinnaistaSisaltoa) {
+                    addGeneerinenArviointi(docBase, osaAlue.getArviointi());
+                }
+
+            } else {
+
+                // Parita pakollinen ja valinnainen osaamistavoite
+                Map<Long, Pair<OsaamistavoiteDto, OsaamistavoiteDto>> tavoiteParit = new LinkedHashMap<>();
+
+                if (osaamistavoitteet != null) {
+                    for (OsaamistavoiteLaajaDto tavoite : osaamistavoitteet) {
+                        Long key = tavoite.isPakollinen()
+                                ? tavoite.getId()
+                                : (tavoite.getEsitieto() != null ? tavoite.getEsitieto().getId() : tavoite.getId());
+
+                        if (tavoiteParit.containsKey(key)) {
+                            Pair<OsaamistavoiteDto, OsaamistavoiteDto> pari = tavoiteParit.get(key);
+                            pari = tavoite.isPakollinen()
+                                    ? Pair.of(tavoite, pari.getSecond()) : Pair.of(pari.getFirst(), tavoite);
+                            tavoiteParit.put(key, pari);
+
+                        } else {
+                            Pair<OsaamistavoiteDto, OsaamistavoiteDto> pari = tavoite.isPakollinen()
+                                    ? Pair.of(tavoite, (OsaamistavoiteDto) null) : Pair
+                                    .of((OsaamistavoiteDto) null, tavoite);
+                            tavoiteParit.put(key, pari);
                         }
                     }
+                }
 
-                    for (Pair<OsaamistavoiteDto, OsaamistavoiteDto> tavoitePari : tavoiteParit.values()) {
-                        OsaamistavoiteLaajaDto pakollinen = (OsaamistavoiteLaajaDto) tavoitePari.getFirst();
-                        OsaamistavoiteLaajaDto valinnainen = (OsaamistavoiteLaajaDto) tavoitePari.getSecond();
+                for (Pair<OsaamistavoiteDto, OsaamistavoiteDto> tavoitePari : tavoiteParit.values()) {
+                    OsaamistavoiteLaajaDto pakollinen = (OsaamistavoiteLaajaDto) tavoitePari.getFirst();
+                    OsaamistavoiteLaajaDto valinnainen = (OsaamistavoiteLaajaDto) tavoitePari.getSecond();
 
-                        OsaamistavoiteDto otsikkoTavoite = pakollinen != null ? pakollinen : valinnainen;
-                        if (otsikkoTavoite == null) {
+                    OsaamistavoiteDto otsikkoTavoite = pakollinen != null ? pakollinen : valinnainen;
+                    if (otsikkoTavoite == null) {
+                        continue;
+                    }
+
+                    if (osa.getTyyppi().equals(TutkinnonOsaTyyppi.TUTKE2)) {
+                        String tavoitteenNimi = getTextString(docBase, otsikkoTavoite.getNimi());
+                        addTeksti(docBase, tavoitteenNimi, "h6");
+                    }
+
+                    OsaamistavoiteLaajaDto[] tavoiteLista = new OsaamistavoiteLaajaDto[]{pakollinen, valinnainen};
+                    for (OsaamistavoiteLaajaDto tavoite : tavoiteLista) {
+                        if (tavoite == null) {
                             continue;
                         }
 
-                        if (osa.getTyyppi().equals(TutkinnonOsaTyyppi.TUTKE2)) {
-                            String tavoitteenNimi = getTextString(docBase, otsikkoTavoite.getNimi());
-                            addTeksti(docBase, tavoitteenNimi, "h6");
+                        String otsikkoAvain = tavoite.isPakollinen() ? "docgen.tutke2.pakolliset_osaamistavoitteet.title"
+                                : "docgen.tutke2.valinnaiset_osaamistavoitteet.title";
+                        String otsikko = messages.translate(otsikkoAvain, docBase.getKieli())
+                                + getLaajuusSuffiksi(tavoite.getLaajuus(), docBase.getLaajuusYksikko(), docBase.getKieli());
+                        String tavoitteet = getTextString(docBase, tavoite.getTavoitteet());
+                        ArviointiDto arviointi = tavoite.getArviointi();
+                        LokalisoituTekstiDto tunnustaminen = tavoite.getTunnustaminen();
+                        List<AmmattitaitovaatimusKohdealueetDto> ammattitaitovaatimukset = tavoite.getAmmattitaitovaatimuksetLista();
+
+                        if (!ObjectUtils.isEmpty(tavoitteet) || tunnustaminen != null) {
+                            addTeksti(docBase, otsikko, "h5");
+                        } else {
+                            continue;
                         }
 
-                        OsaamistavoiteLaajaDto[] tavoiteLista = new OsaamistavoiteLaajaDto[]{pakollinen, valinnainen};
-                        for (OsaamistavoiteLaajaDto tavoite : tavoiteLista) {
-                            if (tavoite == null) {
-                                continue;
-                            }
-
-                            String otsikkoAvain = tavoite.isPakollinen() ? "docgen.tutke2.pakolliset_osaamistavoitteet.title"
-                                    : "docgen.tutke2.valinnaiset_osaamistavoitteet.title";
-                            String otsikko = messages.translate(otsikkoAvain, docBase.getKieli())
-                                    + getLaajuusSuffiksi(tavoite.getLaajuus(), docBase.getLaajuusYksikko(), docBase.getKieli());
-                            String tavoitteet = getTextString(docBase, tavoite.getTavoitteet());
-                            ArviointiDto arviointi = tavoite.getArviointi();
-                            LokalisoituTekstiDto tunnustaminen = tavoite.getTunnustaminen();
-                            List<AmmattitaitovaatimusKohdealueetDto> ammattitaitovaatimukset = tavoite.getAmmattitaitovaatimuksetLista();
-
-                            if (!ObjectUtils.isEmpty(tavoitteet) || tunnustaminen != null) {
-                                addTeksti(docBase, otsikko, "h5");
-                            } else {
-                                continue;
-                            }
-
-                            if (!ObjectUtils.isEmpty(tavoitteet)) {
-                                addTeksti(docBase, tavoitteet, "div");
-                            }
-
-                            addArviointi(docBase, arviointi, osa.getTyyppi());
-
-                            if (tunnustaminen != null) {
-                                addTeksti(docBase, messages.translate("docgen.tutke2.tunnustaminen.title", docBase.getKieli()), "h6");
-                                addTeksti(docBase, getTextString(docBase, tunnustaminen), "div");
-                            }
-
-                            if (!ammattitaitovaatimukset.isEmpty()) {
-                                addAmmattitaitovaatimukset(docBase, null, ammattitaitovaatimukset, null);
-                            }
-
+                        if (!ObjectUtils.isEmpty(tavoitteet)) {
+                            addTeksti(docBase, tavoitteet, "div");
                         }
-                    }
 
-                    if (osaAlue.getPakollisetOsaamistavoitteet() != null) {
-                        String otsikko = messages.translate("docgen.tutke2.pakolliset_osaamistavoitteet.title", docBase.getKieli())
-                                + getLaajuusSuffiksi(osaAlue.getPakollisetOsaamistavoitteet().getLaajuus(), docBase.getLaajuusYksikko(), docBase.getKieli());
-                        addTeksti(docBase, otsikko, "h5");
-                        addAmmattitaitovaatimukset2019(docBase, osaAlue.getPakollisetOsaamistavoitteet().getTavoitteet2020());
-                    }
+                        addArviointi(docBase, arviointi, osa.getTyyppi());
 
-                    if (osaAlue.getValinnaisetOsaamistavoitteet() != null) {
-                        String otsikko = messages.translate("docgen.tutke2.valinnaiset_osaamistavoitteet.title", docBase.getKieli())
-                                + getLaajuusSuffiksi(osaAlue.getValinnaisetOsaamistavoitteet().getLaajuus(), docBase.getLaajuusYksikko(), docBase.getKieli());
-                        addTeksti(docBase, otsikko, "h5");
-                        addAmmattitaitovaatimukset2019(docBase, osaAlue.getValinnaisetOsaamistavoitteet().getTavoitteet2020());
-                    }
-                    addGeneerinenArviointi(docBase, mapper.map(osaAlue.getGeneerinenArviointiasteikko(), GeneerinenArviointiasteikkoKaikkiDto.class));
+                        if (tunnustaminen != null) {
+                            addTeksti(docBase, messages.translate("docgen.tutke2.tunnustaminen.title", docBase.getKieli()), "h6");
+                            addTeksti(docBase, getTextString(docBase, tunnustaminen), "div");
+                        }
 
-                });
+                        if (!ammattitaitovaatimukset.isEmpty()) {
+                            addAmmattitaitovaatimukset(docBase, null, ammattitaitovaatimukset, null);
+                        }
+
+                    }
+                }
+                addGeneerinenArviointi(docBase, osaAlue.getArviointi());
+            }
+        });
+    }
+
+    private boolean osaamistavoitteellaSisaltoa(Osaamistavoite2020Dto tavoite, Kieli kieli) {
+        if (tavoite == null) {
+            return false;
+        }
+        return tavoite.getTavoitteet().getVaatimukset().stream()
+                    .anyMatch(vaatimus -> vaatimus.getVaatimus().getTekstit().containsKey(kieli) && StringUtils.isNotEmpty(vaatimus.getVaatimus().getTekstit().get(kieli)))
+                || tavoite.getTavoitteet().getKohdealueet().stream()
+                .anyMatch(kohdeAlue -> kohdeAlue.getVaatimukset().stream()
+                        .anyMatch(vaatimus -> vaatimus.getVaatimus() != null && vaatimus.getVaatimus().getTekstit().containsKey(kieli) && StringUtils.isNotEmpty(vaatimus.getVaatimus().getTekstit().get(kieli))));
     }
 
     private void addTekstiOsa(DokumenttiPeruste docBase, Optional<TekstiOsaDto> tekstiOsa) {
