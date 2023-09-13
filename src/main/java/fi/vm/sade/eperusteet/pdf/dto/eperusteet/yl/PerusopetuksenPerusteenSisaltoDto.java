@@ -43,6 +43,6 @@ public class PerusopetuksenPerusteenSisaltoDto implements PerusteenSisaltoDto {
                 .flatMap(Stream::of)
                 .filter(vlk -> Objects.equals(vlk.getTunniste(), tunniste))
                 .findAny();
-
     }
+
 }

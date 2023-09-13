@@ -7,6 +7,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.SuoritustapaLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteSuppeaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.AIPEOpetuksenSisaltoDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.LaajaalainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.PerusopetuksenPerusteenSisaltoDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,5 +54,9 @@ public class DokumenttiPeruste extends DokumenttiBase {
                 .flatMap(Collection::stream)
                 .filter(viite -> viite.getId().equals(id))
                 .findFirst();
+    }
+
+    public Optional<LaajaalainenOsaaminenDto> getLaajaAlainenOsaaminen(Long id) {
+        return getPeruste().getPerusopetuksenPerusteenSisalto().getLaajaalaisetosaamiset().stream().filter(lao -> lao.getId().equals(id)).findAny();
     }
 }

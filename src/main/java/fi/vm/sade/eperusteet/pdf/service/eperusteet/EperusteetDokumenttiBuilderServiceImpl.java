@@ -881,7 +881,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
                         // Tekstikappaleet
                         if (!ObjectUtils.isEmpty(vuosiluokka.getVapaatTekstit())) {
-                            addHeader(docBase, "TODO tekstikappaleiden yläotsikko"); //TODO: tarvitaanko tätä välttämättä?
                             vuosiluokka.getVapaatTekstit().forEach(vt -> {
                                 addTeksti(docBase, getTextString(docBase, vt.getNimi()), "h5");
                                 addLokalisoituteksti(docBase, vt.getTeksti(), "div");
@@ -893,10 +892,13 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                         if (!ObjectUtils.isEmpty(vuosiluokka.getLaajaalaisetOsaamiset())) {
                             addHeader(docBase, messages.translate("laaja-alainen-osaaminen", docBase.getKieli()));
                             vuosiluokka.getLaajaalaisetOsaamiset().stream()
-                                    .sorted(Comparator.comparing(VuosiluokkaKokonaisuudenLaajaalainenOsaaminenDto::getId))
+                                    .sorted(Comparator.comparing(lao -> docBase.getLaajaAlainenOsaaminen(lao.getLaajaalainenOsaaminen().getIdLong()).get().getNimi().get(docBase.getKieli())))
                                     .forEach(lao -> {
-                                        addTeksti(docBase, "TODO laajis otsikko", "h5"); //TODO: mistä laajiksen otsikot?
-                                        addLokalisoituteksti(docBase, lao.getKuvaus(), "div");
+                                        Optional<LaajaalainenOsaaminenDto> perusteenLaoDto = docBase.getLaajaAlainenOsaaminen(lao.getLaajaalainenOsaaminen().getIdLong());
+                                        if (perusteenLaoDto.isPresent()) {
+                                            addLokalisoituteksti(docBase, perusteenLaoDto.get().getNimi(), "h5");
+                                            addLokalisoituteksti(docBase, lao.getKuvaus(), "div");
+                                        }
                                     });
                             docBase.getGenerator().increaseNumber();
                         }
