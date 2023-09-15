@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.pdf.service.external;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
@@ -24,9 +25,8 @@ import java.util.Objects;
 @Service
 public class AmosaaServiceImpl implements AmosaaService {
 
-    private static final String AMOSAA_API = "/api/amosaa/";
-    private static final String AMOSAA_EXTERNAL_API = "/api/external/";
     private static final String AMOSAA_PERUSTEET_API = "/api/perusteet/";
+    private static final String AMOSAA_ARVIOINTIASTEIKOT_API = "/api/arviointiasteikot/";
     private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 
     @Value("${fi.vm.sade.eperusteet.pdf.amosaa-service:''}")
@@ -62,16 +62,14 @@ public class AmosaaServiceImpl implements AmosaaService {
     }
 
     @Override
-    public List<SisaltoViiteDto> getSisaltoviitteenTyypilla(Long ktId, Long opsId, SisaltoTyyppi tyyppi) {
+    public ArviointiAsteikkoDto getArviointiasteikko(Long arviointiAsteikkoId) {
         try {
-            ResponseEntity<SisaltoViiteDto[]> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_API  + "koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/sisaltoviitteet/{tyyppi}",
+            ResponseEntity<ArviointiAsteikkoDto> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_ARVIOINTIASTEIKOT_API + "{arviointiAsteikkoId}",
                     HttpMethod.GET,
                     httpEntity,
-                    SisaltoViiteDto[].class,
-                    ktId,
-                    opsId,
-                    tyyppi);
-            return Arrays.asList(Objects.requireNonNull(response.getBody()));
+                    ArviointiAsteikkoDto.class,
+                    arviointiAsteikkoId);
+            return response.getBody();
         } catch (Exception e) {
             throw new ServiceException("Sisältöä ei saatu haettua: " + e.getMessage());
         }

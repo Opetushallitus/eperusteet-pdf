@@ -1884,7 +1884,10 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     private void addTutke2Osat(DokumenttiPeruste docBase, TutkinnonOsaKaikkiDto osa) {
         List<OsaAlueKaikkiDto> osaAlueet = osa.getOsaAlueet();
 
-        osaAlueet.forEach(osaAlue -> {
+        osaAlueet.stream()
+                .filter(osaAlue -> !getTextString(docBase, osaAlue.getNimi()).isEmpty())
+                .forEach(osaAlue -> {
+                    
             String nimi = getTextString(docBase, osaAlue.getNimi());
             addTeksti(docBase, nimi, "h5");
 
@@ -1918,6 +1921,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 }
 
             } else {
+                log.info("osa alue 2020 NOT");
 
                 // Parita pakollinen ja valinnainen osaamistavoite
                 Map<Long, Pair<OsaamistavoiteDto, OsaamistavoiteDto>> tavoiteParit = new LinkedHashMap<>();
