@@ -23,6 +23,7 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TekstiKappaleJulkinenDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TekstiosaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TutkinnonosaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TuvaLaajaAlainenOsaaminenDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.KoodistoMetadataDto;
@@ -1234,12 +1235,15 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 }
 
                 // Ammattitaitovaatimukset
-                if (perusteenTutkinnonosa.getAmmattitaitovaatimuksetLista() != null) {
+                if (perusteenTutkinnonosa.getAmmattitaitovaatimukset2019() != null) {
                     addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
-                    perusteenTutkinnonosa.getAmmattitaitovaatimuksetLista().forEach(dto -> addAmmattitaitovaatimuksenKohdealue(docBase, mapper.map(dto, AmmattitaitovaatimuksenKohdealueDto.class)));
+                    addAmmattitaitovaatimuksenKohdealue(docBase, perusteenTutkinnonosa.getAmmattitaitovaatimukset2019());
                 } else if (perusteenTutkinnonosa.getAmmattitaitovaatimukset() != null) {
                     addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
                     addLokalisoituteksti(docBase, perusteenTutkinnonosa.getAmmattitaitovaatimukset(), "div");
+                } else if (!CollectionUtils.isEmpty(perusteenTutkinnonosa.getAmmattitaitovaatimuksetLista())) {
+                    addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
+                    perusteenTutkinnonosa.getAmmattitaitovaatimuksetLista().forEach(dto -> addAmmattitaitovaatimuksenKohdealue(docBase, mapper.map(dto, AmmattitaitovaatimuksenKohdealueDto.class)));
                 }
 
                 // Arviointi
@@ -1247,8 +1251,24 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                     addTeksti(docBase, messages.translate("docgen.arviointi", docBase.getKieli()), "h5");
                     fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArviointiDto arviointiDto = perusteenTutkinnonosa.getArviointi();
 
-                    arviointiDto.getArvioinninKohdealueet().forEach(arvioinninKohdealueDto -> {
-                        addArvioinninKohdealue(docBase, arvioinninKohdealueDto);
+                    arviointiDto.getArvioinninKohdealueet().forEach(arvioinninKohdealue -> {
+                        arvioinninKohdealue.getArvioinninKohteet().forEach(arvioinninKohde -> {
+                            if (arvioinninKohde.getArviointiAsteikko() != null && arvioinninKohde.getArviointiAsteikkoDto() == null) {
+                                ArviointiAsteikkoDto arviointiAsteikkoDto = amosaaService.getArviointiasteikko(arvioinninKohde.getArviointiAsteikko().getIdLong());
+                                arvioinninKohde.setArviointiAsteikkoDto(arviointiAsteikkoDto);
+
+                                arvioinninKohde.getOsaamistasonKriteerit().forEach(osaamistasonKriteeri -> {
+                                    if (osaamistasonKriteeri.getOsaamistaso() != null && osaamistasonKriteeri.getOsaamistasoDto() == null) {
+                                        Optional<OsaamistasoDto> optOsaamistaso = arviointiAsteikkoDto.getOsaamistasot().stream()
+                                                .filter(o -> o.getId().equals(osaamistasonKriteeri.getOsaamistaso().getIdLong()))
+                                                .findFirst();
+                                        optOsaamistaso.ifPresent(osaamistasonKriteeri::setOsaamistasoDto);
+                                    }
+                                });
+                            }
+                        });
+
+                        addArvioinninKohdealue(docBase, arvioinninKohdealue);
                     });
                 }
 
