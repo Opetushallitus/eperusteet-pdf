@@ -26,7 +26,13 @@ public class OppiaineLaajaDto extends OppiaineBaseDto {
 
     public Optional<OppiaineenVuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuus(Long id) {
         return vuosiluokkakokonaisuudet.stream()
-                .filter(v -> Optional.ofNullable(v.getVuosiluokkaKokonaisuus()).orElse(Optional.of(Reference.of(0L))).map(Reference::getIdLong).orElse(0L).equals(id))
+                .filter(v -> Optional.ofNullable(v.getVuosiluokkaKokonaisuus()).orElse(Reference.of(0L)).getIdLong().equals(id))
+                .findAny();
+    }
+
+    public Optional<OppiaineenVuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuus(UUID tunniste) {
+        return vuosiluokkakokonaisuudet.stream()
+                .filter(v -> v.getVuosiluokkaKokonaisuus().toString().equals(tunniste.toString()))
                 .findAny();
     }
 }

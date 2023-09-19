@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.pdf.service.ylops;
 
 import com.google.common.collect.ComparisonChain;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiRivi;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTaulukko;
@@ -229,7 +230,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                         Optional<VuosiluokkaKokonaisuusDto> perusteenVlk = docBase.getPerusteVlk(UUID.fromString(oaVlk.getVuosiluokkakokonaisuus().getId()));
                         if (perusteenVlk.isPresent()) {
                             Optional<OppiaineenVuosiluokkaKokonaisuusDto> optPerusteOaVlkDto =
-                                    perusteOppiaineDto.getVuosiluokkakokonaisuus(perusteenVlk.get().getId());
+                                    perusteOppiaineDto.getVuosiluokkakokonaisuus(perusteenVlk.get().getTunniste());
                             if (optPerusteOaVlkDto.isPresent()) {
                                 perusteOaVlkDto = optPerusteOaVlkDto.get();
                             }
@@ -568,8 +569,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
         OppiaineenVuosiluokkaKokonaisuusDto perusteOaVlkDto = null;
 
         if (perusteOppiaineDto != null) {
-            Optional<OppiaineenVuosiluokkaKokonaisuusDto> optPerusteOaVlkDto
-                    = perusteOppiaineDto.getVuosiluokkakokonaisuus(vlk.getTunniste().getId());
+            Optional<OppiaineenVuosiluokkaKokonaisuusDto> optPerusteOaVlkDto = perusteOppiaineDto.getVuosiluokkakokonaisuus(vlk.getTunniste().getId());
             if (optPerusteOaVlkDto.isPresent()) {
                 perusteOaVlkDto = optPerusteOaVlkDto.get();
             }

@@ -958,7 +958,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
                         // Oppimäärän vuosiluokkakokonaisuus
                         OppiaineenVuosiluokkaKokonaisuusDto vuosiluokkaKokonaisuus = oppimaara.getVuosiluokkakokonaisuudet().stream()
-                                .filter(vlk -> vlk.getVuosiluokkaKokonaisuus().isPresent() && vuosiluokkaId.equals(vlk.getVuosiluokkaKokonaisuus().get().getIdLong()))
+                                .filter(vlk -> vlk.getVuosiluokkaKokonaisuus() != null && vuosiluokkaId.equals(vlk.getVuosiluokkaKokonaisuus().getIdLong()))
                                 .findFirst()
                                 .orElse(null);
 
