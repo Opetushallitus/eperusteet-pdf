@@ -40,7 +40,6 @@ public class PerusopetuksenPerusteenSisaltoDto implements PerusteenSisaltoDto {
 
     public Optional<VuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuudet(UUID tunniste) {
         return vuosiluokkakokonaisuudet.stream()
-                .flatMap(Stream::of)
                 .filter(vlk -> Objects.equals(vlk.getTunniste(), tunniste))
                 .findAny();
     }

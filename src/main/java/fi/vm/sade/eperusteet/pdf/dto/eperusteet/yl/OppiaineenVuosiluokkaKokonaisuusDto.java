@@ -1,5 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.common.ReferenceableDto;
@@ -16,7 +18,9 @@ import java.util.Optional;
 @AllArgsConstructor
 public class OppiaineenVuosiluokkaKokonaisuusDto implements ReferenceableDto {
     private Long id;
-    private Optional<Reference> vuosiluokkaKokonaisuus;
+
+    @JsonAlias({"_vuosiluokkaKokonaisuus", "_vuosiluokkakokonaisuus"})
+    private Reference vuosiluokkaKokonaisuus;
     private Optional<TekstiOsaDto> tehtava;
     private Optional<TekstiOsaDto> tyotavat;
     private Optional<TekstiOsaDto> ohjaus;
