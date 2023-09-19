@@ -1235,12 +1235,15 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 }
 
                 // Ammattitaitovaatimukset
-                if (perusteenTutkinnonosa.getAmmattitaitovaatimuksetLista() != null) {
+                if (perusteenTutkinnonosa.getAmmattitaitovaatimukset2019() != null) {
                     addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
-                    perusteenTutkinnonosa.getAmmattitaitovaatimuksetLista().forEach(dto -> addAmmattitaitovaatimuksenKohdealue(docBase, mapper.map(dto, AmmattitaitovaatimuksenKohdealueDto.class)));
+                    addAmmattitaitovaatimuksenKohdealue(docBase, perusteenTutkinnonosa.getAmmattitaitovaatimukset2019());
                 } else if (perusteenTutkinnonosa.getAmmattitaitovaatimukset() != null) {
                     addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
                     addLokalisoituteksti(docBase, perusteenTutkinnonosa.getAmmattitaitovaatimukset(), "div");
+                } else if (!CollectionUtils.isEmpty(perusteenTutkinnonosa.getAmmattitaitovaatimuksetLista())) {
+                    addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
+                    perusteenTutkinnonosa.getAmmattitaitovaatimuksetLista().forEach(dto -> addAmmattitaitovaatimuksenKohdealue(docBase, mapper.map(dto, AmmattitaitovaatimuksenKohdealueDto.class)));
                 }
 
                 // Arviointi

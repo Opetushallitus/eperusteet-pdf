@@ -1921,8 +1921,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 }
 
             } else {
-                log.info("osa alue 2020 NOT");
-
                 // Parita pakollinen ja valinnainen osaamistavoite
                 Map<Long, Pair<OsaamistavoiteDto, OsaamistavoiteDto>> tavoiteParit = new LinkedHashMap<>();
 

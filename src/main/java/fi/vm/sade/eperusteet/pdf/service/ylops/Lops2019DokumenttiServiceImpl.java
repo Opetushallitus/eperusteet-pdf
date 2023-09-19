@@ -949,7 +949,6 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
                                 // Tavoitteet
                                 cite.appendChild(getList(docBase, tavoitteet.getTavoitteet()));
                             }
-
                         }
                     });
             docBase.getBodyElement().appendChild(cite);
