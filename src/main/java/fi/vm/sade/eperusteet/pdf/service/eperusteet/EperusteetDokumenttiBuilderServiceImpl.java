@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.dto.enums.TavoiteAlueTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.TutkinnonOsaTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Vuosiluokka;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerisenArvioinninOsaamistasonKriteeriKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KevytTekstiKappaleDto;
@@ -74,12 +75,14 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.AIPEOppiaineLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.AIPEVaiheDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.KeskeinenSisaltoalueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.LaajaalainenOsaaminenDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OpetuksenKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OpetuksenTavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineenVuosiluokkaKokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.PerusopetuksenPerusteenSisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TaiteenalaDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TavoitteenArviointiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TekstiOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.VuosiluokkaKokonaisuudenLaajaalainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.VuosiluokkaKokonaisuusDto;
@@ -113,6 +116,7 @@ import javax.xml.xpath.XPathFactory;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -123,9 +127,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeader;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addLokalisoituteksti;
+import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addPlaceholder;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addTeksti;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getList;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
@@ -918,7 +924,8 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                             // Oppiaineet
                             perusopetuksenPerusteenSisaltoDto.getOppiaineet().stream()
                                     .filter(oppiaine -> oppiaine.getVuosiluokkakokonaisuus(vuosiluokka.getId()).isPresent())
-                                    .sorted(Comparator.comparing(OppiaineLaajaDto::getId))
+                                    .sorted(Comparator.comparing(oppiaine -> LokalisoituTekstiDto.getOrDefault(oppiaine.getNimiOrDefault(LokalisoituTekstiDto.of("")), docBase.getKieli(), "")))
+                                    .sorted(Comparator.comparing(oppiaine -> oppiaine.getJnroOrDefault(99L)))
                                     .forEach(oppiaine -> {
                                         addHeader(docBase, getTextString(docBase, getOptionalValue(oppiaine.getNimi())));
 
@@ -927,7 +934,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
                                         // Oppiaineen vuosiluokkakokonaisuus
                                         oppiaine.getVuosiluokkakokonaisuus(vuosiluokka.getId())
-                                                .ifPresent(oppiaineenVuosiluokkaKokonaisuusDto -> addVuosiluokkakokonaisuus(docBase, oppiaineenVuosiluokkaKokonaisuusDto));
+                                                .ifPresent(oppiaineenVuosiluokkaKokonaisuusDto -> addVuosiluokkakokonaisuus(docBase, oppiaine.getKohdealueet(), oppiaineenVuosiluokkaKokonaisuusDto));
 
                                         // Oppimäärät
                                         addOppimaarat(docBase, oppiaine.getOppimaarat(), vuosiluokka.getId());
@@ -946,7 +953,8 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     private void addOppimaarat(DokumenttiPeruste docBase, Set<OppiaineDto> oppimaarat, Long vuosiluokkaId) {
         if (!ObjectUtils.isEmpty(oppimaarat)) {
             oppimaarat.stream()
-                    .sorted(Comparator.comparing(OppiaineDto::getId))
+                    .sorted(Comparator.comparing(oppiaine -> LokalisoituTekstiDto.getOrDefault(oppiaine.getNimiOrDefault(LokalisoituTekstiDto.of("")), docBase.getKieli(), "")))
+                    .sorted(Comparator.comparing(oppiaine -> oppiaine.getJnroOrDefault(99L)))
                     .forEach(oppimaara -> {
                         // Oppimäärän nimi
                         addTeksti(docBase, getTextString(docBase, getOptionalValue(oppimaara.getNimi())), "h5");
@@ -962,69 +970,111 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                                 .findFirst()
                                 .orElse(null);
 
-                        addVuosiluokkakokonaisuus(docBase, vuosiluokkaKokonaisuus);
+                        addVuosiluokkakokonaisuus(docBase, oppimaara.getKohdealueet(), vuosiluokkaKokonaisuus);
                     });
         }
     }
 
-    private void addVuosiluokkakokonaisuus(DokumenttiPeruste docBase, OppiaineenVuosiluokkaKokonaisuusDto vuosiluokkaKokonaisuus) {
-        if (vuosiluokkaKokonaisuus != null) {
+    private void addVuosiluokkakokonaisuus(DokumenttiPeruste docBase, Set<OpetuksenKohdealueDto> oppiaineenKohdealueet, OppiaineenVuosiluokkaKokonaisuusDto oppiaineenVuosiluokkaKokonaisuus) {
+        if (oppiaineenVuosiluokkaKokonaisuus != null) {
+
             // Tekstikappaleet
-            vuosiluokkaKokonaisuus.getVapaatTekstit().forEach(vt -> {
+            oppiaineenVuosiluokkaKokonaisuus.getVapaatTekstit().forEach(vt -> {
                 addTeksti(docBase, getTextString(docBase, vt.getNimi()), "h6");
                 addTeksti(docBase, getTextString(docBase, vt.getTeksti()), "div");
             });
 
-            // TODO: ei tietoa näytetäänkö lopulta taulukkona kuten esimerkissä, tässä vasta testailtu
-            // tavoitealueella ryhmittely puuttuu
-            if (!ObjectUtils.isEmpty(vuosiluokkaKokonaisuus.getTavoitteet())) {
-                addTeksti(docBase, messages.translate("opetuksen-tavoitteet", docBase.getKieli()), "h6");
 
-                Element taulukko = docBase.getDocument().createElement("table-vuosiluokkakokonaisuus");
-                taulukko.setAttribute("border", "1");
-                docBase.getBodyElement().appendChild(taulukko);
-                Element tbody = docBase.getDocument().createElement("tbody");
-                taulukko.appendChild(tbody);
-
-                Element tr = docBase.getDocument().createElement("tr");
-                tr.setAttribute("bgcolor", "#EEEEEE");
-                tbody.appendChild(tr);
-
-                Element th1 = docBase.getDocument().createElement("th");
-                Element th2 = docBase.getDocument().createElement("th");
-                Element th3 = docBase.getDocument().createElement("th");
-
-                th1.appendChild(newBoldElement(docBase.getDocument(), messages.translate("docgen.opetuksen-tavoitteet.title", docBase.getKieli())));
-                th2.appendChild(newBoldElement(docBase.getDocument(), messages.translate("tavoitteisiin-liittyvat-sisaltoalueet", docBase.getKieli())));
-                th3.appendChild(newBoldElement(docBase.getDocument(), messages.translate("laaja-alainen-osaaminen", docBase.getKieli())));
-                tr.appendChild(th1);
-                tr.appendChild(th2);
-                tr.appendChild(th3);
-
-                // Tavoitteet
-                vuosiluokkaKokonaisuus.getTavoitteet().forEach(tavoite -> {
-                    Element tr1 = docBase.getDocument().createElement("tr");
-                    tbody.appendChild(tr1);
-
-                    Element solu1 = docBase.getDocument().createElement("td");
-                    solu1.setTextContent(getTextString(docBase, getOptionalValue(tavoite.getTavoite())));
-                    tr1.appendChild(solu1);
-
-                    Element solu2 = docBase.getDocument().createElement("td");
-                    solu2.setTextContent(addSisaltoalueetList(docBase, vuosiluokkaKokonaisuus.getSisaltoalueet(), tavoite));
-                    tr1.appendChild(solu2);
-
-                    Element solu3 = docBase.getDocument().createElement("td");
-                    solu3.setTextContent(addLaajaAlaisetList(docBase, tavoite.getLaajattavoitteet()));
-                    tr1.appendChild(solu3);
-                });
-            }
-
-            // Sisältöalueet
-            vuosiluokkaKokonaisuus.getSisaltoalueet().forEach(sisaltoalue -> {
+            oppiaineenVuosiluokkaKokonaisuus.getSisaltoalueet()
+                    .stream()
+                    .sorted(Comparator.comparing(sisaltoalue -> getTextString(docBase, sisaltoalue.getNimi().get())))
+                    .forEach(sisaltoalue -> {
                 addTeksti(docBase, getTextString(docBase, getOptionalValue(sisaltoalue.getNimi())), "h6");
                 addTeksti(docBase, getTextString(docBase, getOptionalValue(sisaltoalue.getKuvaus())), "div");
             });
+
+            // tavoitealueella ryhmittely puuttuu
+            if (!ObjectUtils.isEmpty(oppiaineenVuosiluokkaKokonaisuus.getTavoitteet())) {
+                addTeksti(docBase, messages.translate("opetuksen-tavoitteet", docBase.getKieli()), "h5");
+
+                oppiaineenVuosiluokkaKokonaisuus.getTavoitteet().forEach(tavoite -> {
+                    addTeksti(docBase, getTextString(docBase, tavoite.getTavoite().get()), "h5");
+
+                    if (tavoite.getTavoitteistaJohdetutOppimisenTavoitteet().isPresent()) {
+                        addTeksti(docBase, messages.translate("tavoitteista-johdetut-oppimisen-tavoitteet", docBase.getKieli()), "h6");
+                        addTeksti(docBase, getTextString(docBase, tavoite.getTavoitteistaJohdetutOppimisenTavoitteet().get()), "div");
+                    }
+
+                    if (!tavoite.getKohdealueet().isEmpty()) {
+                        OpetuksenKohdealueDto opetuksenKohdealueDto = oppiaineenKohdealueet.stream()
+                                .filter(kohdealue -> kohdealue.getId().equals(tavoite.getKohdealueet().stream().findFirst().get().getIdLong())).findAny().get();
+                        addTeksti(docBase, messages.translate("tavoitealue", docBase.getKieli()), "h6");
+                        addTeksti(docBase, getTextString(docBase, opetuksenKohdealueDto.nimi.get()), "div");
+
+                        addTeksti(docBase, "", "p");
+                    }
+
+                    if (!tavoite.getLaajattavoitteet().isEmpty()) {
+                        addTeksti(docBase, messages.translate("laaja-alainen-osaaminen", docBase.getKieli()), "h6");
+
+                        docBase.getPeruste().getPerusopetuksenPerusteenSisalto().getLaajaalaisetosaamiset().stream()
+                                .filter(lao -> tavoite.getLaajattavoitteet().stream().map(Reference::getIdLong).collect(Collectors.toList()).contains(lao.getId()))
+                                .sorted(Comparator.comparing(lao -> getTextString(docBase, lao.getNimi())))
+                                .forEach(lao -> {
+                                    addTeksti(docBase, getTextString(docBase, lao.getNimi()), "p");
+                        });
+
+                        addTeksti(docBase, "", "p");
+                    }
+
+                    if (!tavoite.getSisaltoalueet().isEmpty()) {
+                        addTeksti(docBase, messages.translate("sisaltoalueet", docBase.getKieli()), "h6");
+
+                        oppiaineenVuosiluokkaKokonaisuus.getSisaltoalueet().stream()
+                                .filter(sisaltoalue -> tavoite.getSisaltoalueet().stream().map(Reference::getIdLong).collect(Collectors.toList()).contains(sisaltoalue.getId()))
+                                .sorted(Comparator.comparing(sisaltoalue -> getTextString(docBase, sisaltoalue.getNimi().get())))
+                                .forEach(sisaltoalue -> {
+                            addTeksti(docBase, getTextString(docBase, sisaltoalue.getNimi().get()), "p");
+                        });
+
+                        addTeksti(docBase, "", "p");
+                    }
+
+                    if (tavoite.getArvioinninKuvaus().isPresent()) {
+                        addTeksti(docBase, messages.translate("arvioinnin-kohde", docBase.getKieli()), "h6");
+                        addTeksti(docBase, getTextString(docBase, tavoite.getArvioinninKuvaus().get()), "div");
+                    }
+
+                    if (tavoite.getArvioinninOtsikko().isPresent()) {
+                        addTeksti(docBase, getTextString(docBase, tavoite.getArvioinninOtsikko().get()), "h6");
+                    }
+
+                    if (!tavoite.getArvioinninkohteet().isEmpty()) {
+                        DokumenttiTaulukko taulukko = new DokumenttiTaulukko();
+                        taulukko.addOtsikkosarakkeet(
+                                messages.translate("arvosana", docBase.getKieli()),
+                                messages.translate("osaamisen-kuvaus", docBase.getKieli())
+                        );
+
+                        tavoite.getArvioinninkohteet()
+                                .stream()
+                                .sorted(Comparator.comparing(arvioinninKohde -> arvioinninKohde.getArvosana().get()))
+                                .forEach(arvioinninKohde -> {
+                            DokumenttiRivi rivi = new DokumenttiRivi();
+                            rivi.addSarake(
+                                    messages.translate("osaamisen-kuvaus-arvosanalle-" + arvioinninKohde.getArvosana().get(), docBase.getKieli()),
+                                    getTextString(docBase, arvioinninKohde.getOsaamisenKuvaus().orElse(LokalisoituTekstiDto.of(""))));
+                            taulukko.addRivi(rivi);
+                        });
+
+                        taulukko.addToDokumentti(docBase);
+                    }
+
+                    if (tavoite.getVapaaTeksti().isPresent()) {
+                        addTeksti(docBase, getTextString(docBase, tavoite.getVapaaTeksti().get()), "div");
+                    }
+                });
+            }
         }
     }
 
