@@ -29,6 +29,7 @@ public class OrikaMapperConfig {
         mapperFactory.classMap(AmmattitaitovaatimusKohdealueetDto.class, AmmattitaitovaatimuksenKohdealueDto.class).byDefault();
         mapperFactory.classMap(LokalisoituTekstiDto.class, LokalisoituTekstiDto.class).byDefault();
         mapperFactory.classMap(Lops2019OppiaineKaikkiDto.class, Lops2019OppiaineKaikkiDto.class).byDefault();
+        mapperFactory.classMap(PaikallisetAmmattitaitovaatimukset2019Dto.class, Ammattitaitovaatimukset2019Dto.class).byDefault();
 
         return mapperFactory.getMapperFacade();
     }

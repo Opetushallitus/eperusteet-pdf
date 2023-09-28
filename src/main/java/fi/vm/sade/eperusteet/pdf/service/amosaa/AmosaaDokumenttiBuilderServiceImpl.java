@@ -52,6 +52,8 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.SuoritustapaLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.Ammattitaitovaatimukset2019Dto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.Ammattitaitovaatimus2019Dto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.AmmattitaitovaatimustenKohdealue2019Dto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaAlueKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.OsaamisenTavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaKaikkiDto;
@@ -865,16 +867,16 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         if (perusteenOsaAlue != null) {
 
             if (omaOsaAlueDto.getTyyppi().equals(OmaOsaAlueTyyppi.PAKOLLINEN)) {
-                addAmmattitaitovaatimuksenKohdealue(docBase, perusteenOsaAlue.getPakollisetOsaamistavoitteet().getTavoitteet());
+                addAmmattitaitovaatimukset2019(docBase, perusteenOsaAlue.getPakollisetOsaamistavoitteet().getTavoitteet());
             }
 
             if (omaOsaAlueDto.getTyyppi().equals(OmaOsaAlueTyyppi.VALINNAINEN)) {
-                addAmmattitaitovaatimuksenKohdealue(docBase, perusteenOsaAlue.getValinnaisetOsaamistavoitteet().getTavoitteet());
+                addAmmattitaitovaatimukset2019(docBase, perusteenOsaAlue.getValinnaisetOsaamistavoitteet().getTavoitteet());
             }
 
             addGeneerinenArviointi(docBase, mapper.map(perusteenOsaAlue.getArviointi(), GeneerinenArviointiasteikkoKaikkiDto.class));
         } else {
-            addAmmattitaitovaatimuksenKohdealue(docBase, mapper.map(omaOsaAlueDto.getOsaamistavoitteet(), Ammattitaitovaatimukset2019Dto.class));
+            addAmmattitaitovaatimukset2019(docBase, mapper.map(omaOsaAlueDto.getOsaamistavoitteet(), Ammattitaitovaatimukset2019Dto.class));
             addGeneerinenArviointi(docBase, omaOsaAlueDto.getGeneerinenArviointiasteikko());
         }
     }
@@ -968,7 +970,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
 
             if (omaTutkinnonosa.getAmmattitaitovaatimukset() != null) {
-                addAmmattitaitovaatimukset2019(docBase, omaTutkinnonosa.getAmmattitaitovaatimukset());
+                addAmmattitaitovaatimukset2019(docBase, mapper.map(omaTutkinnonosa.getAmmattitaitovaatimukset(), Ammattitaitovaatimukset2019Dto.class));
             }
 
             if (omaTutkinnonosa.getAmmattitaitovaatimuksetLista().size() > 0) {
@@ -996,11 +998,11 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         }
     }
 
-    private void addAmmattitaitovaatimukset2019(DokumenttiBase docBase, PaikallisetAmmattitaitovaatimukset2019Dto ammattitaitovaatimukset2019) {
+    private void addAmmattitaitovaatimukset2019(DokumenttiBase docBase, Ammattitaitovaatimukset2019Dto ammattitaitovaatimukset2019) {
         if (ammattitaitovaatimukset2019 != null) {
             LokalisoituTekstiDto kohde = ammattitaitovaatimukset2019.getKohde();
-            List<PaikallinenAmmattitaitovaatimus2019Dto> vaatimukset = ammattitaitovaatimukset2019.getVaatimukset();
-            List<PaikallinenAmmattitaitovaatimustenKohdealue2019Dto> kohdealueet = ammattitaitovaatimukset2019.getKohdealueet();
+            List<Ammattitaitovaatimus2019Dto> vaatimukset = ammattitaitovaatimukset2019.getVaatimukset();
+            List<AmmattitaitovaatimustenKohdealue2019Dto> kohdealueet = ammattitaitovaatimukset2019.getKohdealueet();
 
             if (!ObjectUtils.isEmpty(vaatimukset) || !ObjectUtils.isEmpty(kohdealueet)) {
                 if (kohde != null && !ObjectUtils.isEmpty(vaatimukset)) {
@@ -1051,48 +1053,6 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 });
             }
         }
-    }
-
-    private void addAmmattitaitovaatimuksenKohdealue(DokumenttiBase docBase,
-                                                     Ammattitaitovaatimukset2019Dto ammattitaitovaatimukset2019Dto) {
-        if (ammattitaitovaatimukset2019Dto == null) {
-            return;
-        }
-
-        DokumenttiTaulukko taulukko = new DokumenttiTaulukko();
-        StringBuilder vaatimuksenKohteetBuilder = new StringBuilder();
-        ammattitaitovaatimukset2019Dto.getKohdealueet().forEach(ammattitaitovaatimuksenKohde -> {
-            if (ammattitaitovaatimukset2019Dto.getKohde() != null) {
-                vaatimuksenKohteetBuilder.append("<h6>");
-                vaatimuksenKohteetBuilder.append(getTextString(docBase, ammattitaitovaatimukset2019Dto.getKohde()));
-                vaatimuksenKohteetBuilder.append("</h6>");
-            }
-
-            if (ammattitaitovaatimuksenKohde.getKuvaus() != null) {
-                vaatimuksenKohteetBuilder.append("<p>");
-                vaatimuksenKohteetBuilder.append(getTextString(docBase, ammattitaitovaatimuksenKohde.getKuvaus()));
-                vaatimuksenKohteetBuilder.append("</p>");
-            }
-
-            vaatimuksenKohteetBuilder.append("<ul>");
-            ammattitaitovaatimuksenKohde.getVaatimukset().forEach(vaatimus -> {
-                vaatimuksenKohteetBuilder.append("<li>");
-                vaatimuksenKohteetBuilder.append(getTextString(docBase, vaatimus.getVaatimus()));
-                if (vaatimus.getKoodi() != null) {
-                    vaatimuksenKohteetBuilder.append(" (");
-                    vaatimuksenKohteetBuilder.append(vaatimus.getKoodi().getArvo());
-                    vaatimuksenKohteetBuilder.append(")");
-                }
-                vaatimuksenKohteetBuilder.append("</li>");
-            });
-            vaatimuksenKohteetBuilder.append("</ul>");
-        });
-
-        DokumenttiRivi rivi = new DokumenttiRivi();
-        rivi.addSarake(vaatimuksenKohteetBuilder.toString());
-        taulukko.addRivi(rivi);
-
-        taulukko.addToDokumentti(docBase);
     }
 
     private void addAmmattitaitovaatimuksenKohdealue(DokumenttiBase docBase,
@@ -1237,7 +1197,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 // Ammattitaitovaatimukset
                 if (perusteenTutkinnonosa.getAmmattitaitovaatimukset2019() != null) {
                     addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
-                    addAmmattitaitovaatimuksenKohdealue(docBase, perusteenTutkinnonosa.getAmmattitaitovaatimukset2019());
+                    addAmmattitaitovaatimukset2019(docBase, perusteenTutkinnonosa.getAmmattitaitovaatimukset2019());
                 } else if (perusteenTutkinnonosa.getAmmattitaitovaatimukset() != null) {
                     addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
                     addLokalisoituteksti(docBase, perusteenTutkinnonosa.getAmmattitaitovaatimukset(), "div");
@@ -1286,7 +1246,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             } else if (TutkinnonOsaTyyppi.isTutke(perusteenTutkinnonosa.getTyyppi())) {
                 if (!ObjectUtils.isEmpty(perusteenTutkinnonosa.getOsaAlueet())) {
                     perusteenTutkinnonosa.getOsaAlueet().stream()
-                            .filter(osaAlue -> osaAlue.getNimi() != null)
+                            .filter(osaAlue -> osaAlue.getNimi() != null && (!ObjectUtils.isEmpty(osaAlue.getOsaamistavoitteet()) || osaAlue.getValmaTelmaSisalto() != null))
                             .forEach(osaAlue -> {
 
                                 // Nimi
