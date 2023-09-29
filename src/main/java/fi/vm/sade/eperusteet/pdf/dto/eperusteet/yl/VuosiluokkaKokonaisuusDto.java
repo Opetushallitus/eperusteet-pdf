@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.ReferenceableDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Vuosiluokka;
@@ -24,6 +25,7 @@ public class VuosiluokkaKokonaisuusDto implements ReferenceableDto {
     private TekstiOsaDto tehtava;
     private TekstiOsaDto siirtymaSeuraavaan;
     private TekstiOsaDto laajaalainenOsaaminen;
+    @JsonProperty("laajaalaisetosaamiset")
     private Set<VuosiluokkaKokonaisuudenLaajaalainenOsaaminenDto> laajaalaisetOsaamiset;
     private TekstiOsaDto paikallisestiPaatettavatAsiat;
     private List<KevytTekstiKappaleDto> vapaatTekstit;

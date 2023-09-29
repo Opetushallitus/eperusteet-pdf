@@ -76,7 +76,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
             PerusopetuksenPerusteenSisaltoDto poPerusteenSisaltoDto = docBase.getPeruste().getPerusopetuksenPerusteenSisalto();
             Map<UUID, LaajaalainenOsaaminenDto> laajaAlaisetOsaamisetMap = poPerusteenSisaltoDto.getLaajaalaisetosaamiset().stream().collect(Collectors.toMap(LaajaalainenOsaaminenDto::getTunniste, v -> v));
             Map<UUID, VuosiluokkaKokonaisuusDto> perusteenVlkMap = poPerusteenSisaltoDto.getVuosiluokkakokonaisuudet().stream().collect(Collectors.toMap(VuosiluokkaKokonaisuusDto::getTunniste, v -> v));
-            if (poPerusteenSisaltoDto != null && vlk.getTunniste().getId() != null) {
+            if (vlk.getTunniste().getId() != null) {
                 Optional<VuosiluokkaKokonaisuusDto> optPerusteVlkDto = Optional.ofNullable(perusteenVlkMap.get(UUID.fromString(vlk.getTunniste().getId())));
 
                 if (optPerusteVlkDto.isPresent()) {
@@ -139,15 +139,13 @@ public class PerusopetusServiceImpl implements PerusopetusService {
 
             addHeader(docBase, messages.translate("laaja-alaisen-osaamisen-alueet", docBase.getKieli()));
 
-            Map<Long, LaajaalainenOsaaminenDto> laajaAlaisetOsaamisetWithIdMap = laajaAlaisetOsaamisetMap.values().stream().collect(Collectors.toMap(LaajaalainenOsaaminenDto::getId, v -> v));
-
             List<VuosiluokkaKokonaisuudenLaajaalainenOsaaminenDto> perusteVlkLaajaalaisetOsaamiset = perusteVlk.getLaajaalaisetOsaamiset().stream()
                     .filter((lao -> lao.getLaajaalainenOsaaminen() != null))
-                    .sorted(Comparator.comparing(lao -> laajaAlaisetOsaamisetWithIdMap.get(lao.getLaajaalainenOsaaminen().getIdLong()).getNimi().get(docBase.getKieli())))
+                    .sorted(Comparator.comparing(lao -> laajaAlaisetOsaamisetMap.get(UUID.fromString(lao.getLaajaalainenOsaaminen().toString())).getNimi().get(docBase.getKieli())))
                     .collect(Collectors.toCollection(ArrayList::new));
 
             for (VuosiluokkaKokonaisuudenLaajaalainenOsaaminenDto perusteVlkLaajaalainenosaaminen : perusteVlkLaajaalaisetOsaamiset) {
-                LaajaalainenOsaaminenDto perusteLaajaalainenosaaminenDto = laajaAlaisetOsaamisetWithIdMap.get(perusteVlkLaajaalainenosaaminen.getLaajaalainenOsaaminen().getIdLong());
+                LaajaalainenOsaaminenDto perusteLaajaalainenosaaminenDto = laajaAlaisetOsaamisetMap.get(UUID.fromString(perusteVlkLaajaalainenosaaminen.getLaajaalainenOsaaminen().toString()));
 
                 if (perusteLaajaalainenosaaminenDto != null) {
                     docBase.getGenerator().increaseDepth();
