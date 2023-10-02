@@ -918,6 +918,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                             // Oppiaineet
                             perusopetuksenPerusteenSisaltoDto.getOppiaineet().stream()
                                     .filter(oppiaine -> oppiaine.getVuosiluokkakokonaisuus(vuosiluokka.getId()).isPresent())
+                                    .filter(oppiaine -> oppiaine.getNimi().isPresent())
                                     .sorted(Comparator.comparing(oppiaine -> LokalisoituTekstiDto.getOrDefault(oppiaine.getNimiOrDefault(LokalisoituTekstiDto.of("")), docBase.getKieli(), "")))
                                     .sorted(Comparator.comparing(oppiaine -> oppiaine.getJnroOrDefault(99L)))
                                     .forEach(oppiaine -> {
@@ -947,6 +948,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     private void addOppimaarat(DokumenttiPeruste docBase, Set<OppiaineDto> oppimaarat, Long vuosiluokkaId) {
         if (!ObjectUtils.isEmpty(oppimaarat)) {
             oppimaarat.stream()
+                    .filter(oppimaara -> oppimaara.getNimi().isPresent())
                     .sorted(Comparator.comparing(oppiaine -> LokalisoituTekstiDto.getOrDefault(oppiaine.getNimiOrDefault(LokalisoituTekstiDto.of("")), docBase.getKieli(), "")))
                     .sorted(Comparator.comparing(oppiaine -> oppiaine.getJnroOrDefault(99L)))
                     .forEach(oppimaara -> {
