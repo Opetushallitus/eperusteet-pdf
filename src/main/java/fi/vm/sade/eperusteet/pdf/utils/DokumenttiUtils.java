@@ -17,8 +17,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DokumenttiUtils {
@@ -40,9 +43,9 @@ public class DokumenttiUtils {
         addLokalisoituteksti(docBase, lTeksti, tagi, null);
     }
 
-    public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTekstiDto lTeksti, String tagi, Element el) {
-        if (lTeksti != null && lTeksti.getTekstit() != null && lTeksti.getTekstit().get(docBase.getKieli()) != null) {
-            String teksti = lTeksti.getTekstit().get(docBase.getKieli());
+    public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTekstiDto lokalisoituTekstiDto, String tagi, Element el) {
+        if (getKielistettyTeksti(lokalisoituTekstiDto, docBase.getKieli()) != null) {
+            String teksti = getKielistettyTeksti(lokalisoituTekstiDto, docBase.getKieli());
             teksti = "<" + tagi + ">" + cleanHtml(teksti) + "</" + tagi + ">";
 
             Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(teksti));
@@ -119,35 +122,29 @@ public class DokumenttiUtils {
     }
 
     public static String getTextString(DokumenttiBase docBase, LokalisoituTekstiDto lokalisoituTekstiDto) {
-        return getString(lokalisoituTekstiDto, docBase.getKieli());
-    }
-
-    public static String getTextString(DokumenttiAmosaa docBase, LokalisoituTekstiDto lokalisoituTekstiDto) {
-        return getString(lokalisoituTekstiDto, docBase.getKieli());
-    }
-
-    public static String getTextString(DokumenttiYlops docBase, LokalisoituTekstiDto lokalisoituTekstiDto) {
-        return getString(lokalisoituTekstiDto, docBase.getKieli());
-    }
-
-    private static String getString(LokalisoituTekstiDto lokalisoituTekstiDto, Kieli kieli) {
-        if (lokalisoituTekstiDto != null && lokalisoituTekstiDto.getTekstit() != null && kieli != null
-                && lokalisoituTekstiDto.getTekstit().containsKey(kieli)
-                && lokalisoituTekstiDto.getTekstit().get(kieli) != null) {
-            return cleanHtml(lokalisoituTekstiDto.getTekstit().get(kieli));
-        } else {
-            return "";
-        }
+        return getTextString(docBase.getKieli(), lokalisoituTekstiDto);
     }
 
     public static String getTextString(Kieli kieli, LokalisoituTekstiDto lokalisoituTekstiDto) {
-        if (lokalisoituTekstiDto != null && lokalisoituTekstiDto.getTekstit() != null && kieli != null
-                && lokalisoituTekstiDto.getTekstit().containsKey(kieli)
-                && lokalisoituTekstiDto.getTekstit().get(kieli) != null) {
-            return cleanHtml(lokalisoituTekstiDto.getTekstit().get(kieli));
+        if (getKielistettyTeksti(lokalisoituTekstiDto, kieli) != null) {
+            return cleanHtml(getKielistettyTeksti(lokalisoituTekstiDto, kieli));
         } else {
             return "";
         }
+    }
+
+    private static String getKielistettyTeksti(LokalisoituTekstiDto lokalisoituTekstiDto, Kieli kieli) {
+        if (lokalisoituTekstiDto == null || kieli == null || lokalisoituTekstiDto.getTekstit() == null) {
+            return null;
+        }
+
+        if (lokalisoituTekstiDto.getTekstit().containsKey(kieli)) {
+            return lokalisoituTekstiDto.getTekstit().get(kieli);
+        }
+
+        Optional<Kieli> vaihtoehtoinenKieli = Arrays.stream(Kieli.values())
+                .filter(vaihtoehtoKieli -> lokalisoituTekstiDto.getTekstit().containsKey(vaihtoehtoKieli) && lokalisoituTekstiDto.getTekstit().get(vaihtoehtoKieli) != null).findFirst();
+        return vaihtoehtoinenKieli.map(value -> "[" + lokalisoituTekstiDto.getTekstit().get(value) + "]").orElse(null);
     }
 
     public static void addList(DokumenttiBase docBase, Collection<LokalisoituTekstiDto> tekstit) {

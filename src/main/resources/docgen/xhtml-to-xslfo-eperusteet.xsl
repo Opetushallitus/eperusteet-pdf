@@ -585,7 +585,7 @@
                               font-size="0pt" id="{@name}"/>
                 </xsl:if>
             </xsl:when>
-            <xsl:when test="@href and @href != ''">
+            <xsl:when test="@href and @href != '' and not(starts-with(@href,'['))">
                 <fo:basic-link color="blue">
                     <xsl:attribute name="external-destination">
                         <xsl:value-of select="@href"/>
