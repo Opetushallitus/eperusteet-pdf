@@ -31,7 +31,7 @@ public class OppiaineDto extends OppiaineBaseUpdateDto {
             return super.getNimi();
         }
 
-        return Optional.of(koodi).map(KoodiDto::getNimi);
+        return Optional.ofNullable(koodi).map(KoodiDto::getNimi);
     }
 
     public Optional<OppiaineenVuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuus(String tunniste) {
