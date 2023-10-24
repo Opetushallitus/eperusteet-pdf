@@ -14,9 +14,6 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.OmaOsaAlueExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.OmaTutkinnonosaExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.OpintokokonaisuusDto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.PaikallinenAmmattitaitovaatimus2019Dto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.PaikallinenAmmattitaitovaatimustenKohdealue2019Dto;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.PaikallisetAmmattitaitovaatimukset2019Dto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SuorituspolkuExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TekstiKappaleJulkinenDto;
@@ -66,7 +63,6 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoOpintoDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.pdf.service.external.AmosaaService;
-import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClient;
 import fi.vm.sade.eperusteet.pdf.utils.CharapterNumberGenerator;
 import fi.vm.sade.eperusteet.pdf.utils.CollectionUtil;
@@ -118,11 +114,7 @@ import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.selectLaajuusYksik
 @Service
 public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuilderService {
 
-    private static final float COMPRESSION_LEVEL = 0.9f;
     private static final DecimalFormat df2 = new DecimalFormat("0.##");
-
-    @Autowired
-    private EperusteetService eperusteetService;
 
     @Autowired
     private LocalizedMessagesService messages;
@@ -226,6 +218,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 Element perusteNimiEl = docBase.getDocument().createElement("meta");
                 perusteNimiEl.setAttribute("name", "perusteNimi");
                 perusteNimiEl.setAttribute("content", perusteNimi);
+                perusteNimiEl.setAttribute("translate", messages.translate("perusteen-nimi", docBase.getKieli()));
                 docBase.getHeadElement().appendChild(perusteNimiEl);
             }
         }
@@ -236,6 +229,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             Element paatosnumeroEl = docBase.getDocument().createElement("meta");
             paatosnumeroEl.setAttribute("name", "paatosnumero");
             paatosnumeroEl.setAttribute("content", paatosnumero);
+            paatosnumeroEl.setAttribute("translate", messages.translate("paatosnumero", docBase.getKieli()));
             docBase.getHeadElement().appendChild(paatosnumeroEl);
         }
 
@@ -245,6 +239,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             Element hyvaksyjaEl = docBase.getDocument().createElement("meta");
             hyvaksyjaEl.setAttribute("name", "hyvaksyja");
             hyvaksyjaEl.setAttribute("content", hyvaksyja);
+            hyvaksyjaEl.setAttribute("translate", messages.translate("hyvaksyja", docBase.getKieli()));
             docBase.getHeadElement().appendChild(hyvaksyjaEl);
         }
 
@@ -255,6 +250,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             paatospaivamaaraEl.setAttribute("name", "paatospaivamaara");
             String paatospaivamaaraText = new SimpleDateFormat("d.M.yyyy").format(paatospaivamaara);
             paatospaivamaaraEl.setAttribute("content", paatospaivamaaraText);
+            paatospaivamaaraEl.setAttribute("translate", messages.translate("paatospaivamaara", docBase.getKieli()));
             docBase.getHeadElement().appendChild(paatospaivamaaraEl);
         }
 
@@ -265,6 +261,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             voimaantulopaivamaaraEl.setAttribute("name", "voimaantulopaivamaara");
             String voimaantulopaivamaaraText = new SimpleDateFormat("d.M.yyyy").format(voimaantulopaivamaara);
             voimaantulopaivamaaraEl.setAttribute("content", voimaantulopaivamaaraText);
+            voimaantulopaivamaaraEl.setAttribute("translate", messages.translate("voimaantulopaivamaara", docBase.getKieli()));
             docBase.getHeadElement().appendChild(voimaantulopaivamaaraEl);
         }
 
