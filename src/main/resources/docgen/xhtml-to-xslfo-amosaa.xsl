@@ -177,6 +177,9 @@
                             <xsl:if test="//html/@lang = 'sv'">
                                 <xsl:text>Namn</xsl:text>
                             </xsl:if>
+                            <xsl:if test="//html/@lang = 'en'">
+                                <xsl:text>Name</xsl:text>
+                            </xsl:if>
                         </fo:block>
                     </fo:table-cell>
                     <fo:table-cell>
@@ -191,12 +194,7 @@
                     <fo:table-row>
                         <fo:table-cell>
                             <fo:block font-weight="bold">
-                                <xsl:if test="//html/@lang = 'fi'">
-                                    <xsl:text>Perusteen nimi</xsl:text>
-                                </xsl:if>
-                                <xsl:if test="//html/@lang = 'sv'">
-                                    <xsl:text>[Perusteen nimi]</xsl:text>
-                                </xsl:if>
+                                <xsl:apply-templates select="/html/head/meta[@name='perusteNimi']/@translate"/>
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell>
@@ -212,12 +210,7 @@
                     <fo:table-row>
                         <fo:table-cell>
                             <fo:block font-weight="bold">
-                                <xsl:if test="//html/@lang = 'fi'">
-                                    <xsl:text>Päätösnumero</xsl:text>
-                                </xsl:if>
-                                <xsl:if test="//html/@lang = 'sv'">
-                                    <xsl:text>[Päätösnumero]</xsl:text>
-                                </xsl:if>
+                                <xsl:apply-templates select="/html/head/meta[@name='paatosnumero']/@translate"/>
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell>
@@ -233,12 +226,7 @@
                     <fo:table-row>
                         <fo:table-cell>
                             <fo:block font-weight="bold">
-                                <xsl:if test="//html/@lang = 'fi'">
-                                    <xsl:text>Hyväksyjä</xsl:text>
-                                </xsl:if>
-                                <xsl:if test="//html/@lang = 'sv'">
-                                    <xsl:text>[Hyväksyjä]</xsl:text>
-                                </xsl:if>
+                                <xsl:apply-templates select="/html/head/meta[@name='hyvaksyja']/@translate"/>
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell>
@@ -254,12 +242,7 @@
                     <fo:table-row>
                         <fo:table-cell>
                             <fo:block font-weight="bold">
-                                <xsl:if test="//html/@lang = 'fi'">
-                                    <xsl:text>Päätöspäivämäärä</xsl:text>
-                                </xsl:if>
-                                <xsl:if test="//html/@lang = 'sv'">
-                                    <xsl:text>[Päätöspäivämäärä]</xsl:text>
-                                </xsl:if>
+                                <xsl:apply-templates select="/html/head/meta[@name='paatospaivamaara']/@translate"/>
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell>
@@ -275,12 +258,7 @@
                     <fo:table-row>
                         <fo:table-cell>
                             <fo:block font-weight="bold">
-                                <xsl:if test="//html/@lang = 'fi'">
-                                    <xsl:text>Voimaantulopäivämäärä</xsl:text>
-                                </xsl:if>
-                                <xsl:if test="//html/@lang = 'sv'">
-                                    <xsl:text>[Voimaantulopäivämäärä]</xsl:text>
-                                </xsl:if>
+                                <xsl:apply-templates select="/html/head/meta[@name='voimaantulopaivamaara']/@translate"/>
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell>
