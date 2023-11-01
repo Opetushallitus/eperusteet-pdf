@@ -14,6 +14,16 @@ import lombok.NoArgsConstructor;
 public class VuosiluokkaKokonaisuudenLaajaalainenOsaaminenDto implements ReferenceableDto {
     private Long id;
     @JsonProperty("_laajaalainenosaaminen")
+    private Reference laajaalainenosaaminen;
+    @JsonProperty("_laajaalainenOsaaminen")
     private Reference laajaalainenOsaaminen;
     private LokalisoituTekstiDto kuvaus;
+
+    public Reference getLaajaalainenOsaaminen() {
+        if (laajaalainenOsaaminen != null) {
+            return laajaalainenOsaaminen;
+        }
+
+        return laajaalainenosaaminen;
+    }
 }
