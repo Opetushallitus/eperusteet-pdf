@@ -293,8 +293,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             }
 
             TekstiKappaleJulkinenDto tekstiKappale = sisaltoViiteDto.getTekstiKappale();
-            StringBuilder otsikkoBuilder = new StringBuilder();
-            otsikkoBuilder.append(getTextString(docBase, sisaltoViiteDto.getNimi()));
+            StringBuilder otsikkoBuilder = new StringBuilder(getSisaltoViiteOtsikko(docBase, sisaltoViiteDto));
 
             if (sisaltoViiteDto.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)
                     && sisaltoViiteDto.getTosa() != null
@@ -413,6 +412,14 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
             docBase.getGenerator().increaseNumber();
         }
+    }
+
+    private String getSisaltoViiteOtsikko(DokumenttiAmosaa docBase, SisaltoViiteExportDto sisaltoViiteDto) {
+        if (sisaltoViiteDto.getTyyppi().equals(SisaltoTyyppi.SUORITUSPOLUT)) {
+            return messages.translate("opiskelupolut", docBase.getKieli());
+        }
+
+        return getTextString(docBase, sisaltoViiteDto.getNimi());
     }
 
     private void addSuorituspolku(DokumenttiAmosaa docBase, SisaltoViiteExportDto viite, String suorituspolkuNimi) {
@@ -1204,7 +1211,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 }
 
                 // Arviointi
-                if (perusteenTutkinnonosa.getArviointi() != null) {
+                if (perusteenTutkinnonosa.getArviointi() != null && !CollectionUtils.isEmpty(perusteenTutkinnonosa.getArviointi().getArvioinninKohdealueet())) {
                     addTeksti(docBase, messages.translate("docgen.arviointi", docBase.getKieli()), "h5");
                     fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArviointiDto arviointiDto = perusteenTutkinnonosa.getArviointi();
 
@@ -1228,6 +1235,8 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                         addArvioinninKohdealue(docBase, arvioinninKohdealue);
                     });
                 }
+
+                addGeneerinenArviointi(docBase, perusteenTutkinnonosa.getGeneerinenArviointiasteikko());
 
                 // Ammattitaidon osoittamistavat
                 if (perusteenTutkinnonosa.getAmmattitaidonOsoittamistavat() != null) {
