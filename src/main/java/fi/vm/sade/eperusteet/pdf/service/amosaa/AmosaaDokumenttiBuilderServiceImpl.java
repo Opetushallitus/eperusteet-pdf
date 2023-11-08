@@ -718,32 +718,15 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
                 TekstiosaDto tavatjaymparisto = toteutus.getTavatjaymparisto();
                 if (tavatjaymparisto != null && tavatjaymparisto.getTeksti() != null) {
-                    DokumenttiTaulukko.addRow(docBase,
-                            toteutusTaulukko,
-                            messages.translate("docgen.tavat-ja-ymparisto", docBase.getKieli()),
-                            true);
-
-                    Element tr = docBase.getDocument().createElement("tr");
-                    toteutusTaulukko.appendChild(tr);
-                    Element td = docBase.getDocument().createElement("th");
-                    tr.appendChild(td);
-                    addLokalisoituteksti(docBase, tavatjaymparisto.getTeksti(), "div", td);
+                    addTeksti(docBase, messages.translate("docgen.osaamisen-hankkiminen", docBase.getKieli()), "h6");
+                    addLokalisoituteksti(docBase, tavatjaymparisto.getTeksti(), "div");
                     toteutuksellaSisaltoa = true;
                 }
 
                 TekstiosaDto arvioinnista = toteutus.getArvioinnista();
                 if (arvioinnista != null && arvioinnista.getTeksti() != null) {
-                    DokumenttiTaulukko.addRow(docBase,
-                            toteutusTaulukko,
-                            messages.translate("docgen.osaamisen-arvioinnista", docBase.getKieli()),
-                            true);
-
-                    Element tr = docBase.getDocument().createElement("tr");
-                    toteutusTaulukko.appendChild(tr);
-                    Element td = docBase.getDocument().createElement("th");
-                    tr.appendChild(td);
-                    addLokalisoituteksti(docBase, arvioinnista.getTeksti(), "div", td);
-
+                    addTeksti(docBase, messages.translate("docgen.osaamisen-osoittaminen", docBase.getKieli()), "h6");
+                    addLokalisoituteksti(docBase, arvioinnista.getTeksti(), "div");
                     toteutuksellaSisaltoa = true;
                 }
 
@@ -753,7 +736,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 }
 
                 toteutus.getVapaat().forEach(vapaaTeksti -> {
-                    addLokalisoituteksti(docBase, vapaaTeksti.getNimi(), "h5");
+                    addLokalisoituteksti(docBase, vapaaTeksti.getNimi(), "h6");
                     addLokalisoituteksti(docBase, vapaaTeksti.getTeksti(), "div");
                 });
             });
@@ -798,36 +781,20 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
                 TekstiosaDto tavatjaymparisto = toteutus.getTavatjaymparisto();
                 if (tavatjaymparisto != null && tavatjaymparisto.getTeksti() != null) {
-                    DokumenttiTaulukko.addRow(docBase,
-                            toteutusTaulukko,
-                            messages.translate("docgen.tavat-ja-ymparisto", docBase.getKieli()),
-                            true);
-
-                    Element tr = docBase.getDocument().createElement("tr");
-                    toteutusTaulukko.appendChild(tr);
-                    Element td = docBase.getDocument().createElement("th");
-                    tr.appendChild(td);
-                    addLokalisoituteksti(docBase, tavatjaymparisto.getTeksti(), "div", td);
+                    addTeksti(docBase, messages.translate("docgen.osaamisen-hankkiminen", docBase.getKieli()), "h6");
+                    addLokalisoituteksti(docBase, tavatjaymparisto.getTeksti(), "div");
                 }
 
                 TekstiosaDto arvioinnista = toteutus.getArvioinnista();
                 if (arvioinnista != null && arvioinnista.getTeksti() != null) {
-                    DokumenttiTaulukko.addRow(docBase,
-                            toteutusTaulukko,
-                            messages.translate("docgen.osaamisen-arvioinnista", docBase.getKieli()),
-                            true);
-
-                    Element tr = docBase.getDocument().createElement("tr");
-                    toteutusTaulukko.appendChild(tr);
-                    Element td = docBase.getDocument().createElement("th");
-                    tr.appendChild(td);
-                    addLokalisoituteksti(docBase, arvioinnista.getTeksti(), "div", td);
+                    addTeksti(docBase, messages.translate("docgen.osaamisen-osoittaminen", docBase.getKieli()), "h6");
+                    addLokalisoituteksti(docBase, arvioinnista.getTeksti(), "div");
                 }
 
                 docBase.getBodyElement().appendChild(toteutusTaulukko);
 
                 toteutus.getVapaat().forEach(vapaaTeksti -> {
-                    addLokalisoituteksti(docBase, vapaaTeksti.getNimi(), "h5");
+                    addLokalisoituteksti(docBase, vapaaTeksti.getNimi(), "h6");
                     addLokalisoituteksti(docBase, vapaaTeksti.getTeksti(), "div");
                 });
             });
