@@ -125,6 +125,13 @@ public class DokumenttiUtils {
         return getTextString(docBase.getKieli(), lokalisoituTekstiDto);
     }
 
+    public static boolean sisaltaaDokumentinKielenSisallon(DokumenttiBase docBase, LokalisoituTekstiDto lokalisoituTekstiDto) {
+        return lokalisoituTekstiDto != null
+            && lokalisoituTekstiDto.getTekstit() != null
+            && lokalisoituTekstiDto.getTekstit().get(docBase.getKieli()) != null
+            && !lokalisoituTekstiDto.getTekstit().get(docBase.getKieli()).isEmpty();
+    }
+
     public static String getTextString(Kieli kieli, LokalisoituTekstiDto lokalisoituTekstiDto) {
         if (getKielistettyTeksti(lokalisoituTekstiDto, kieli) != null) {
             return cleanHtml(getKielistettyTeksti(lokalisoituTekstiDto, kieli));
