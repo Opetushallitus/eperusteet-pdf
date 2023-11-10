@@ -109,6 +109,7 @@ import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addLokalisoituteks
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addTeksti;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.selectLaajuusYksikkoMessage;
+import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.sisaltaaDokumentinKielenSisallon;
 
 @Slf4j
 @Service
@@ -745,6 +746,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         if (!CollectionUtils.isEmpty(sisaltoViiteDto.getOsaAlueet())) {
             docBase.getGenerator().increaseDepth();
             sisaltoViiteDto.getOsaAlueet().stream()
+                    .filter(osaAlue -> sisaltaaDokumentinKielenSisallon(docBase, osaAlue.getNimi()))
                     .sorted(Comparator.comparingInt(OmaOsaAlueExportDto::sort) )
                     .forEach(osaAlue -> {
                 PerusteKaikkiDto tosaPeruste = docBase.getTutkinnonOsienPerusteet().stream()

@@ -131,6 +131,7 @@ import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getList;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.newBoldElement;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.newItalicElement;
+import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.sisaltaaDokumentinKielenSisallon;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.tagTeksti;
 
 @Slf4j
@@ -1970,7 +1971,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         List<OsaAlueKaikkiDto> osaAlueet = osa.getOsaAlueet();
 
         osaAlueet.stream()
-                .filter(osaAlue -> !getTextString(docBase, osaAlue.getNimi()).isEmpty())
+                .filter(osaAlue -> sisaltaaDokumentinKielenSisallon(docBase, osaAlue.getNimi()))
                 .forEach(osaAlue -> {
                     
             String nimi = getTextString(docBase, osaAlue.getNimi());
