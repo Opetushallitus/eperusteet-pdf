@@ -202,10 +202,10 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             addPerusteenOsat(docBase, sisalto); // Tekstikappaleet
             addPerusopetus(docBase);
         } else {
-            addAipeSisalto(docBase);
             addTutkinnonMuodostuminen(docBase);
             addTutkinnonosat(docBase);
             addPerusteenOsat(docBase, sisalto); // Tekstikappaleet
+            addAipeSisalto(docBase);
         }
         addTekstikappaleLiitteet(docBase, sisalto);
         addFootnotes(docBase);
@@ -1149,7 +1149,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             }
             if (po instanceof TaiteenalaDto) {
                 TaiteenalaDto taiteenala = (TaiteenalaDto) po;
-                addTaiteenala(docBase, taiteenala, po, lapsi);
+                addTaiteenala(docBase, taiteenala);
             } else if (po instanceof OpintokokonaisuusDto) {
                 OpintokokonaisuusDto opintokokonaisuus = (OpintokokonaisuusDto) po;
                 addOpintokokonaisuus(docBase, opintokokonaisuus, po, lapsi);
@@ -1259,8 +1259,8 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         }
     }
 
-    private void addTaiteenala(DokumenttiPeruste docBase, TaiteenalaDto taiteenala, PerusteenOsaDto po,
-                               PerusteenOsaViiteDto lapsi) {
+    private void addTaiteenala(DokumenttiPeruste docBase,
+                               TaiteenalaDto taiteenala) {
         // Nimi
         LokalisoituTekstiDto nimi = taiteenala.getNimi();
         addHeader(docBase, getTextString(docBase, nimi));
@@ -1295,6 +1295,13 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
         // Yhteiset opinnot
         addTaiteenalaSisalto(docBase, taiteenala.getYhteisetOpinnot(), "docgen.taiteenala.yhteiset-opinnot");
+
+        taiteenala.getVapaatTekstit().forEach(vapaaTeksti -> {
+            addTeksti(docBase, getTextString(docBase, vapaaTeksti.getNimi()), "h5");
+            addTeksti(docBase, getTextString(docBase, vapaaTeksti.getTeksti()), "div");
+        });
+
+        docBase.getGenerator().increaseNumber();
     }
 
     private void addOpintokokonaisuus(DokumenttiPeruste docBase,
@@ -1973,7 +1980,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         osaAlueet.stream()
                 .filter(osaAlue -> sisaltaaDokumentinKielenSisallon(docBase, osaAlue.getNimi()))
                 .forEach(osaAlue -> {
-                    
+
             String nimi = getTextString(docBase, osaAlue.getNimi());
             addTeksti(docBase, nimi, "h5");
 
