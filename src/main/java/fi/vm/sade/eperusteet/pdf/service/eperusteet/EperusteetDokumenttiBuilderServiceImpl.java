@@ -911,7 +911,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
                         // Laaja-alaiset osaamiset
                         if (!ObjectUtils.isEmpty(vuosiluokka.getLaajaalaisetOsaamiset())) {
-                            addHeader(docBase, messages.translate("laaja-alainen-osaaminen", docBase.getKieli()));
+                            addHeader(docBase, messages.translate("laaja-alaisen-osaamisen-osa-alueet", docBase.getKieli()));
                             vuosiluokka.getLaajaalaisetOsaamiset().stream()
                                     .sorted(Comparator.comparing(lao -> docBase.getLaajaAlainenOsaaminen(lao.getLaajaalainenOsaaminen().getIdLong()).get().getNimi().get(docBase.getKieli())))
                                     .forEach(lao -> {
@@ -945,8 +945,10 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                                     .forEach(oppiaine -> {
                                         addHeader(docBase, getTextString(docBase, getOptionalValue(oppiaine.getNimi())));
 
-                                        // Tehtävä
-                                        // TODO: tehtava-tieto toistaiseksi tyhjänä
+                                        if (oppiaine.getTehtava().isPresent()) {
+                                            addTeksti(docBase, getTextString(docBase, oppiaine.getTehtava().get().getOtsikko()), "h6");
+                                            addTeksti(docBase, getTextString(docBase, oppiaine.getTehtava().get().getTeksti()), "div");
+                                        }
 
                                         // Oppiaineen vuosiluokkakokonaisuus
                                         oppiaine.getVuosiluokkakokonaisuus(vuosiluokka.getId())
@@ -1036,11 +1038,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 oppiaineenVuosiluokkaKokonaisuus.getTavoitteet().forEach(tavoite -> {
                     addTeksti(docBase, getTextString(docBase, tavoite.getTavoite().get()), "h5");
 
-                    if (tavoite.getTavoitteistaJohdetutOppimisenTavoitteet().isPresent()) {
-                        addTeksti(docBase, messages.translate("tavoitteista-johdetut-oppimisen-tavoitteet", docBase.getKieli()), "h6");
-                        addTeksti(docBase, getTextString(docBase, tavoite.getTavoitteistaJohdetutOppimisenTavoitteet().get()), "div");
-                    }
-
                     if (!tavoite.getKohdealueet().isEmpty()) {
                         OpetuksenKohdealueDto opetuksenKohdealueDto = oppiaineenKohdealueet.stream()
                                 .filter(kohdealue -> kohdealue.getId().equals(tavoite.getKohdealueet().stream().findFirst().get().getIdLong())).findAny().get();
@@ -1050,17 +1047,9 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                         addTeksti(docBase, "", "p");
                     }
 
-                    if (!tavoite.getLaajattavoitteet().isEmpty()) {
-                        addTeksti(docBase, messages.translate("laaja-alainen-osaaminen", docBase.getKieli()), "h6");
-
-                        docBase.getPeruste().getPerusopetuksenPerusteenSisalto().getLaajaalaisetosaamiset().stream()
-                                .filter(lao -> tavoite.getLaajattavoitteet().stream().map(Reference::getIdLong).collect(Collectors.toList()).contains(lao.getId()))
-                                .sorted(Comparator.comparing(lao -> getTextString(docBase, lao.getNimi())))
-                                .forEach(lao -> {
-                                    addTeksti(docBase, getTextString(docBase, lao.getNimi()), "p");
-                        });
-
-                        addTeksti(docBase, "", "p");
+                    if (tavoite.getTavoitteistaJohdetutOppimisenTavoitteet().isPresent()) {
+                        addTeksti(docBase, messages.translate("tavoitteista-johdetut-oppimisen-tavoitteet", docBase.getKieli()), "h6");
+                        addTeksti(docBase, getTextString(docBase, tavoite.getTavoitteistaJohdetutOppimisenTavoitteet().get()), "div");
                     }
 
                     if (!tavoite.getSisaltoalueet().isEmpty()) {
@@ -1071,6 +1060,19 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                                 .sorted(Comparator.comparing(sisaltoalue -> getTextString(docBase, sisaltoalue.getNimi().get())))
                                 .forEach(sisaltoalue -> {
                             addTeksti(docBase, getTextString(docBase, sisaltoalue.getNimi().get()), "p");
+                        });
+
+                        addTeksti(docBase, "", "p");
+                    }
+
+                    if (!tavoite.getLaajattavoitteet().isEmpty()) {
+                        addTeksti(docBase, messages.translate("laaja-alaisen-osaamisen-osa-alueet", docBase.getKieli()), "h6");
+
+                        docBase.getPeruste().getPerusopetuksenPerusteenSisalto().getLaajaalaisetosaamiset().stream()
+                                .filter(lao -> tavoite.getLaajattavoitteet().stream().map(Reference::getIdLong).collect(Collectors.toList()).contains(lao.getId()))
+                                .sorted(Comparator.comparing(lao -> getTextString(docBase, lao.getNimi())))
+                                .forEach(lao -> {
+                                    addTeksti(docBase, getTextString(docBase, lao.getNimi()), "p");
                         });
 
                         addTeksti(docBase, "", "p");
