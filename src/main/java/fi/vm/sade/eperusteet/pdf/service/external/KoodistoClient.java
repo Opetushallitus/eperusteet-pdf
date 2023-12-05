@@ -7,10 +7,8 @@ import java.util.List;
 
 public interface KoodistoClient {
 
-    @PreAuthorize("permitAll()")
     List<KoodistoKoodiDto> getAll(String koodisto);
 
-    @PreAuthorize("permitAll()")
     KoodistoKoodiDto get(String koodistoUri, String koodiUri);
 
     KoodistoKoodiDto getByUri(String uri);

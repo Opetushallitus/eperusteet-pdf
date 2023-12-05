@@ -25,13 +25,11 @@ public class DokumenttiAsyncConfig implements AsyncConfigurer {
 
     @Override
     @Bean(name = "docTaskExecutor")
-    public Executor getAsyncExecutor() {
+    public ThreadPoolTaskExecutor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(1);
-        executor.setMaxPoolSize(1);
-        executor.setQueueCapacity(100);
+        executor.setCorePoolSize(3);
         executor.initialize();
-        return new DelegatingSecurityContextAsyncTaskExecutor(executor);
+        return executor;
     }
 
     @Override
