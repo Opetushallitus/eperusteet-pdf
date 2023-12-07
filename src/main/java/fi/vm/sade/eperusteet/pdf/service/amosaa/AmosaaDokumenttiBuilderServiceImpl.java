@@ -817,6 +817,18 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             }
         }
 
+        if (omaOsaAlueDto.getPaikallinenTarkennus() != null) {
+            addTeksti(docBase, messages.translate("paikallinen-tarkennus", docBase.getKieli()), "h5");
+            addTeksti(docBase, getTextString(docBase, omaOsaAlueDto.getPaikallinenTarkennus()), "div");
+        }
+
+        if (omaOsaAlueDto.getVapaat() != null) {
+            omaOsaAlueDto.getVapaat().forEach(vapaaTeksti -> {
+                addLokalisoituteksti(docBase, vapaaTeksti.getNimi(), "h5");
+                addLokalisoituteksti(docBase, vapaaTeksti.getTeksti(), "div");
+            });
+        }
+
         if (perusteenOsaAlue != null) {
             addTeksti(docBase, messages.translate("docgen.perusteen-sisalto", docBase.getKieli()), "h5");
             if (omaOsaAlueDto.getTyyppi().equals(OmaOsaAlueTyyppi.PAKOLLINEN)) {
