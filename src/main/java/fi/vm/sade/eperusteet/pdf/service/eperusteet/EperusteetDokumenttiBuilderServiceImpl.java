@@ -185,7 +185,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         docBase.setGenerator(new CharapterNumberGenerator());
         docBase.setKieli(generatorData.getKieli());
         docBase.setPeruste(perusteData);
-        if (KoulutusTyyppi.of(perusteData.getKoulutustyyppi()).isAmmatillinen()) {
+        if (perusteData.getKoulutustyyppi() != null && KoulutusTyyppi.of(perusteData.getKoulutustyyppi()).isAmmatillinen()) {
             docBase.setKvLiiteJulkinenDto(eperusteetService.getKvLiite(perusteData.getId()));
         }
         docBase.setGeneratorData(generatorData);
@@ -195,10 +195,10 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
         PerusteenOsaViiteDto.Laaja sisalto = docBase.getSisalto();
 
-        if (KoulutusTyyppi.of(perusteData.getKoulutustyyppi()).isLukio()) {
+        if (perusteData.getKoulutustyyppi() != null && KoulutusTyyppi.of(perusteData.getKoulutustyyppi()).isLukio()) {
             addPerusteenOsat(docBase, sisalto); // Tekstikappaleet
             addLukioOppiaineet(docBase);
-        } else if (KoulutusTyyppi.of(perusteData.getKoulutustyyppi()).equals(KoulutusTyyppi.PERUSOPETUS)) {
+        } else if (perusteData.getKoulutustyyppi() != null && KoulutusTyyppi.of(perusteData.getKoulutustyyppi()).equals(KoulutusTyyppi.PERUSOPETUS)) {
             addPerusteenOsat(docBase, sisalto); // Tekstikappaleet
             addPerusopetus(docBase);
         } else {
