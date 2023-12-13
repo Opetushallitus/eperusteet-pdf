@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KevytTekstiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.OmaOsaAlueTyyppi;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,8 @@ public class OmaOsaAlueDto {
     private PaikallisetAmmattitaitovaatimukset2019Dto osaamistavoitteet = new PaikallisetAmmattitaitovaatimukset2019Dto();
     private Long geneerinenarviointi;
     private Integer laajuus;
+    private LokalisoituTekstiDto paikallinenTarkennus;
+    private List<KevytTekstiKappaleDto> vapaat = new ArrayList<>();
 
     public int sort() {
         switch (tyyppi) {
