@@ -30,6 +30,7 @@ import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiosaDto;
 import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -243,9 +244,15 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                     docBase.getGenerator().increaseDepth();
                     docBase.getGenerator().increaseDepth();
 
-
                     // Tehtävä
                     addOppiaineTehtava(docBase, oppiaine, perusteOppiaineDto);
+
+                    if (!CollectionUtils.isEmpty(perusteOppiaineDto.getVapaatTekstit())) {
+                        perusteOppiaineDto.getVapaatTekstit().forEach(vapaaTeksti -> {
+                            addTeksti(docBase, getTextString(docBase, vapaaTeksti.getNimi()), "h6");
+                            addTeksti(docBase, getTextString(docBase, vapaaTeksti.getTeksti()), "div");
+                        });
+                    }
 
                     // Oppiaineen vuosiluokkakokonaiuuden kohtaiset
                     addOppiaineVuosiluokkkakokonaisuus(docBase, perusteOaVlkDto, oaVlk, oaPohjanVlk);
@@ -265,12 +272,11 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                     }
 
                     docBase.getGenerator().decreaseDepth();
-
                     docBase.getGenerator().increaseNumber();
                 }
             }
-            docBase.getGenerator().decreaseDepth();
 
+            docBase.getGenerator().decreaseDepth();
             docBase.getGenerator().increaseNumber();
         }
     }
@@ -306,6 +312,14 @@ public class PerusopetusServiceImpl implements PerusopetusService {
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getTyotavat(), pohjanVlkDto.getTyotavat(), perusteOaVlkDto.getTyotavat().orElse(null));
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getOhjaus(), pohjanVlkDto.getOhjaus(), perusteOaVlkDto.getOhjaus().orElse(null));
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getArviointi(), pohjanVlkDto.getArviointi(), perusteOaVlkDto.getArviointi().orElse(null));
+
+            if (!CollectionUtils.isEmpty(perusteOaVlkDto.getVapaatTekstit())) {
+                perusteOaVlkDto.getVapaatTekstit().forEach(vt -> {
+                    addTeksti(docBase, getTextString(docBase, vt.getNimi()), "h6");
+                    addTeksti(docBase, getTextString(docBase, vt.getTeksti()), "div");
+                });
+            }
+
             addTavoitteetJaSisaltoalueet(docBase, perusteOaVlkDto, oaVlkDto);
         } else {
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getTehtava(), pohjanVlkDto.getTehtava(), null);
