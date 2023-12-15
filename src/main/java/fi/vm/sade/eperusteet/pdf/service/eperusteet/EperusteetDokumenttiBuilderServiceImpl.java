@@ -952,6 +952,13 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                                             addTeksti(docBase, getTextString(docBase, oppiaine.getTehtava().get().getTeksti()), "div");
                                         }
 
+                                        if (!CollectionUtils.isEmpty(oppiaine.getVapaatTekstit())) {
+                                            oppiaine.getVapaatTekstit().forEach(vapaaTeksti -> {
+                                                addTeksti(docBase, getTextString(docBase, vapaaTeksti.getNimi()), "h6");
+                                                addTeksti(docBase, getTextString(docBase, vapaaTeksti.getTeksti()), "div");
+                                            });
+                                        }
+
                                         // Oppiaineen vuosiluokkakokonaisuus
                                         oppiaine.getVuosiluokkakokonaisuus(vuosiluokka.getId())
                                                 .ifPresent(oppiaineenVuosiluokkaKokonaisuusDto -> addVuosiluokkakokonaisuus(docBase, oppiaine.getKohdealueet(), oppiaineenVuosiluokkaKokonaisuusDto));
