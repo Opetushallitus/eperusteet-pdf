@@ -766,6 +766,18 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         }
         addHeader(docBase, otsikko.toString());
 
+        if (omaOsaAlueDto.getPaikallinenTarkennus() != null) {
+            addTeksti(docBase, messages.translate("koulutuksen-jarjestajan-tarkennus", docBase.getKieli()), "h5");
+            addTeksti(docBase, getTextString(docBase, omaOsaAlueDto.getPaikallinenTarkennus()), "div");
+        }
+
+        if (omaOsaAlueDto.getVapaat() != null) {
+            omaOsaAlueDto.getVapaat().forEach(vapaaTeksti -> {
+                addLokalisoituteksti(docBase, vapaaTeksti.getNimi(), "h5");
+                addLokalisoituteksti(docBase, vapaaTeksti.getTeksti(), "div");
+            });
+        }
+
         if (!CollectionUtils.isEmpty(omaOsaAlueDto.getToteutukset())) {
             addTeksti(docBase, messages.translate("docgen.koulutuksen-jarjestajan-toteutus", docBase.getKieli()), "h5");
 
@@ -815,18 +827,6 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             if (perusteenOsaAlue == null) {
                 return;
             }
-        }
-
-        if (omaOsaAlueDto.getPaikallinenTarkennus() != null) {
-            addTeksti(docBase, messages.translate("paikallinen-tarkennus", docBase.getKieli()), "h5");
-            addTeksti(docBase, getTextString(docBase, omaOsaAlueDto.getPaikallinenTarkennus()), "div");
-        }
-
-        if (omaOsaAlueDto.getVapaat() != null) {
-            omaOsaAlueDto.getVapaat().forEach(vapaaTeksti -> {
-                addLokalisoituteksti(docBase, vapaaTeksti.getNimi(), "h5");
-                addLokalisoituteksti(docBase, vapaaTeksti.getTeksti(), "div");
-            });
         }
 
         if (perusteenOsaAlue != null) {
