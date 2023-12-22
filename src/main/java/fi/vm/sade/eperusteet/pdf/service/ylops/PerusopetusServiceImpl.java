@@ -1,13 +1,10 @@
 package fi.vm.sade.eperusteet.pdf.service.ylops;
 
-import com.google.common.collect.ComparisonChain;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiRivi;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTaulukko;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
-import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.LaajaalainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineLaajaDto;
@@ -247,10 +244,19 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                     // Tehtävä
                     addOppiaineTehtava(docBase, oppiaine, perusteOppiaineDto);
 
-                    if (!CollectionUtils.isEmpty(perusteOppiaineDto.getVapaatTekstit())) {
+                    if (perusteOppiaineDto != null && !CollectionUtils.isEmpty(perusteOppiaineDto.getVapaatTekstit())) {
                         perusteOppiaineDto.getVapaatTekstit().forEach(vapaaTeksti -> {
-                            addTeksti(docBase, getTextString(docBase, vapaaTeksti.getNimi()), "h6");
-                            addTeksti(docBase, getTextString(docBase, vapaaTeksti.getTeksti()), "div");
+                            addTeksti(docBase, getTextString(docBase, vapaaTeksti.getNimi()), "h5");
+                            addTeksti(docBase, getTextString(docBase, vapaaTeksti.getTeksti()), "cite");
+
+                            if (!CollectionUtils.isEmpty(oppiaine.getVapaatTekstit())) {
+                                oppiaine.getVapaatTekstit().forEach(vt -> {
+                                    if (vt.getPerusteenVapaaTekstiId().equals(vapaaTeksti.getId())) {
+                                        addTeksti(docBase, messages.translate("paikallinen-tarkennus", docBase.getKieli()), "h6");
+                                        addTeksti(docBase, getTextString(docBase, vt.getPaikallinenTarkennus()), "div");
+                                    }
+                                });
+                            }
                         });
                     }
 
