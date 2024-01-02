@@ -23,6 +23,7 @@ public class OppiaineExportDto extends OppiaineBaseDto {
     private String koodiUri;
     private String koodiArvo;
     private OppiaineExportDto pohjanOppiaine;
+    private Set<VapaatekstiPaikallinentarkennusDto> vapaatTekstit;
 
     public Optional<OppiaineenVuosiluokkakokonaisuusDto> getVuosiluokkakokonaisuus(String tunniste) {
         return vuosiluokkakokonaisuudet.stream()
