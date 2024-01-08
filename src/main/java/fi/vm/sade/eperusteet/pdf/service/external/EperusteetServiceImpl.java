@@ -89,7 +89,7 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public ArviointiAsteikkoDto getArviointiasteikko(Long id) {
         try {
-            ResponseEntity<ArviointiAsteikkoDto> response = restTemplate.exchange(eperusteetServiceUrl + EPERUSTEET_API + "arviointiasteikot/{id}",
+            ResponseEntity<ArviointiAsteikkoDto> response = restTemplate.exchange(eperusteetServiceUrl + "/api/arviointiasteikot/{id}",
                     HttpMethod.GET,
                     httpEntity,
                     ArviointiAsteikkoDto.class,
