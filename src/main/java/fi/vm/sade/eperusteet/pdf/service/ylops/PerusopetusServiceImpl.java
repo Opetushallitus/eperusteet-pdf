@@ -384,6 +384,8 @@ public class PerusopetusServiceImpl implements PerusopetusService {
 
                     addLokalisoituteksti(docBase, opetuksentavoite.getTavoite(), "div");
 
+                    addLokalisoituteksti(docBase, opetuksentavoite.getTavoitteistaJohdetutOppimisenTavoitteet(), "div");
+
                     // Tavoitteen arviointi
                     DokumenttiTaulukko taulukko = new DokumenttiTaulukko();
                     taulukko.addOtsikko(messages.translate("arviointi-vuosiluokan-paatteeksi", docBase.getKieli()));
