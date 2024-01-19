@@ -1056,7 +1056,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                     }
 
                     if (!ObjectUtils.isEmpty(tavoite.getOppiaineenTavoitteenOpetuksenTavoitteet())) {
-                        addTeksti(docBase, messages.translate("tavoitteista-johdetut-oppimisen-tavoitteet", docBase.getKieli()), "h6");
+                        addTeksti(docBase, messages.translate("opetuksen-tavoitteet", docBase.getKieli()), "h6");
                         tavoite.getOppiaineenTavoitteenOpetuksenTavoitteet().forEach(ot -> addTeksti(docBase, getTextString(docBase, ot.getTavoite().get()), "p"));
                     }
                     if (tavoite.getTavoitteistaJohdetutOppimisenTavoitteet().isPresent()) {

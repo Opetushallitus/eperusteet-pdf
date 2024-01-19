@@ -28,6 +28,7 @@ import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -384,7 +385,15 @@ public class PerusopetusServiceImpl implements PerusopetusService {
 
                     addLokalisoituteksti(docBase, opetuksentavoite.getTavoite(), "div");
 
-                    addLokalisoituteksti(docBase, opetuksentavoite.getTavoitteistaJohdetutOppimisenTavoitteet(), "div");
+                    if (!ObjectUtils.isEmpty(opetuksentavoite.getOppiaineenTavoitteenOpetuksenTavoitteet())) {
+                        addTeksti(docBase, messages.translate("opetuksen-tavoitteet", docBase.getKieli()), "h6");
+                        opetuksentavoite.getOppiaineenTavoitteenOpetuksenTavoitteet().forEach(ot -> addTeksti(docBase, getTextString(docBase, ot.getTavoite().get()), "p"));
+                    }
+
+                    if (!ObjectUtils.isEmpty(opetuksentavoite.getTavoitteistaJohdetutOppimisenTavoitteet())) {
+                        addTeksti(docBase, messages.translate("tavoitteista-johdetut-oppimisen-tavoitteet", docBase.getKieli()), "h6");
+                        addTeksti(docBase, getTextString(docBase, opetuksentavoite.getTavoitteistaJohdetutOppimisenTavoitteet()), "div");
+                    }
 
                     // Tavoitteen arviointi
                     DokumenttiTaulukko taulukko = new DokumenttiTaulukko();
