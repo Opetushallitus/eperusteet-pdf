@@ -1047,6 +1047,11 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 oppiaineenVuosiluokkaKokonaisuus.getTavoitteet().forEach(tavoite -> {
                     addTeksti(docBase, getTextString(docBase, tavoite.getTavoite().get()), "h5");
 
+                    if (!ObjectUtils.isEmpty(tavoite.getOppiaineenTavoitteenOpetuksenTavoitteet())) {
+                        addTeksti(docBase, messages.translate("opetuksen-tavoitteet", docBase.getKieli()), "h6");
+                        tavoite.getOppiaineenTavoitteenOpetuksenTavoitteet().forEach(ot -> addTeksti(docBase, getTextString(docBase, ot.getTavoite().get()), "p"));
+                    }
+
                     if (!tavoite.getKohdealueet().isEmpty()) {
                         OpetuksenKohdealueDto opetuksenKohdealueDto = oppiaineenKohdealueet.stream()
                                 .filter(kohdealue -> kohdealue.getId().equals(tavoite.getKohdealueet().stream().findFirst().get().getIdLong())).findAny().get();
@@ -1055,10 +1060,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                         addTeksti(docBase, "", "p");
                     }
 
-                    if (!ObjectUtils.isEmpty(tavoite.getOppiaineenTavoitteenOpetuksenTavoitteet())) {
-                        addTeksti(docBase, messages.translate("opetuksen-tavoitteet", docBase.getKieli()), "h6");
-                        tavoite.getOppiaineenTavoitteenOpetuksenTavoitteet().forEach(ot -> addTeksti(docBase, getTextString(docBase, ot.getTavoite().get()), "p"));
-                    }
                     if (tavoite.getTavoitteistaJohdetutOppimisenTavoitteet().isPresent()) {
                         addTeksti(docBase, messages.translate("tavoitteista-johdetut-oppimisen-tavoitteet", docBase.getKieli()), "h6");
                         addTeksti(docBase, getTextString(docBase, tavoite.getTavoitteistaJohdetutOppimisenTavoitteet().get()), "div");
