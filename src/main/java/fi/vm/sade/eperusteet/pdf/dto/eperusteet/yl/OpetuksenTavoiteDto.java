@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -27,4 +28,5 @@ public class OpetuksenTavoiteDto implements ReferenceableDto {
     private Optional<LokalisoituTekstiDto> arvioinninOsaamisenKuvaus;
     private Optional<LokalisoituTekstiDto> tavoitteistaJohdetutOppimisenTavoitteet;
     private Optional<LokalisoituTekstiDto> vapaaTeksti;
+    private List<OppiaineenTavoitteenOpetuksenTavoiteDto> oppiaineenTavoitteenOpetuksenTavoitteet;
 }
