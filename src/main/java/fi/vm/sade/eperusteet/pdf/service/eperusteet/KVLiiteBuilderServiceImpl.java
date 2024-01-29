@@ -13,6 +13,7 @@ import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -177,22 +178,20 @@ public class KVLiiteBuilderServiceImpl implements KVLiiteBuilderService {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
-        if (kvLiiteJulkinenDto.getVoimassaoloAlkaa() != null) {
-            voimaantulopaivaJaDiaari.append(messages
-                    .translate("docgen.kvliite.tutkinnon-perusteiden-voimaantulopaiva", docBase.getKieli()));
-            voimaantulopaivaJaDiaari.append(" ");
-            voimaantulopaivaJaDiaari.append(dateFormat.format(kvLiiteJulkinenDto.getVoimassaoloAlkaa()));
-            voimaantulopaivaJaDiaari.append(" ");
+        if (kvLiiteJulkinenDto.getVoimassaoloAlkaa() == null || kvLiiteJulkinenDto.getDiaarinumero() == null) {
+            throw new NotImplementedException("Voimaantulopäivää ja/tai diaarinumeroa ei ole annettu");
         }
 
-        if (kvLiiteJulkinenDto.getDiaarinumero() != null) {
-            voimaantulopaivaJaDiaari.append("(");
-            voimaantulopaivaJaDiaari.append(kvLiiteJulkinenDto.getDiaarinumero());
-            voimaantulopaivaJaDiaari.append(")");
-        }
+        voimaantulopaivaJaDiaari.append(messages.translate("docgen.kvliite.tutkinnon-perusteiden-voimaantulopaiva", docBase.getKieli()));
+        voimaantulopaivaJaDiaari.append(" ");
+        voimaantulopaivaJaDiaari.append(dateFormat.format(kvLiiteJulkinenDto.getVoimassaoloAlkaa()));
+        voimaantulopaivaJaDiaari.append(" ");
 
-        td.appendChild(DokumenttiUtils.newItalicElement(docBase,
-                voimaantulopaivaJaDiaari.toString()));
+        voimaantulopaivaJaDiaari.append("(");
+        voimaantulopaivaJaDiaari.append(kvLiiteJulkinenDto.getDiaarinumero());
+        voimaantulopaivaJaDiaari.append(")");
+
+        td.appendChild(DokumenttiUtils.newItalicElement(docBase, voimaantulopaivaJaDiaari.toString()));
     }
 
     private void addTutkinnonNimiDokumentinKielella(DokumenttiKVLiite docBase) {
