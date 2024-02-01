@@ -85,6 +85,21 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                     // Vuosiluokkan sisältö
                     docBase.getGenerator().increaseDepth();
 
+                    if (!CollectionUtils.isEmpty(perusteVlk.getVapaatTekstit())) {
+                        perusteVlk.getVapaatTekstit().forEach(vapaaTeksti -> {
+                            addTeksti(docBase, getTextString(docBase, vapaaTeksti.getNimi()), "h5");
+                            addTeksti(docBase, getTextString(docBase, vapaaTeksti.getTeksti()), "cite");
+
+                            if (!CollectionUtils.isEmpty(vlk.getVapaatTekstit())) {
+                                vlk.getVapaatTekstit().forEach(vt -> {
+                                    if (vt.getPerusteenVapaaTekstiId().equals(vapaaTeksti.getId())) {
+                                        addTeksti(docBase, messages.translate("paikallinen-tarkennus", docBase.getKieli()), "h6");
+                                        addTeksti(docBase, getTextString(docBase, vt.getPaikallinenTarkennus()), "div");
+                                    }
+                                });
+                            }
+                        });
+                    }
 
                     // Vuosiluokkakokonaisuuden kohdat
 

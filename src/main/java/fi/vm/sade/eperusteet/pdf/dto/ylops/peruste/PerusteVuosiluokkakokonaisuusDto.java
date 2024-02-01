@@ -6,10 +6,12 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Vuosiluokka;
 import fi.vm.sade.eperusteet.pdf.dto.common.ReferenceableDto;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.perustedto.TekstiKappaleDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,4 +31,5 @@ public class PerusteVuosiluokkakokonaisuusDto implements ReferenceableDto {
     @JsonProperty("laajaalaisetosaamiset")
     private Set<PerusteVuosiluokkakokonaisuudenLaajaalainenosaaminenDto> laajaalaisetOsaamiset;
     private PerusteTekstiOsaDto paikallisestiPaatettavatAsiat;
+    private List<TekstiKappaleDto> vapaatTekstit;
 }

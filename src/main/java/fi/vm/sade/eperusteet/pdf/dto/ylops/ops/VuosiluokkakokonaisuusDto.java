@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -25,6 +27,7 @@ public class VuosiluokkakokonaisuusDto implements ReferenceableDto {
     private TekstiosaDto laajaalainenosaaminen;
     private Tila tila;
     private Set<LaajaalainenosaaminenDto> laajaalaisetosaamiset;
+    private List<VapaatekstiPaikallinentarkennusDto> vapaatTekstit = new ArrayList<>();
 
     public VuosiluokkakokonaisuusDto(Reference tunniste) {
         this.tunniste = tunniste;
