@@ -1,8 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops.teksti;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fi.vm.sade.eperusteet.pdf.dto.enums.Omistussuhde;
 import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Omistussuhde;
 import lombok.Getter;
 import lombok.Setter;
 

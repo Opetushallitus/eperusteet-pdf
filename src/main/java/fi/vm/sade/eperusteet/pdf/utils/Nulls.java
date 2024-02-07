@@ -1,6 +1,5 @@
 package fi.vm.sade.eperusteet.pdf.utils;
 
-
 import fi.vm.sade.eperusteet.pdf.exception.NotExistsException;
 
 import java.util.Collection;

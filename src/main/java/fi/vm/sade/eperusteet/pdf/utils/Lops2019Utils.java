@@ -1,6 +1,5 @@
 package fi.vm.sade.eperusteet.pdf.utils;
 
-
 import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OppiaineJarjestysDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019PerustePaikallinenOppiaineDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019SortableOppiaineDto;
