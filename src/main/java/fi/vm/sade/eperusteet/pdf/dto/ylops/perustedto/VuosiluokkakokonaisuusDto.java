@@ -2,8 +2,8 @@ package fi.vm.sade.eperusteet.pdf.dto.ylops.perustedto;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import fi.vm.sade.eperusteet.pdf.dto.enums.Vuosiluokka;
 import fi.vm.sade.eperusteet.pdf.dto.common.ReferenceableDto;
+import fi.vm.sade.eperusteet.pdf.dto.enums.Vuosiluokka;
 import lombok.Getter;
 import lombok.Setter;
 

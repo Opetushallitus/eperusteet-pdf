@@ -2,9 +2,7 @@ package fi.vm.sade.eperusteet.pdf.service.external;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
-import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
-import fi.vm.sade.eperusteet.pdf.dto.enums.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
@@ -18,9 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 
 @Service
 public class AmosaaServiceImpl implements AmosaaService {

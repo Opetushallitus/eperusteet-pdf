@@ -1,13 +1,11 @@
 package fi.vm.sade.eperusteet.pdf.service.ylops;
 
-import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
 import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.TekstiKappaleViiteExportDto;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.exception.NotExistsException;
 import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;

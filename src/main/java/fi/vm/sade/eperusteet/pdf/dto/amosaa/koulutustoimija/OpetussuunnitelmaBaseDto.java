@@ -1,9 +1,9 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.enums.JotpaTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.OpsTyyppi;
 import fi.vm.sade.eperusteet.utils.domain.utils.Tila;

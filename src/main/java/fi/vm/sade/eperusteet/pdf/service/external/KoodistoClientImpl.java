@@ -5,7 +5,6 @@ import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.fenum.qual.AwtFlowLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -15,7 +14,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
@@ -74,7 +72,7 @@ public class KoodistoClientImpl implements KoodistoClient {
                 .findFirst();
         return koodistoKoodi.orElseGet(() -> null);
     }
-    
+
     @Override
     public KoodistoKoodiDto getByUri(String uri) {
         String[] splitted = uri.split("_");

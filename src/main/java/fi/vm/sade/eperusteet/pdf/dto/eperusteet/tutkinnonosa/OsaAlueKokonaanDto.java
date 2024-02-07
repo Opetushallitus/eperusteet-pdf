@@ -1,7 +1,6 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.Arviointi2020Dto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

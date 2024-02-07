@@ -2,9 +2,9 @@ package fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.lops2019.oppiaineet;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.KoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.common.ReferenceableDto;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.KoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019SortableOppiaineDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
