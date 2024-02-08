@@ -1159,7 +1159,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
     }
 
     private void addPerusteenTutkinnonOsa(DokumenttiAmosaa docBase, Long perusteenTutkinnonosaId, Optional<PerusteKaikkiDto> peruste) {
-        if (peruste.isPresent()) {
+        if (peruste.isEmpty()) {
             return;
         }
 
