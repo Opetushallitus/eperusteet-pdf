@@ -656,9 +656,10 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 break;
             case PERUSTEESTA:
                 if (tutkinnonOsa.getPerusteentutkinnonosa() != null) {
-                    PerusteKaikkiDto perusteKaikkiDto = docBase.getTutkinnonOsienPerusteet().stream()
-                            .filter(peruste -> peruste.getTutkinnonOsat().stream().anyMatch(dto -> dto.getId().equals(tutkinnonOsa.getPerusteentutkinnonosa())))
-                            .findFirst().get();
+                    Optional<PerusteKaikkiDto> perusteKaikkiDto = docBase.getTutkinnonOsienPerusteet().stream()
+                            .filter(peruste -> peruste.getTutkinnonOsat().stream()
+                                    .anyMatch(dto -> dto.getId().equals(tutkinnonOsa.getPerusteentutkinnonosa())))
+                            .findFirst();
                     addPerusteenTutkinnonOsa(docBase, tutkinnonOsa.getPerusteentutkinnonosa(), perusteKaikkiDto);
                 }
                 break;
@@ -1157,12 +1158,12 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         arvioinninKohteetBuilder.append(taulukko.toString());
     }
 
-    private void addPerusteenTutkinnonOsa(DokumenttiAmosaa docBase, Long perusteenTutkinnonosaId, PerusteKaikkiDto peruste) {
-        if (peruste == null) {
+    private void addPerusteenTutkinnonOsa(DokumenttiAmosaa docBase, Long perusteenTutkinnonosaId, Optional<PerusteKaikkiDto> peruste) {
+        if (peruste.isEmpty()) {
             return;
         }
 
-        Optional<TutkinnonOsaKaikkiDto> optPerusteenTutkinnonosa = peruste.getTutkinnonOsat().stream()
+        Optional<TutkinnonOsaKaikkiDto> optPerusteenTutkinnonosa = peruste.get().getTutkinnonOsat().stream()
                 .filter(dto -> dto.getId().equals(perusteenTutkinnonosaId))
                 .findFirst();
 
