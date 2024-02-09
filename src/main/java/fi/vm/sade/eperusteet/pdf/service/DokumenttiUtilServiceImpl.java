@@ -54,16 +54,6 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
     private RestTemplateBuilder restTemplateBuilder;
 
     @Override
-    public RestTemplate createRestTemplateWithImageConversionSupport() {
-        return createRestTemplate(Arrays.asList(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG));
-    }
-
-    @Override
-    public RestTemplate createRestTemplateWithPdfConversionSupport() {
-        return createRestTemplate(List.of(MediaType.APPLICATION_PDF));
-    }
-
-    @Override
     public void buildImages(DokumenttiBase docBase, GeneratorData generatorData) {
         XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();

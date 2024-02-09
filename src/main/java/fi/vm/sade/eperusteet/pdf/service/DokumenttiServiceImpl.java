@@ -16,7 +16,6 @@ import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaDokumenttiBuilderService;
 import fi.vm.sade.eperusteet.pdf.service.eperusteet.EperusteetDokumenttiBuilderService;
 import fi.vm.sade.eperusteet.pdf.service.eperusteet.KVLiiteBuilderService;
 import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
-import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.external.YlopsService;
 import fi.vm.sade.eperusteet.pdf.service.ylops.YlopsDokumenttiBuilderService;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils;
@@ -55,13 +54,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     private PdfService pdfService;
 
     @Autowired
-    private DokumenttiUtilService dokumenttiUtilService;
-
-    @Autowired
     private CommonExternalService commonExternalService;
-
-    @Autowired
-    private EperusteetService eperusteetService;
 
     @Autowired
     private YlopsService ylopsService;

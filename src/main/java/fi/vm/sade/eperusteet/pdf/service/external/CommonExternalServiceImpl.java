@@ -65,10 +65,6 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     private RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
-    @Lazy
-    private DokumenttiUtilService dokumenttiUtilService;
-
-    @Autowired
     HttpEntity httpEntity;
 
     @Autowired

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
 import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteJulkinenDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
@@ -46,24 +45,6 @@ public class EperusteetServiceImpl implements EperusteetService {
     private RestClientFactory restClientFactory;
 
     private final ObjectMapper objectMapper = InitJacksonConverter.createMapper();
-
-    @Override
-    public PerusteKaikkiDto getPerusteKaikkiDto(Long id, Integer revision) {
-        try {
-            String url = eperusteetServiceUrl + EPERUSTEET_API + id + "/kaikki";
-            if (revision != null) {
-                url = url.concat("?rev=" + revision);
-            }
-
-            ResponseEntity<String> response = restTemplate.exchange(url,
-                    HttpMethod.GET,
-                    httpEntity,
-                    String.class);
-            return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
-        } catch (Exception e) {
-            throw new ServiceException("Perustedataa ei saatu haettua: " + e.getMessage());
-        }
-    }
 
     @Override
     public KVLiiteJulkinenDto getKvLiite(Long id) {
