@@ -1,0 +1,528 @@
+{
+	"id": 210,
+	"nimi": {
+		"_id": "220",
+		"_tunniste": "5f712768-cba0-44d4-8dfa-aa0069a96a25",
+		"fi": "Graaginen ytoilla"
+	},
+	"tila": "luonnos",
+	"tyyppi": "ops",
+	"kuvaus": null,
+	"koulutustoimija": {
+		"id": 20,
+		"organisaatio": "1.2.246.562.10.15738250156",
+		"nimi": {
+			"en": "Hollolan kunta",
+			"fi": "Hollolan kunta",
+			"sv": "Hollolan kunta"
+		},
+		"organisaatioRyhma": false
+	},
+	"luotu": 1706531006199,
+	"muokattu": 1706601703072,
+	"perusteDiaarinumero": "123/456/7890",
+	"peruste": {
+		"id": 324,
+		"diaarinumero": "123/456/7890",
+		"perusteId": 630,
+		"nimi": {
+			"_id": "505",
+			"_tunniste": "f0023489-cf67-41df-abb5-dffdc041209b",
+			"fi": "Ammatillinen peruste"
+		},
+		"koulutustyyppi": "koulutustyyppi_11",
+		"koulutukset": [
+			{
+				"id": 304,
+				"nimi": {
+					"_id": "504",
+					"_tunniste": "35defe4f-cf09-433d-bc0f-70acb0743558",
+					"en": "FQ in Graphics Technology",
+					"fi": "Graafisen alan ammattitutkinto",
+					"sv": "Yrkesexamen inom grafiska branschen"
+				},
+				"koulutuskoodiArvo": "355500",
+				"koulutuskoodiUri": "koulutus_355500",
+				"koulutusalakoodi": null,
+				"opintoalakoodi": null
+			}
+		]
+	},
+	"tila2016": "luonnos",
+	"jotpatyyppi": null,
+	"kommentti": null,
+	"julkaisukielet": [
+		"fi"
+	],
+	"liitteet": [],
+	"paatospaivamaara": 1704060000000,
+	"voimaantulo": 1704060000000,
+	"voimassaoloLoppuu": null,
+	"hyvaksyja": "tt",
+	"paatosnumero": "1",
+	"suoritustapa": "reformi",
+	"esikatseltavissa": false,
+	"tutkintonimikkeet": [],
+	"osaamisalat": [],
+	"oppilaitosTyyppiKoodiUri": null,
+	"oppilaitosTyyppiKoodi": null,
+	"koulutustyyppi": "koulutustyyppi_11",
+	"viimeisinJulkaisuAika": null,
+	"perustePaivitettyPvm": 1706601703071,
+	"sisalto": {
+		"id": 230,
+		"tyyppi": "tekstikappale",
+		"naytaPohjanTeksti": true,
+		"naytaPerusteenTeksti": false,
+		"lapset": [
+			{
+				"id": 231,
+				"tyyppi": "suorituspolut",
+				"naytaPohjanTeksti": true,
+				"naytaPerusteenTeksti": false,
+				"tekstiKappale": {
+					"id": 240,
+					"luotu": 1706531006790,
+					"muokattu": 1706531006790,
+					"nimi": {
+						"_id": "221",
+						"_tunniste": "71a31655-7178-4c90-9c48-3d72a71e5cc6",
+						"en": "Training paths",
+						"fi": "Opiskelupolut",
+						"ru": "[ru suorituspolut]",
+						"se": "[se suorituspolut]",
+						"sv": "Utbildningsvägar"
+					},
+					"teksti": null,
+					"tunniste": "b729dba0-0a91-493f-9787-a70dd6aa8fe2"
+				},
+				"lapset": [],
+				"osaAlueet": [],
+				"nimi": {
+					"_id": "221",
+					"_tunniste": "71a31655-7178-4c90-9c48-3d72a71e5cc6",
+					"en": "Training paths",
+					"fi": "Opiskelupolut",
+					"ru": "[ru suorituspolut]",
+					"se": "[se suorituspolut]",
+					"sv": "Utbildningsvägar"
+				}
+			},
+			{
+				"id": 232,
+				"tyyppi": "tutkinnonosat",
+				"naytaPohjanTeksti": true,
+				"naytaPerusteenTeksti": false,
+				"tekstiKappale": {
+					"id": 241,
+					"luotu": 1706531007169,
+					"muokattu": 1706531007169,
+					"nimi": {
+						"_id": "222",
+						"_tunniste": "0b4e6335-bc3a-4e19-a3a3-913c0671a535",
+						"en": "Units",
+						"fi": "Tutkinnon osat",
+						"ru": "[ru tutkinnon-osat]",
+						"se": "[se tutkinnon-osat]",
+						"sv": "Examensdelar"
+					},
+					"teksti": null,
+					"tunniste": "b838a3ed-bbfe-4c8d-9b76-258072b09d7e"
+				},
+				"lapset": [
+					{
+						"id": 233,
+						"tyyppi": "tutkinnonosa",
+						"naytaPohjanTeksti": true,
+						"naytaPerusteenTeksti": false,
+						"tosa": {
+							"id": 250,
+							"tyyppi": "perusteesta",
+							"koodi": "tutkinnonosat_104646",
+							"muokattu": 1706531007203,
+							"toteutukset": [],
+							"perusteentutkinnonosa": 960,
+							"vapaat": []
+						},
+						"tekstiKappale": {
+							"id": 242,
+							"luotu": 1706531007203,
+							"muokattu": 1706531007203,
+							"nimi": {
+								"_id": "223",
+								"_tunniste": "f52283d7-1e35-4048-b8b9-1c42eff1f052",
+								"fi": "2D-CAD-piirtäminen",
+								"sv": "Ritning med ett 2D-CAD-program"
+							},
+							"teksti": null,
+							"tunniste": "7ad0fa9b-bb0a-4bc0-98ec-8f2a4f408a08"
+						},
+						"lapset": [],
+						"osaAlueet": [],
+						"nimi": {
+							"_id": "223",
+							"_tunniste": "f52283d7-1e35-4048-b8b9-1c42eff1f052",
+							"fi": "2D-CAD-piirtäminen",
+							"sv": "Ritning med ett 2D-CAD-program"
+						}
+					},
+					{
+						"id": 234,
+						"tyyppi": "tutkinnonosa",
+						"naytaPohjanTeksti": true,
+						"naytaPerusteenTeksti": false,
+						"tosa": {
+							"id": 251,
+							"tyyppi": "perusteesta",
+							"koodi": "tutkinnonosat_101269",
+							"muokattu": 1706531007206,
+							"toteutukset": [],
+							"perusteentutkinnonosa": 961,
+							"vapaat": []
+						},
+						"tekstiKappale": {
+							"id": 243,
+							"luotu": 1706531007206,
+							"muokattu": 1706531007206,
+							"nimi": {
+								"_id": "224",
+								"_tunniste": "2da4564f-a14e-4fdf-a70c-4cdaa18680de",
+								"fi": "3D-grafiikan toteuttaminen",
+								"sv": "Genomförande av 3D-grafik"
+							},
+							"teksti": null,
+							"tunniste": "d5c2ca7f-cfd8-4e4d-a609-2c3f4be5333d"
+						},
+						"lapset": [],
+						"osaAlueet": [],
+						"nimi": {
+							"_id": "224",
+							"_tunniste": "2da4564f-a14e-4fdf-a70c-4cdaa18680de",
+							"fi": "3D-grafiikan toteuttaminen",
+							"sv": "Genomförande av 3D-grafik"
+						}
+					},
+					{
+						"id": 334,
+						"tyyppi": "tutkinnonosa",
+						"linkattuOps": 50,
+						"linkattuSisaltoViiteId": 330,
+						"linkattuPerusteId": 630,
+						"naytaPohjanTeksti": true,
+						"naytaPerusteenTeksti": false,
+						"tosa": {
+							"id": 350,
+							"tyyppi": "perusteesta",
+							"koodi": "tutkinnonosat_201028",
+							"muokattu": 1706599084893,
+							"toteutukset": [],
+							"perusteentutkinnonosa": 969,
+							"vapaat": []
+						},
+						"tekstiKappale": {
+							"id": 340,
+							"luotu": 1706598999000,
+							"muokattu": 1706598999000,
+							"nimi": {
+								"_id": "312",
+								"_tunniste": "bec2c922-1285-490e-b44e-a2d8c57cc0a5",
+								"fi": "3D CAM -ohjelmointi ja CNC-valmistus"
+							},
+							"teksti": null,
+							"tunniste": "5f098654-aea3-4a18-ac84-9501a087e02f"
+						},
+						"lapset": [],
+						"osaAlueet": [
+							{
+								"id": 390,
+								"tyyppi": "paikallinen",
+								"nimi": {
+									"_id": "317",
+									"_tunniste": "a86d11ef-fa02-4a1f-8a02-f7660384716d",
+									"fi": "Osa-alue 1"
+								},
+								"perusteenOsaAlueKoodi": null,
+								"perusteenOsaAlueId": null,
+								"piilotettu": false,
+								"toteutukset": [],
+								"osaamistavoitteet": {
+									"id": 400,
+									"kohde": null,
+									"vaatimukset": [],
+									"kohdealueet": []
+								},
+								"geneerinenarviointi": null,
+								"laajuus": null,
+								"koodi": "1234",
+								"paikallinenTarkennus": {
+									"_id": "318",
+									"_tunniste": "5b7a41e1-0e56-4d70-8bda-45b58de87d86",
+									"fi": "<p>paikis</p>"
+								},
+								"vapaat": [],
+								"geneerinenArviointiasteikko": null
+							},
+							{
+								"id": 391,
+								"tyyppi": "paikallinen",
+								"nimi": {
+									"_id": "440",
+									"_tunniste": "e899ada7-1869-4bbb-bf6e-3dea27bbeeab",
+									"fi": "Osa-alue 2"
+								},
+								"perusteenOsaAlueKoodi": null,
+								"perusteenOsaAlueId": null,
+								"piilotettu": false,
+								"toteutukset": [],
+								"osaamistavoitteet": {
+									"id": 401,
+									"kohde": null,
+									"vaatimukset": [],
+									"kohdealueet": []
+								},
+								"geneerinenarviointi": null,
+								"laajuus": null,
+								"koodi": "2345",
+								"paikallinenTarkennus": {
+									"_id": "441",
+									"_tunniste": "c27b05b8-0953-49fc-9796-ed934d105ad9",
+									"fi": "<p>paikkiis</p>"
+								},
+								"vapaat": [],
+								"geneerinenArviointiasteikko": null
+							},
+							{
+								"id": 393,
+								"tyyppi": "valinnainen",
+								"nimi": {
+									"_id": "445",
+									"_tunniste": "34a243d6-e9e7-4de5-9438-11f306fdcf14",
+									"fi": "Osa-alueinen"
+								},
+								"perusteenOsaAlueKoodi": "ammatillisenoppiaineet_ma",
+								"perusteenOsaAlueId": 1630,
+								"piilotettu": false,
+								"toteutukset": [],
+								"osaamistavoitteet": null,
+								"geneerinenarviointi": null,
+								"laajuus": null,
+								"koodi": null,
+								"paikallinenTarkennus": null,
+								"vapaat": [],
+								"geneerinenArviointiasteikko": null
+							}
+						],
+						"nimi": {
+							"_id": "312",
+							"_tunniste": "bec2c922-1285-490e-b44e-a2d8c57cc0a5",
+							"fi": "3D CAM -ohjelmointi ja CNC-valmistus"
+						}
+					}
+				],
+				"osaAlueet": [],
+				"nimi": {
+					"_id": "222",
+					"_tunniste": "0b4e6335-bc3a-4e19-a3a3-913c0671a535",
+					"en": "Units",
+					"fi": "Tutkinnon osat",
+					"ru": "[ru tutkinnon-osat]",
+					"se": "[se tutkinnon-osat]",
+					"sv": "Examensdelar"
+				}
+			}
+		],
+		"osaAlueet": []
+	},
+	"suorituspolut": [],
+	"tutkinnonOsat": [
+		{
+			"id": 233,
+			"tyyppi": "tutkinnonosa",
+			"naytaPohjanTeksti": true,
+			"naytaPerusteenTeksti": false,
+			"tosa": {
+				"id": 250,
+				"tyyppi": "perusteesta",
+				"koodi": "tutkinnonosat_104646",
+				"muokattu": 1706531007203,
+				"toteutukset": [],
+				"perusteentutkinnonosa": 960,
+				"vapaat": []
+			},
+			"tekstiKappale": {
+				"id": 242,
+				"luotu": 1706531007203,
+				"muokattu": 1706531007203,
+				"nimi": {
+					"_id": "223",
+					"_tunniste": "f52283d7-1e35-4048-b8b9-1c42eff1f052",
+					"fi": "2D-CAD-piirtäminen",
+					"sv": "Ritning med ett 2D-CAD-program"
+				},
+				"teksti": null,
+				"tunniste": "7ad0fa9b-bb0a-4bc0-98ec-8f2a4f408a08"
+			},
+			"lapset": [],
+			"osaAlueet": [],
+			"nimi": {
+				"_id": "223",
+				"_tunniste": "f52283d7-1e35-4048-b8b9-1c42eff1f052",
+				"fi": "2D-CAD-piirtäminen",
+				"sv": "Ritning med ett 2D-CAD-program"
+			}
+		},
+		{
+			"id": 234,
+			"tyyppi": "tutkinnonosa",
+			"naytaPohjanTeksti": true,
+			"naytaPerusteenTeksti": false,
+			"tosa": {
+				"id": 251,
+				"tyyppi": "perusteesta",
+				"koodi": "tutkinnonosat_101269",
+				"muokattu": 1706531007206,
+				"toteutukset": [],
+				"perusteentutkinnonosa": 961,
+				"vapaat": []
+			},
+			"tekstiKappale": {
+				"id": 243,
+				"luotu": 1706531007206,
+				"muokattu": 1706531007206,
+				"nimi": {
+					"_id": "224",
+					"_tunniste": "2da4564f-a14e-4fdf-a70c-4cdaa18680de",
+					"fi": "3D-grafiikan toteuttaminen",
+					"sv": "Genomförande av 3D-grafik"
+				},
+				"teksti": null,
+				"tunniste": "d5c2ca7f-cfd8-4e4d-a609-2c3f4be5333d"
+			},
+			"lapset": [],
+			"osaAlueet": [],
+			"nimi": {
+				"_id": "224",
+				"_tunniste": "2da4564f-a14e-4fdf-a70c-4cdaa18680de",
+				"fi": "3D-grafiikan toteuttaminen",
+				"sv": "Genomförande av 3D-grafik"
+			}
+		},
+		{
+			"id": 334,
+			"tyyppi": "tutkinnonosa",
+			"linkattuOps": 50,
+			"linkattuSisaltoViiteId": 330,
+			"linkattuPerusteId": 630,
+			"naytaPohjanTeksti": true,
+			"naytaPerusteenTeksti": false,
+			"tosa": {
+				"id": 350,
+				"tyyppi": "perusteesta",
+				"koodi": "tutkinnonosat_201028",
+				"muokattu": 1706599084893,
+				"toteutukset": [],
+				"perusteentutkinnonosa": 969,
+				"vapaat": []
+			},
+			"tekstiKappale": {
+				"id": 340,
+				"luotu": 1706598999000,
+				"muokattu": 1706598999000,
+				"nimi": {
+					"_id": "312",
+					"_tunniste": "bec2c922-1285-490e-b44e-a2d8c57cc0a5",
+					"fi": "3D CAM -ohjelmointi ja CNC-valmistus"
+				},
+				"teksti": null,
+				"tunniste": "5f098654-aea3-4a18-ac84-9501a087e02f"
+			},
+			"lapset": [],
+			"osaAlueet": [
+				{
+					"id": 390,
+					"tyyppi": "paikallinen",
+					"nimi": {
+						"_id": "317",
+						"_tunniste": "a86d11ef-fa02-4a1f-8a02-f7660384716d",
+						"fi": "Osa-alue 1"
+					},
+					"perusteenOsaAlueKoodi": null,
+					"perusteenOsaAlueId": null,
+					"piilotettu": false,
+					"toteutukset": [],
+					"osaamistavoitteet": {
+						"id": 400,
+						"kohde": null,
+						"vaatimukset": [],
+						"kohdealueet": []
+					},
+					"geneerinenarviointi": null,
+					"laajuus": null,
+					"koodi": "1234",
+					"paikallinenTarkennus": {
+						"_id": "318",
+						"_tunniste": "5b7a41e1-0e56-4d70-8bda-45b58de87d86",
+						"fi": "<p>paikis</p>"
+					},
+					"vapaat": [],
+					"geneerinenArviointiasteikko": null
+				},
+				{
+					"id": 391,
+					"tyyppi": "paikallinen",
+					"nimi": {
+						"_id": "440",
+						"_tunniste": "e899ada7-1869-4bbb-bf6e-3dea27bbeeab",
+						"fi": "Osa-alue 2"
+					},
+					"perusteenOsaAlueKoodi": null,
+					"perusteenOsaAlueId": null,
+					"piilotettu": false,
+					"toteutukset": [],
+					"osaamistavoitteet": {
+						"id": 401,
+						"kohde": null,
+						"vaatimukset": [],
+						"kohdealueet": []
+					},
+					"geneerinenarviointi": null,
+					"laajuus": null,
+					"koodi": "2345",
+					"paikallinenTarkennus": {
+						"_id": "441",
+						"_tunniste": "c27b05b8-0953-49fc-9796-ed934d105ad9",
+						"fi": "<p>paikkiis</p>"
+					},
+					"vapaat": [],
+					"geneerinenArviointiasteikko": null
+				},
+				{
+					"id": 393,
+					"tyyppi": "valinnainen",
+					"nimi": {
+						"_id": "445",
+						"_tunniste": "34a243d6-e9e7-4de5-9438-11f306fdcf14",
+						"fi": "Osa-alueinen"
+					},
+					"perusteenOsaAlueKoodi": "ammatillisenoppiaineet_ma",
+					"perusteenOsaAlueId": 1630,
+					"piilotettu": false,
+					"toteutukset": [],
+					"osaamistavoitteet": null,
+					"geneerinenarviointi": null,
+					"laajuus": null,
+					"koodi": null,
+					"paikallinenTarkennus": null,
+					"vapaat": [],
+					"geneerinenArviointiasteikko": null
+				}
+			],
+			"nimi": {
+				"_id": "312",
+				"_tunniste": "bec2c922-1285-490e-b44e-a2d8c57cc0a5",
+				"fi": "3D CAM -ohjelmointi ja CNC-valmistus"
+			}
+		}
+	],
+	"opintokokonaisuudet": []
+}

@@ -1,0 +1,235 @@
+{
+	"id": 4220,
+	"globalVersion": {
+		"aikaleima": 1707897974902
+	},
+	"nimi": {
+		"_id": "4233",
+		"_tunniste": "ff85284a-db75-4e6c-ac9f-8900164f0f8b",
+		"fi": "Ammatillinen peruste"
+	},
+	"koulutustyyppi": "koulutustyyppi_11",
+	"toteutus": "ammatillinen",
+	"koulutukset": [
+		{
+			"nimi": {
+				"en": "Diploma in Agriculture",
+				"fi": "Agrologi",
+				"sv": "Agrolog"
+			},
+			"koulutuskoodiArvo": "561101",
+			"koulutuskoodiUri": "koulutus_561101",
+			"koulutusalakoodi": null,
+			"opintoalakoodi": null
+		}
+	],
+	"kielet": [
+		"fi"
+	],
+	"kuvaus": null,
+	"maarayskirje": {
+		"id": 4370,
+		"url": {},
+		"liitteet": {
+			"fi": {
+				"id": "ee183850-0dc4-49e6-ab15-ddf6c47ed68e",
+				"nimi": "1.pdf"
+			}
+		}
+	},
+	"muutosmaaraykset": [],
+	"diaarinumero": "111/111/1111",
+	"voimassaoloAlkaa": 1706738400000,
+	"siirtymaPaattyy": null,
+	"voimassaoloLoppuu": null,
+	"paatospvm": 1707084000000,
+	"viimeisinJulkaisuAika": 1707897988221,
+	"luotu": 1707897856932,
+	"muokattu": 1707897987227,
+	"tila": "valmis",
+	"tyyppi": "normaali",
+	"koulutusvienti": false,
+	"korvattavatDiaarinumerot": [],
+	"osaamisalat": [],
+	"tyotehtavatJoissaVoiToimia": null,
+	"suorittaneenOsaaminen": null,
+	"perusteenAikataulut": [
+		{
+			"id": 4260,
+			"peruste": {
+				"id": 4220,
+				"nimi": {
+					"_id": "4233",
+					"_tunniste": "ff85284a-db75-4e6c-ac9f-8900164f0f8b",
+					"fi": "Ammatillinen peruste"
+				},
+				"tila": "valmis",
+				"tyyppi": "normaali",
+				"koulutustyyppi": "koulutustyyppi_11",
+				"esikatseltavissa": false,
+				"voimassaoloAlkaa": 1706738400000,
+				"voimassaoloLoppuu": null,
+				"_perusteprojekti": "4250",
+				"suoritustavat": [
+					{
+						"suoritustapakoodi": "reformi",
+						"laajuusYksikko": "OSAAMISPISTE"
+					}
+				]
+			},
+			"tavoite": {
+				"_id": "4231",
+				"_tunniste": "f933637e-9d3d-4931-84fb-48ae9dc2320e",
+				"fi": "Peruste luotu"
+			},
+			"tapahtuma": "luominen",
+			"tapahtumapaiva": 1707897852394,
+			"julkinen": false
+		}
+	],
+	"poikkeamismaaraysTarkennus": null,
+	"poikkeamismaaraysTyyppi": null,
+	"suoritustavat": [
+		{
+			"suoritustapakoodi": "reformi",
+			"laajuusYksikko": "OSAAMISPISTE",
+			"rakenne": {
+				"kuvaus": null,
+				"vieras": null,
+				"tunniste": "bec64848-6834-4675-9668-30f56eee611e",
+				"pakollinen": false,
+				"nimi": null,
+				"rooli": "määritelty",
+				"muodostumisSaanto": {
+					"laajuus": {
+						"minimi": 0,
+						"maksimi": 0,
+						"yksikko": null
+					},
+					"koko": null
+				},
+				"osaamisala": null,
+				"tutkintonimike": null,
+				"osat": [
+					{
+						"kuvaus": null,
+						"vieras": null,
+						"tunniste": "3d2fb2e2-5047-4758-affb-0de6b06b871b",
+						"pakollinen": true,
+						"nimi": {
+							"_id": "4450",
+							"_tunniste": "d1407866-efd5-4c93-9a21-e463537eded6",
+							"en": "Compulsory units",
+							"fi": "Pakolliset tutkinnon osat",
+							"sv": "Obligatoriska examensdelar"
+						},
+						"rooli": "määritelty",
+						"muodostumisSaanto": null,
+						"osaamisala": null,
+						"tutkintonimike": null,
+						"osat": [
+							{
+								"kuvaus": null,
+								"vieras": null,
+								"tunniste": "1dd3a3e6-70e9-4c6e-bff2-2f44b3400796",
+								"pakollinen": true,
+								"erikoisuus": null,
+								"_tutkinnonOsaViite": "4390"
+							}
+						],
+						"versioId": null
+					}
+				],
+				"versioId": null
+			},
+			"sisalto": {
+				"id": 4190,
+				"lapset": [
+					{
+						"id": 4191,
+						"perusteenOsa": {
+							"id": 4240,
+							"luotu": 1707897857336,
+							"muokattu": 1707897857336,
+							"muokkaaja": "test",
+							"nimi": {
+								"_id": "4230",
+								"_tunniste": "b8ee431e-fb4e-4bbd-adaa-d716f6bc29b8",
+								"fi": "Tutkinnon muodostuminen",
+								"sv": "Uppbyggnaden av examen"
+							},
+							"tila": "luonnos",
+							"tunniste": "rakenne",
+							"teksti": null,
+							"koodit": [],
+							"liite": false,
+							"osanTyyppi": "tekstikappale"
+						},
+						"lapset": [],
+						"_perusteenOsa": "4240"
+					}
+				]
+			},
+			"tutkinnonOsaViitteet": [
+				{
+					"id": 4390,
+					"laajuus": 10.0,
+					"_tutkinnonOsa": "4241"
+				}
+			]
+		}
+	],
+	"tutkinnonOsat": [
+		{
+			"id": 4241,
+			"luotu": 1707897961315,
+			"muokattu": 1707897961315,
+			"muokkaaja": "test",
+			"nimi": {
+				"fi": "2D-CAD-piirtäminen",
+				"sv": "Ritning med ett 2D-CAD-program"
+			},
+			"tila": "luonnos",
+			"osanTyyppi": "tutkinnonosa",
+			"kuvaus": null,
+			"opintoluokitus": null,
+			"koodi": {
+				"id": 4420,
+				"nimi": {
+					"fi": "2D-CAD-piirtäminen",
+					"sv": "Ritning med ett 2D-CAD-program"
+				},
+				"arvo": "104646",
+				"uri": "tutkinnonosat_104646",
+				"koodisto": "tutkinnonosat",
+				"versio": 2
+			},
+			"koodiUri": "tutkinnonosat_104646",
+			"koodiArvo": "104646",
+			"osaAlueet": [],
+			"tyyppi": "normaali",
+			"valmaTelmaSisalto": null,
+			"geneerinenArviointiasteikko": null,
+			"vapaatTekstit": [],
+			"ammattitaitovaatimukset2019": {
+				"id": 4400,
+				"kohde": {
+					"_id": "4238",
+					"_tunniste": "96cfdaf2-df38-490e-8e98-e44c8d5bda7c",
+					"fi": "Opiskelija"
+				},
+				"vaatimukset": [],
+				"kohdealueet": []
+			},
+			"arviointi": {
+				"id": 4410,
+				"lisatiedot": null,
+				"arvioinninKohdealueet": []
+			},
+			"ammattitaitovaatimukset": {
+				"fi": "<dl><dt><i>Opiskelija</i></dt></dl>"
+			},
+			"ammattitaitovaatimuksetLista": []
+		}
+	]
+}

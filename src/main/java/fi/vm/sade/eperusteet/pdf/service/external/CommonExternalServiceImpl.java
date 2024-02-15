@@ -11,7 +11,6 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
-import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpEntity;
@@ -21,7 +20,7 @@ import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -49,6 +48,7 @@ import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 @Slf4j
 @Service
+@Profile("!test")
 public class CommonExternalServiceImpl implements CommonExternalService{
 
     @Value("${fi.vm.sade.eperusteet.pdf.amosaa-service:''}")
@@ -63,10 +63,6 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     private static final String EPERUSTEET_API = "/api/perusteet/";
 
     private RestTemplate restTemplate = new RestTemplate();
-
-    @Autowired
-    @Lazy
-    private DokumenttiUtilService dokumenttiUtilService;
 
     @Autowired
     HttpEntity httpEntity;

@@ -10,6 +10,7 @@ import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@Profile("!test")
 public class YlopsServiceImpl implements YlopsService {
 
     private static final String API = "/api/";
