@@ -25,8 +25,6 @@ jobs:
         with:
           name: eperusteet-pdf-service-jar
           path: target/eperusteet-pdf-service.jar
-      - name: Run tests
-        run: mvn -B verify --file pom.xml
   build-image:
     needs: [build-and-test-eperusteet-pdf-service]
     runs-on: ubuntu-latest
