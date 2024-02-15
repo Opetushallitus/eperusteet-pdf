@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +26,7 @@ public class DokumenttiServiceIT {
     public void generatePerustePdf() throws IOException {
         Resource resource = new ClassPathResource("material/peruste.json");
         ObjectNode julkaisuFile = objectMapper.readValue(resource.getFile(), ObjectNode.class);
-        Assertions.assertThat(julkaisuFile).isNull();
+
         assertDoesNotThrow(() -> {
             dokumenttiService.generateForEperusteet(1L, Kieli.FI, julkaisuFile.toString());
         });
