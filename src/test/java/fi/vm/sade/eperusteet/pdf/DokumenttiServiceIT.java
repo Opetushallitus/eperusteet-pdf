@@ -26,39 +26,27 @@ public class DokumenttiServiceIT {
     public void generatePerustePdf() throws IOException {
         Resource resource = new ClassPathResource("material/peruste.json");
         ObjectNode julkaisuFile = objectMapper.readValue(resource.getFile(), ObjectNode.class);
-
-        assertDoesNotThrow(() -> {
-            dokumenttiService.generateForEperusteet(1L, Kieli.FI, julkaisuFile.toString());
-        });
+        assertDoesNotThrow(() -> dokumenttiService.generateForEperusteet(1L, Kieli.FI, julkaisuFile.toString()));
     }
 
     @Test
     public void generateKvLiitePdf() throws IOException {
         Resource resource = new ClassPathResource("material/peruste.json");
         ObjectNode julkaisuFile = objectMapper.readValue(resource.getFile(), ObjectNode.class);
-
-        assertDoesNotThrow(() -> {
-            dokumenttiService.generateForEperusteetKvLiite(1L, Kieli.FI, julkaisuFile.toString());
-        });
+        assertDoesNotThrow(() -> dokumenttiService.generateForEperusteetKvLiite(1L, Kieli.FI, julkaisuFile.toString()));
     }
 
     @Test
     public void generateAmosaaPdf() throws IOException {
         Resource resource = new ClassPathResource("material/amosaa.json");
         ObjectNode julkaisuFile = objectMapper.readValue(resource.getFile(), ObjectNode.class);
-
-        assertDoesNotThrow(() -> {
-            dokumenttiService.generateForAmosaa(1L, Kieli.FI, 1L, julkaisuFile.toString());
-        });
+        assertDoesNotThrow(() -> dokumenttiService.generateForAmosaa(1L, Kieli.FI, 1L, julkaisuFile.toString()));
     }
 
     @Test
     public void generateYlopsPdf() throws IOException {
         Resource resource = new ClassPathResource("material/ylops.json");
         ObjectNode julkaisuFile = objectMapper.readValue(resource.getFile(), ObjectNode.class);
-
-        assertDoesNotThrow(() -> {
-            dokumenttiService.generateForYlops(1L, Kieli.FI, julkaisuFile.toString());
-        });
+        assertDoesNotThrow(() -> dokumenttiService.generateForYlops(1L, Kieli.FI, julkaisuFile.toString()));
     }
 }

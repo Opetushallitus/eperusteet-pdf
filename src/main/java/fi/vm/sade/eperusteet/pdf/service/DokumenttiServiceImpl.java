@@ -16,7 +16,6 @@ import fi.vm.sade.eperusteet.pdf.service.amosaa.AmosaaDokumenttiBuilderService;
 import fi.vm.sade.eperusteet.pdf.service.eperusteet.EperusteetDokumenttiBuilderService;
 import fi.vm.sade.eperusteet.pdf.service.eperusteet.KVLiiteBuilderService;
 import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
-import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.external.YlopsService;
 import fi.vm.sade.eperusteet.pdf.service.ylops.YlopsDokumenttiBuilderService;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils;
@@ -55,13 +54,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     private PdfService pdfService;
 
     @Autowired
-    private DokumenttiUtilService dokumenttiUtilService;
-
-    @Autowired
     private CommonExternalService commonExternalService;
-
-    @Autowired
-    private EperusteetService eperusteetService;
 
     @Autowired
     private YlopsService ylopsService;
@@ -77,7 +70,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             Document doc = eperusteetDokumenttiBuilderService.generateXML(peruste, generatorData);
             handleConversionAndSending(doc, generateMetaData(generatorData, peruste.getNimi()), generatorData);
         } catch (Exception ex) {
-            handleError(ex,dokumenttiId, DokumenttiTyyppi.PERUSTE);
+            handleError(ex, dokumenttiId, DokumenttiTyyppi.PERUSTE);
         }
     }
 
@@ -92,7 +85,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             Document doc = kvLiiteBuilderService.generateXML(peruste, generatorData.getKieli());
             handleConversionAndSending(doc, generateMetaData(generatorData, peruste.getNimi()), generatorData);
         } catch (Exception ex) {
-            handleError(ex,dokumenttiId, DokumenttiTyyppi.KVLIITE);
+            handleError(ex, dokumenttiId, DokumenttiTyyppi.KVLIITE);
         }
     }
 
@@ -107,7 +100,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             Document doc = amosaaDokumenttiBuilderService.generateXML(ops, generatorData);
             handleConversionAndSending(doc, generateMetaData(generatorData, ops.getNimi()), generatorData);
         } catch (Exception ex) {
-            handleError(ex,dokumenttiId, DokumenttiTyyppi.AMOSAA);
+            handleError(ex, dokumenttiId, DokumenttiTyyppi.AMOSAA);
         }
     }
 
@@ -123,7 +116,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             Document doc = ylopsDokumenttiBuilderService.generateXML(ops, perusteKaikkiDto, generatorData);
             handleConversionAndSending(doc, generateMetaData(generatorData, ops.getNimi()), generatorData);
         } catch (Exception ex) {
-            handleError(ex,dokumenttiId, DokumenttiTyyppi.YLOPS);
+            handleError(ex, dokumenttiId, DokumenttiTyyppi.YLOPS);
         }
     }
 
