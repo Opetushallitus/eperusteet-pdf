@@ -23,30 +23,28 @@ public class DokumenttiServiceIT {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void generatePerustePdf() throws IOException {
-        Resource resource = new ClassPathResource("material/peruste.json");
-        ObjectNode julkaisuFile = objectMapper.readValue(resource.getFile(), ObjectNode.class);
-        assertDoesNotThrow(() -> dokumenttiService.generateForEperusteet(1L, Kieli.FI, julkaisuFile.toString()));
+    public void generatePerustePdf() {
+        assertDoesNotThrow(() -> dokumenttiService.generateForEperusteet(1L, Kieli.FI, getTestJulkaisuJsonAsString("material/peruste.json")));
     }
 
     @Test
-    public void generateKvLiitePdf() throws IOException {
-        Resource resource = new ClassPathResource("material/peruste.json");
-        ObjectNode julkaisuFile = objectMapper.readValue(resource.getFile(), ObjectNode.class);
-        assertDoesNotThrow(() -> dokumenttiService.generateForEperusteetKvLiite(1L, Kieli.FI, julkaisuFile.toString()));
+    public void generateKvLiitePdf() {
+        assertDoesNotThrow(() -> dokumenttiService.generateForEperusteetKvLiite(1L, Kieli.FI, getTestJulkaisuJsonAsString("material/peruste.json")));
     }
 
     @Test
-    public void generateAmosaaPdf() throws IOException {
-        Resource resource = new ClassPathResource("material/amosaa.json");
-        ObjectNode julkaisuFile = objectMapper.readValue(resource.getFile(), ObjectNode.class);
-        assertDoesNotThrow(() -> dokumenttiService.generateForAmosaa(1L, Kieli.FI, 1L, julkaisuFile.toString()));
+    public void generateAmosaaPdf() {
+        assertDoesNotThrow(() -> dokumenttiService.generateForAmosaa(1L, Kieli.FI, 1L, getTestJulkaisuJsonAsString("material/amosaa.json")));
     }
 
     @Test
-    public void generateYlopsPdf() throws IOException {
-        Resource resource = new ClassPathResource("material/ylops.json");
+    public void generateYlopsPdf() {
+        assertDoesNotThrow(() -> dokumenttiService.generateForYlops(1L, Kieli.FI, getTestJulkaisuJsonAsString("material/ylops.json")));
+    }
+
+    private String getTestJulkaisuJsonAsString(String filename) throws IOException {
+        Resource resource = new ClassPathResource(filename);
         ObjectNode julkaisuFile = objectMapper.readValue(resource.getFile(), ObjectNode.class);
-        assertDoesNotThrow(() -> dokumenttiService.generateForYlops(1L, Kieli.FI, julkaisuFile.toString()));
+        return julkaisuFile.toString();
     }
 }
