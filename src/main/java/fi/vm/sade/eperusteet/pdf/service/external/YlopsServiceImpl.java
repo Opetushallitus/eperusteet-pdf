@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.koodisto.OrganisaatioDto;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiKappaleViiteDto;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
-import java.util.Collections;
-import java.util.List;
 
 @Service
 public class YlopsServiceImpl implements YlopsService {
@@ -43,36 +40,6 @@ public class YlopsServiceImpl implements YlopsService {
         restTemplate = restTemplateBuilder
                 .errorHandler(new RestTemplateResponseErrorHandler())
                 .build();
-    }
-
-    @Override
-    public List<TekstiKappaleViiteDto.Matala> getTekstiKappaleViiteOriginals(Long opsId, Long viiteId) {
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API + "opetussuunnitelmat/{opsId}/tekstit/{viiteId}/alkuperaiset",
-                    HttpMethod.GET,
-                    httpEntity,
-                    String.class,
-                    opsId,
-                    viiteId);
-            return Collections.singletonList(objectMapper.readValue(response.getBody(), TekstiKappaleViiteDto.Matala.class));
-        } catch (Exception e) {
-            throw new ServiceException("Tekstikappaleviitettä ei saatu haettua: " + e.getMessage());
-        }
-    }
-
-    @Override
-    public TekstiKappaleViiteDto getLops2019PerusteTekstikappale(Long opsId, Long tekstikappaleId) {
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API + "opetussuunnitelmat/{opsId}/peruste/tekstikappaleet/{tekstikappaleId}",
-                    HttpMethod.GET,
-                    httpEntity,
-                    String.class,
-                    opsId,
-                    tekstikappaleId);
-            return objectMapper.readValue(response.getBody(), TekstiKappaleViiteDto.class);
-        } catch (Exception e) {
-            throw new ServiceException("Perustetekstikappaletta ei saatu haettua: " + e.getMessage());
-        }
     }
 
     @Override
