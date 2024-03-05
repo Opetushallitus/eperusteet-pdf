@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.pdf.service.amosaa;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OsaamisenArvioinninToteutussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimuksenKohdeDto;
@@ -271,6 +272,27 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         pdfluotu.setAttribute("content", new SimpleDateFormat("d.M.yyyy").format(new Date()));
         pdfluotu.setAttribute("translate", messages.translate("docgen.pdf-luotu", docBase.getKieli()));
         docBase.getHeadElement().appendChild(pdfluotu);
+
+        if (!CollectionUtils.isEmpty(ops.getOsaamisenArvioinninToteutussuunnitelmat())) {
+            Element oatit = docBase.getDocument().createElement("oats");
+            addTeksti(docBase, messages.translate("osaamisen-arvioinnin-toteutussuunnitelma", docBase.getKieli()), "h6", oatit);
+
+            for (OsaamisenArvioinninToteutussuunnitelmaDto oat : ops.getOsaamisenArvioinninToteutussuunnitelmat()) {
+                Element oatElement = docBase.getDocument().createElement("span");
+                if (oat.getOatOpetussuunnitelma() != null) {
+                    addTeksti(docBase, getTextString(docBase, oat.getOatOpetussuunnitelma().getNimi()), "span", oatElement);
+                } else if(oat.getUrl() != null && oat.getUrl().get(docBase.getKieli()) != null) {
+                    Element oatUrl = docBase.getDocument().createElement("a");
+                    oatUrl.setTextContent(getTextString(docBase, oat.getNimi()));
+                    oatUrl.setAttribute("href", oat.getUrl().get(docBase.getKieli()));
+                    oatElement.appendChild(oatUrl);
+                }
+                oatit.appendChild(oatElement);
+                oatit.appendChild(docBase.getDocument().createElement("br"));
+            }
+
+            docBase.getHeadElement().appendChild(oatit);
+        }
     }
 
     private void addTekstit(DokumenttiAmosaa docBase) {
