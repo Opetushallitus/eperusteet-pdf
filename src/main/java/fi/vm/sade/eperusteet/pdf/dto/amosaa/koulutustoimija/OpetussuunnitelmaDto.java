@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -36,4 +37,5 @@ public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto {
     private KoodistoKoodiDto oppilaitosTyyppiKoodi;
     private KoulutusTyyppi koulutustyyppi;
     private Date viimeisinJulkaisuAika;
+    private List<OsaamisenArvioinninToteutussuunnitelmaDto> osaamisenArvioinninToteutussuunnitelmat;
 }

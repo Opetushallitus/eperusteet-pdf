@@ -162,7 +162,7 @@
         </fo:block>
 
         <fo:table table-layout="fixed" width="100%" font-size="10pt"
-                  border-collapse="separate" border-separation="4pt">
+                  border-collapse="separate" border-separation="4pt" padding-bottom="12pt">
             <fo:table-column column-width="proportional-column-width(1)"/>
             <fo:table-column column-width="proportional-column-width(2)"/>
             <fo:table-body>
@@ -284,8 +284,13 @@
 
             </fo:table-body>
         </fo:table>
-    </xsl:template>
 
+        <fo:block font-size="10pt" padding-top="16pt">
+            <xsl:apply-templates select="oats"/>
+        </fo:block>
+
+    </xsl:template>
+    
     <xsl:template match="body">
         <fo:flow flow-name="xsl-region-body">
             <xsl:choose>
