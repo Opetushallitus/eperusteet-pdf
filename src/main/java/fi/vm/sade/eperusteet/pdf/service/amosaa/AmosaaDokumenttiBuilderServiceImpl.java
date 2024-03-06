@@ -37,6 +37,7 @@ import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiRivi;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTaulukko;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.OmaOsaAlueTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.OpintokokonaisuusTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.TutkinnonOsaTyyppi;
@@ -1309,7 +1310,8 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
         addTeksti(docBase, getTextString(docBase, opintokokonaisuus.getKuvaus()), "div");
 
-        addTeksti(docBase, messages.translate("docgen.opetuksen-tavoitteet.title", docBase.getKieli()), "h5");
+        String tavoiteTeksti = OpintokokonaisuusTyyppi.OMA.equals(opintokokonaisuus.getTyyppi()) ? "docgen.osaamistavoitteet" : "docgen.opetuksen-tavoitteet.title";
+        addTeksti(docBase, messages.translate(tavoiteTeksti, docBase.getKieli()), "h5");
 
         if (opintokokonaisuus.getTavoitteidenKuvaus() != null) {
             addTeksti(docBase, messages.translate("docgen.tavoitteiden-kuvaus", docBase.getKieli()), "h6");
