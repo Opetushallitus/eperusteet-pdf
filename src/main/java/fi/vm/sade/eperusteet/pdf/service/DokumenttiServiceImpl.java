@@ -70,7 +70,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             Document doc = eperusteetDokumenttiBuilderService.generateXML(peruste, generatorData);
             handleConversionAndSending(doc, generateMetaData(generatorData, peruste.getNimi()), generatorData);
         } catch (Exception ex) {
-            handleError(ex,dokumenttiId, DokumenttiTyyppi.PERUSTE);
+            handleError(ex, dokumenttiId, DokumenttiTyyppi.PERUSTE);
         }
     }
 
@@ -85,7 +85,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             Document doc = kvLiiteBuilderService.generateXML(peruste, generatorData.getKieli());
             handleConversionAndSending(doc, generateMetaData(generatorData, peruste.getNimi()), generatorData);
         } catch (Exception ex) {
-            handleError(ex,dokumenttiId, DokumenttiTyyppi.KVLIITE);
+            handleError(ex, dokumenttiId, DokumenttiTyyppi.KVLIITE);
         }
     }
 
@@ -100,7 +100,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             Document doc = amosaaDokumenttiBuilderService.generateXML(ops, generatorData);
             handleConversionAndSending(doc, generateMetaData(generatorData, ops.getNimi()), generatorData);
         } catch (Exception ex) {
-            handleError(ex,dokumenttiId, DokumenttiTyyppi.AMOSAA);
+            handleError(ex, dokumenttiId, DokumenttiTyyppi.AMOSAA);
         }
     }
 
@@ -116,7 +116,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             Document doc = ylopsDokumenttiBuilderService.generateXML(ops, perusteKaikkiDto, generatorData);
             handleConversionAndSending(doc, generateMetaData(generatorData, ops.getNimi()), generatorData);
         } catch (Exception ex) {
-            handleError(ex,dokumenttiId, DokumenttiTyyppi.YLOPS);
+            handleError(ex, dokumenttiId, DokumenttiTyyppi.YLOPS);
         }
     }
 
