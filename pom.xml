@@ -128,7 +128,7 @@
 		<dependency>
 			<groupId>fi.vm.sade.eperusteet</groupId>
 			<artifactId>eperusteet-backend-utils</artifactId>
-			<version>2.4-SNAPSHOT</version>
+			<version>2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -152,7 +152,7 @@
 		<dependency>
 			<groupId>fi.vm.sade.java-utils</groupId>
 			<artifactId>opintopolku-cas-servlet-filter</artifactId>
-			<version>0.1.0-SNAPSHOT</version>
+			<version>0.2.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-validator</groupId>
@@ -228,31 +228,27 @@
 
 	<distributionManagement>
 		<repository>
-			<id>oph-sade-artifactory</id>
-			<name>oph-sade-artifactory-releases</name>
-			<url>https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local</url>
+			<id>github</id>
+			<name>GitHub Packages</name>
+			<url>https://maven.pkg.github.com/Opetushallitus/eperusteet-pdf</url>
 		</repository>
-		<snapshotRepository>
-			<id>oph-sade-artifactory</id>
-			<name>oph-sade-artifactory-snapshots</name>
-			<url>https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local</url>
-		</snapshotRepository>
 	</distributionManagement>
 
 	<repositories>
 		<repository>
-			<id>oph-sade-artifactory-snapshots</id>
-			<url>https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
 			<snapshots>
 				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
 			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>oph-sade-artifactory-releases</id>
-			<url>https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local</url>
+			<id>github</id>
+			<name>GitHub Packages eperusteet-pdf</name>
+			<url>https://maven.pkg.github.com/Opetushallitus/eperusteet-pdf</url>
 		</repository>
 	</repositories>
 </project>
