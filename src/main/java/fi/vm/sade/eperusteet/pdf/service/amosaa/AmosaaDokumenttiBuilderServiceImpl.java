@@ -42,6 +42,7 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.TutkinnonOsaTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoKaikkiDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerisenArvioinninOsaamistasonKriteeriKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.OsaamistasonKriteeriDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ammattitaitovaatimukset.AmmattitaitovaatimusKohdealueetDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArvioinninKohdeDto;
@@ -92,6 +93,7 @@ import javax.xml.xpath.XPathFactory;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -893,6 +895,12 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
     private void addGeneerinenArviointi(DokumenttiBase docBase, GeneerinenArviointiasteikkoKaikkiDto arviointi) {
         if (arviointi != null) {
             addTeksti(docBase, messages.translate("docgen.valma.osaamisenarviointi.title", docBase.getKieli()), "h5");
+
+            List<GeneerisenArvioinninOsaamistasonKriteeriKaikkiDto> osaamistasonKriteerit = new ArrayList(arviointi.getOsaamistasonKriteerit());
+            if (osaamistasonKriteerit.size() == 1 && osaamistasonKriteerit.get(0).getKriteerit().isEmpty()) {
+                addTeksti(docBase, getTextString(docBase, osaamistasonKriteerit.get(0).getOsaamistaso().getOtsikko()), "div");
+                return;
+            }
 
             LokalisoituTekstiDto kohde = arviointi.getKohde();
 
