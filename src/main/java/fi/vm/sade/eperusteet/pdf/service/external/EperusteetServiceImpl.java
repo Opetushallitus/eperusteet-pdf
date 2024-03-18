@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.pdf.service.external;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.pdf.configuration.InitJacksonConverter;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.osaamismerkki.OsaamismerkkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.KVLiiteJulkinenDto;
 import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
@@ -19,6 +20,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
@@ -80,6 +83,24 @@ public class EperusteetServiceImpl implements EperusteetService {
             return response.getBody();
         } catch (Exception e) {
             throw new ServiceException("Arviointiasteikkoa ei saatu haettua: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<OsaamismerkkiDto> getOsaamismerkit(Set<Long> koodit) {
+        String url = UriComponentsBuilder
+                .fromHttpUrl(eperusteetServiceUrl + "/api/osaamismerkit/haku/julkiset")
+                .queryParam("koodit", koodit)
+                .build().toUriString();
+
+        try {
+            ResponseEntity<OsaamismerkkiDto[]> response = restTemplate.exchange(url,
+                    HttpMethod.GET,
+                    httpEntity,
+                    OsaamismerkkiDto[].class);
+            return List.of(response.getBody());
+        } catch (Exception e) {
+            throw new ServiceException("Osaamismerkkejä ei saatu haettua: " + e.getMessage());
         }
     }
 }

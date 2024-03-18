@@ -5,6 +5,9 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaDto
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.koulutustoimija.OsaamisenArvioinninToteutussuunnitelmaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.ops.SuorituspolkuRiviDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.osaamismerkki.OsaamismerkkiDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.osaamismerkki.OsaamismerkkiKappaleDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.osaamismerkki.OsaamismerkkiKategoriaDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimuksenKohdeDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.AmmattitaitovaatimuksenKohdealueDto;
@@ -66,6 +69,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoOpintoDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.pdf.service.external.AmosaaService;
+import fi.vm.sade.eperusteet.pdf.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.pdf.service.external.KoodistoClient;
 import fi.vm.sade.eperusteet.pdf.utils.CharapterNumberGenerator;
 import fi.vm.sade.eperusteet.pdf.utils.CollectionUtil;
@@ -126,6 +130,9 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
     @Autowired
     private KoodistoClient koodistoClient;
+
+    @Autowired
+    private EperusteetService eperusteetService;
 
     @Autowired
     private AmosaaService amosaaService;
@@ -310,7 +317,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
         for (SisaltoViiteExportDto sisaltoViiteDto : parent.getLapset()) {
 
-            if (sisaltoViiteDto == null || sisaltoViiteDto.getNimi() == null) {
+            if (sisaltoViiteDto == null) {
                 return;
             }
 
@@ -320,6 +327,10 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
             TekstiKappaleJulkinenDto tekstiKappale = sisaltoViiteDto.getTekstiKappale();
             StringBuilder otsikkoBuilder = new StringBuilder(getSisaltoViiteOtsikko(docBase, sisaltoViiteDto));
+
+            if (ObjectUtils.isEmpty(otsikkoBuilder)) {
+                continue;
+            }
 
             if (sisaltoViiteDto.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)
                     && sisaltoViiteDto.getTosa() != null
@@ -425,6 +436,9 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 case KOTO_OPINTO:
                     addKotoOpinto(docBase, sisaltoViiteDto);
                     break;
+                case OSAAMISMERKKI:
+                    addOsaamismerkkiKappale(docBase, sisaltoViiteDto.getOsaamismerkkiKappale());
+                    break;
                 default:
                     break;
             }
@@ -443,6 +457,10 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
     private String getSisaltoViiteOtsikko(DokumenttiAmosaa docBase, SisaltoViiteExportDto sisaltoViiteDto) {
         if (sisaltoViiteDto.getTyyppi().equals(SisaltoTyyppi.SUORITUSPOLUT)) {
             return messages.translate("opiskelupolut", docBase.getKieli());
+        }
+
+        if (sisaltoViiteDto.getTyyppi().equals(SisaltoTyyppi.OSAAMISMERKKI)) {
+            return messages.translate("kansalliset-perustaitojen-osaamismerkit", docBase.getKieli());
         }
 
         return getTextString(docBase, sisaltoViiteDto.getNimi());
@@ -1357,6 +1375,11 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             arvioinnitEl.appendChild(arviointiEl);
         });
         docBase.getBodyElement().appendChild(arvioinnitEl);
+
+        if (opintokokonaisuus.getOsaamismerkkiKappale() != null) {
+            addTeksti(docBase, messages.translate("kansalliset-perustaitojen-osaamismerkit", docBase.getKieli()), "h5");
+            addOsaamismerkkiKappale(docBase, opintokokonaisuus.getOsaamismerkkiKappale());
+        }
     }
 
     private void addLaajaalainenOsaaminen(DokumenttiBase docBase, SisaltoViiteExportDto sisaltoViiteExportDto) {
@@ -1555,6 +1578,37 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             addTextWithTopic(suullinenVastaanottaminen, "docgen.suullinen_vastaanottaminen.title", docBase);
             addTextWithTopic(suullinenTuottaminen, "docgen.suullinen_tuottaminen.title", docBase);
             addTextWithTopic(vuorovaikutusJaMediaatio, "docgen.vuorovaikutus_ja_mediaatio.title", docBase);
+        });
+    }
+
+    private void addOsaamismerkkiKappale(DokumenttiBase docBase, OsaamismerkkiKappaleDto osaamismerkkiKappale) {
+        if (osaamismerkkiKappale.getKuvaus() != null) {
+            addTeksti(docBase, messages.translate("osaamismerkkien-suorittaminen", docBase.getKieli()), "h6");
+            addTeksti(docBase, getTextString(docBase, osaamismerkkiKappale.getKuvaus()), "div");
+        }
+
+        Set<Long> koodit = osaamismerkkiKappale.getOsaamismerkkiKoodit().stream()
+                .map(koodi -> Long.parseLong(koodi.getKoodi()))
+                .collect(Collectors.toSet());
+
+        List<OsaamismerkkiDto> osaamismerkit = eperusteetService.getOsaamismerkit(koodit);
+
+        Set<OsaamismerkkiKategoriaDto> kategoriat = osaamismerkit.stream()
+                .map(OsaamismerkkiDto::getKategoria)
+                .collect(Collectors.toSet());
+
+        kategoriat.forEach(kategoria -> {
+            addTeksti(docBase, getTextString(docBase, kategoria.getNimi()), "h6");
+
+            Element merkitEl = docBase.getDocument().createElement("ul");
+            osaamismerkit.forEach(merkki -> {
+                if (kategoria.getId().equals(merkki.getKategoria().getId())) {
+                    Element merkkiEl = docBase.getDocument().createElement("li");
+                    merkkiEl.setTextContent(getTextString(docBase, merkki.getNimi()));
+                    merkitEl.appendChild(merkkiEl);
+                }
+            });
+            docBase.getBodyElement().appendChild(merkitEl);
         });
     }
 

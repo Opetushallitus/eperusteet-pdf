@@ -20,6 +20,7 @@ public enum SisaltoTyyppi {
     KOTO_KIELITAITOTASO("koto_kielitaitotaso"),
     KOTO_OPINTO("koto_opinto"),
     KOTO_LAAJAALAINENOSAAMINEN("koto_laajaalainenosaaminen"),
+    OSAAMISMERKKI("osaamismerkki"),
 
     // Linkki toiseen minkä läpi voi vain lukea
     LINKKI("linkki");
@@ -63,7 +64,7 @@ public enum SisaltoTyyppi {
     }
 
     public static boolean salliLuonti(SisaltoTyyppi tyyppi) {
-        return EnumSet.of(SUORITUSPOLKU, OSASUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE, OPINTOKOKONAISUUS).contains(tyyppi);
+        return EnumSet.of(SUORITUSPOLKU, OSASUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE, OPINTOKOKONAISUUS, OSAAMISMERKKI).contains(tyyppi);
     }
 
     public static boolean isSuorituspolku(SisaltoTyyppi tyyppi) {
@@ -75,7 +76,7 @@ public enum SisaltoTyyppi {
     }
 
     public boolean isVstTyyppi() {
-        return isOneOf(TEKSTIKAPPALE, OPINTOKOKONAISUUS);
+        return isOneOf(TEKSTIKAPPALE, OPINTOKOKONAISUUS, OSAAMISMERKKI);
     }
 
     public boolean isTuvaTyyppi() {
