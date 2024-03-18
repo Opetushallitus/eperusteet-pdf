@@ -112,6 +112,7 @@ import javax.xml.xpath.XPathFactory;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -665,7 +666,8 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                         osa.getAmmattitaitovaatimuksetLista(),
                         osa.getAmmattitaitovaatimukset());
                 addGeneerinenArviointi(docBase, osa.getGeneerinenArviointiasteikko());
-                if (osa.getGeneerinenArviointiasteikko() == null) {
+
+                if (osa.getArviointi() == null) {
                     addArviointi(docBase, osa.getArviointi(), tyyppi);
                 }
                 addValmatelmaSisalto(docBase, osa.getValmaTelmaSisalto());
@@ -1818,7 +1820,12 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             addTeksti(docBase, messages.translate("docgen.geneerinen-arviointi.title", docBase.getKieli()), "h5");
 
             LokalisoituTekstiDto kohde = geneerinenArviointiasteikko.getKohde();
-            Set<GeneerisenArvioinninOsaamistasonKriteeriKaikkiDto> osaamistasonKriteerit = geneerinenArviointiasteikko.getOsaamistasonKriteerit();
+            List<GeneerisenArvioinninOsaamistasonKriteeriKaikkiDto> osaamistasonKriteerit = new ArrayList(geneerinenArviointiasteikko.getOsaamistasonKriteerit());
+
+            if (osaamistasonKriteerit.size() == 1 && osaamistasonKriteerit.get(0).getKriteerit().isEmpty()) {
+                addTeksti(docBase, getTextString(docBase, osaamistasonKriteerit.get(0).getOsaamistaso().getOtsikko()), "div");
+                return;
+            }
 
             Element taulukko = docBase.getDocument().createElement("table");
             taulukko.setAttribute("border", "1");
