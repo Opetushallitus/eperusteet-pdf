@@ -667,7 +667,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                         osa.getAmmattitaitovaatimukset());
                 addGeneerinenArviointi(docBase, osa.getGeneerinenArviointiasteikko());
 
-                if (osa.getArviointi() == null) {
+                if (osa.getGeneerinenArviointiasteikko() == null) {
                     addArviointi(docBase, osa.getArviointi(), tyyppi);
                 }
                 addValmatelmaSisalto(docBase, osa.getValmaTelmaSisalto());
