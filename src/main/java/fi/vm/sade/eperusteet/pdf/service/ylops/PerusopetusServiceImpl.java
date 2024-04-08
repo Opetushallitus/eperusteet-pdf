@@ -331,11 +331,11 @@ public class PerusopetusServiceImpl implements PerusopetusService {
         }
 
         if (perusteOaVlkDto != null) {
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTehtava(), pohjanVlkDto.getTehtava(), perusteOaVlkDto.getTehtava().orElse(null), null);
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getYleistavoitteet(), pohjanVlkDto.getYleistavoitteet(), null, null);
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTyotavat(), pohjanVlkDto.getTyotavat(), perusteOaVlkDto.getTyotavat().orElse(null), null);
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getOhjaus(), pohjanVlkDto.getOhjaus(), perusteOaVlkDto.getOhjaus().orElse(null), null);
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getArviointi(), pohjanVlkDto.getArviointi(), perusteOaVlkDto.getArviointi().orElse(null), null);
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTehtava(), pohjanVlkDto.getTehtava(), perusteOaVlkDto.getTehtava().orElse(null));
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getYleistavoitteet(), pohjanVlkDto.getYleistavoitteet(), null);
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTyotavat(), pohjanVlkDto.getTyotavat(), perusteOaVlkDto.getTyotavat().orElse(null));
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getOhjaus(), pohjanVlkDto.getOhjaus(), perusteOaVlkDto.getOhjaus().orElse(null));
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getArviointi(), pohjanVlkDto.getArviointi(), perusteOaVlkDto.getArviointi().orElse(null));
 
             if (!CollectionUtils.isEmpty(perusteOaVlkDto.getVapaatTekstit())) {
                 perusteOaVlkDto.getVapaatTekstit().forEach(vt -> {
@@ -352,12 +352,12 @@ public class PerusopetusServiceImpl implements PerusopetusService {
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getArviointi(), pohjanVlkDto.getArviointi(), null, messages.translate("docgen.arviointi.title", docBase.getKieli()));
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getTavoitteistaJohdetutOppimisenTavoitteet(), pohjanVlkDto.getTavoitteistaJohdetutOppimisenTavoitteet(), null, messages.translate("docgen.tavoitteista-johdetut-oppimisen-tavoitteet.title", docBase.getKieli()));
         } else {
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTehtava(), pohjanVlkDto.getTehtava(), null, null);
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getYleistavoitteet(), pohjanVlkDto.getYleistavoitteet(), null, null);
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTyotavat(), pohjanVlkDto.getTyotavat(), null, null);
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getOhjaus(), pohjanVlkDto.getOhjaus(), null, null);
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getArviointi(), pohjanVlkDto.getArviointi(), null, null);
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTavoitteistaJohdetutOppimisenTavoitteet(), pohjanVlkDto.getTavoitteistaJohdetutOppimisenTavoitteet(), null, null);
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTehtava(), pohjanVlkDto.getTehtava(), null);
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getYleistavoitteet(), pohjanVlkDto.getYleistavoitteet(), null);
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTyotavat(), pohjanVlkDto.getTyotavat(), null);
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getOhjaus(), pohjanVlkDto.getOhjaus(), null);
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getArviointi(), pohjanVlkDto.getArviointi(), null);
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTavoitteistaJohdetutOppimisenTavoitteet(), pohjanVlkDto.getTavoitteistaJohdetutOppimisenTavoitteet(), null);
             addTavoitteetJaSisaltoalueet(docBase, null, oaVlkDto);
         }
     }
@@ -523,6 +523,10 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                 }
             }
         }
+    }
+
+    private void addOppiaineYleisetOsiot(DokumenttiBase docBase, TekstiosaDto tekstiosa, TekstiosaDto pohjanTekstiosa, TekstiOsaDto perusteTekstiOsaDto) {
+        addOppiaineYleisetOsiot(docBase, tekstiosa, pohjanTekstiosa, perusteTekstiOsaDto, null);
     }
 
     private void addOppiaineYleisetOsiot(DokumenttiBase docBase, TekstiosaDto tekstiosa, TekstiosaDto pohjanTekstiosa, TekstiOsaDto perusteTekstiOsaDto, String valinnaisenOtsikko) {
