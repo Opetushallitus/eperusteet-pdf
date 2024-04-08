@@ -625,8 +625,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                 docBase,
                 oppiaine.getTehtava(),
                 oppiaine.getPohjanOppiaine() != null ? oppiaine.getPohjanOppiaine().getTehtava() : null,
-                perusteTehtavaDto,
-                null);
+                perusteTehtavaDto);
 
         // Peruste
         OppiaineenVuosiluokkaKokonaisuusDto perusteOaVlkDto = null;
