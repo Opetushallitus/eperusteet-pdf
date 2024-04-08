@@ -5,6 +5,7 @@ import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiRivi;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTaulukko;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiYlops;
+import fi.vm.sade.eperusteet.pdf.dto.enums.OppiaineValinnainenTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.LaajaalainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineLaajaDto;
@@ -277,7 +278,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                     }
 
                     // Oppiaineen vuosiluokkakokonaiuuden kohtaiset
-                    addOppiaineVuosiluokkkakokonaisuus(docBase, perusteOaVlkDto, oaVlk, oaPohjanVlk);
+                    addOppiaineVuosiluokkakokonaisuus(docBase, perusteOaVlkDto, oaVlk, oaPohjanVlk, !OppiaineValinnainenTyyppi.EI_MAARITETTY.equals(oppiaine.getValinnainenTyyppi()));
 
                     docBase.getGenerator().decreaseDepth();
 
@@ -319,10 +320,11 @@ public class PerusopetusServiceImpl implements PerusopetusService {
         addTekstiosa(docBase, oppiaine.getTehtava(), "div");
     }
 
-    private void addOppiaineVuosiluokkkakokonaisuus(DokumenttiBase docBase,
-                                                    OppiaineenVuosiluokkaKokonaisuusDto perusteOaVlkDto,
-                                                    OppiaineenVuosiluokkakokonaisuusDto oaVlkDto,
-                                                    OppiaineenVuosiluokkakokonaisuusDto pohjanVlkDto) {
+    private void addOppiaineVuosiluokkakokonaisuus(DokumenttiBase docBase,
+                                                   OppiaineenVuosiluokkaKokonaisuusDto perusteOaVlkDto,
+                                                   OppiaineenVuosiluokkakokonaisuusDto oaVlkDto,
+                                                   OppiaineenVuosiluokkakokonaisuusDto pohjanVlkDto,
+                                                   boolean isValinnainen) {
 
         if (oaVlkDto == null) {
             return;
@@ -343,12 +345,19 @@ public class PerusopetusServiceImpl implements PerusopetusService {
             }
 
             addTavoitteetJaSisaltoalueet(docBase, perusteOaVlkDto, oaVlkDto);
+        } else if (isValinnainen) {
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTehtava(), pohjanVlkDto.getTehtava(), null, messages.translate("valinnaisen-tehtava", docBase.getKieli()));
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTyotavat(), pohjanVlkDto.getTyotavat(), null, messages.translate("oppiaine-tyotavat", docBase.getKieli()));
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getOhjaus(), pohjanVlkDto.getOhjaus(), null, messages.translate("oppiaine-ohjaus", docBase.getKieli()));
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getArviointi(), pohjanVlkDto.getArviointi(), null, messages.translate("docgen.arviointi.title", docBase.getKieli()));
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTavoitteistaJohdetutOppimisenTavoitteet(), pohjanVlkDto.getTavoitteistaJohdetutOppimisenTavoitteet(), null, messages.translate("docgen.tavoitteista-johdetut-oppimisen-tavoitteet.title", docBase.getKieli()));
         } else {
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getTehtava(), pohjanVlkDto.getTehtava(), null);
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getYleistavoitteet(), pohjanVlkDto.getYleistavoitteet(), null);
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getTyotavat(), pohjanVlkDto.getTyotavat(), null);
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getOhjaus(), pohjanVlkDto.getOhjaus(), null);
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getArviointi(), pohjanVlkDto.getArviointi(), null);
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTavoitteistaJohdetutOppimisenTavoitteet(), pohjanVlkDto.getTavoitteistaJohdetutOppimisenTavoitteet(), null);
             addTavoitteetJaSisaltoalueet(docBase, null, oaVlkDto);
         }
     }
@@ -517,6 +526,10 @@ public class PerusopetusServiceImpl implements PerusopetusService {
     }
 
     private void addOppiaineYleisetOsiot(DokumenttiBase docBase, TekstiosaDto tekstiosa, TekstiosaDto pohjanTekstiosa, TekstiOsaDto perusteTekstiOsaDto) {
+        addOppiaineYleisetOsiot(docBase, tekstiosa, pohjanTekstiosa, perusteTekstiOsaDto, null);
+    }
+
+    private void addOppiaineYleisetOsiot(DokumenttiBase docBase, TekstiosaDto tekstiosa, TekstiosaDto pohjanTekstiosa, TekstiOsaDto perusteTekstiOsaDto, String valinnaisenOtsikko) {
         if (tekstiosa != null) {
             LokalisoituTekstiDto otsikko = tekstiosa.getOtsikko();
             if (otsikko != null) {
@@ -526,11 +539,16 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                 addLokalisoituteksti(docBase, perusteTekstiOsaDto.getTeksti(), "cite");
             }
 
-            if (pohjanTekstiosa != null && pohjanTekstiosa.getTeksti() != null && pohjanTekstiosa.getTeksti() != null) {
+            if (pohjanTekstiosa != null && pohjanTekstiosa.getTeksti() != null) {
                 addLokalisoituteksti(docBase, pohjanTekstiosa.getTeksti(), "div");
             }
 
-            addLokalisoituteksti(docBase, tekstiosa.getTeksti(), "div");
+            if (!ObjectUtils.isEmpty(tekstiosa.getTeksti())) {
+                if (!ObjectUtils.isEmpty(valinnaisenOtsikko)) {
+                    addHeader(docBase, valinnaisenOtsikko);
+                }
+                addLokalisoituteksti(docBase, tekstiosa.getTeksti(), "div");
+            }
         }
     }
 
@@ -620,7 +638,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
         }
 
         // Oppimäärän vuosiluokkakokonaiuuden kohtaiset
-        addOppiaineVuosiluokkkakokonaisuus(docBase, perusteOaVlkDto, optOaVlk.get(), oaPohjanVlk);
+        addOppiaineVuosiluokkakokonaisuus(docBase, perusteOaVlkDto, optOaVlk.get(), oaPohjanVlk, !OppiaineValinnainenTyyppi.EI_MAARITETTY.equals(oppiaine.getValinnainenTyyppi()));
 
         docBase.getGenerator().decreaseDepth();
         docBase.getGenerator().increaseNumber();
