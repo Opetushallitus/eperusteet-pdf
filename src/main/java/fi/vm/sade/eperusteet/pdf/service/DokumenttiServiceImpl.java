@@ -110,7 +110,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         try {
             OpetussuunnitelmaExportDto ops = objectMapper.readValue(opsJson, OpetussuunnitelmaExportDto.class);
             GeneratorData generatorData = GeneratorData.of(ops.getId(), dokumenttiId, kieli, DokumenttiTyyppi.YLOPS, null);
-            PerusteKaikkiDto perusteKaikkiDto = ylopsService.getPerusteKaikkiDto(ops.getPerusteenId());
+            PerusteKaikkiDto perusteKaikkiDto = ylopsService.getOpetussuunnitelmaPeruste(ops.getPerusteenId(), ops.getPeruste().getGlobalVersion().getAikaleima());
 
             log.info("Luodaan PDF-dokumenttia (docId={}, {}, {})", dokumenttiId, generatorData.getTyyppi(), kieli);
             Document doc = ylopsDokumenttiBuilderService.generateXML(ops, perusteKaikkiDto, generatorData);
