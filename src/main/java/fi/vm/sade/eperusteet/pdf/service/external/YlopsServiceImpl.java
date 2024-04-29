@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import java.util.Date;
 
 @Service
 @Profile("!test")
@@ -59,13 +60,14 @@ public class YlopsServiceImpl implements YlopsService {
     }
 
     @Override
-    public PerusteKaikkiDto getPerusteKaikkiDto(Long perusteId) {
+    public PerusteKaikkiDto getOpetussuunnitelmaPeruste(Long perusteId, Date aikaleima) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API + "ulkopuoliset/peruste/{perusteId}",
+            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API + "ulkopuoliset/peruste/{perusteId}/julkaisuhetki/{aikaleima}",
                     HttpMethod.GET,
                     httpEntity,
                     String.class,
-                    perusteId);
+                    perusteId,
+                    aikaleima.getTime());
             return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
         } catch (Exception e) {
             throw new ServiceException("Perustedataa ei saatu haettua: " + e.getMessage());
