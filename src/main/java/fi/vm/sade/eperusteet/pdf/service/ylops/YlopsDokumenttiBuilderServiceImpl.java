@@ -207,11 +207,19 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
             docBase.getHeadElement().appendChild(dateEl);
         }
 
-        Element pdfluotu = docBase.getDocument().createElement("meta");
-        pdfluotu.setAttribute("name", "pdfluotu");
-        pdfluotu.setAttribute("content", new SimpleDateFormat("d.M.yyyy").format(new Date()));
-        pdfluotu.setAttribute("translate", messages.translate("docgen.pdf-luotu", docBase.getKieli()));
-        docBase.getHeadElement().appendChild(pdfluotu);
+        if (docBase.getOps().getViimeisinJulkaisuAika() != null) {
+            Element pdfjulkaistu = docBase.getDocument().createElement("meta");
+            pdfjulkaistu.setAttribute("name", "pdfjulkaistu");
+            pdfjulkaistu.setAttribute("content", new SimpleDateFormat("d.M.yyyy").format(docBase.getOps().getViimeisinJulkaisuAika()));
+            pdfjulkaistu.setAttribute("translate", messages.translate("docgen.pdf-julkaistu", docBase.getKieli()));
+            docBase.getHeadElement().appendChild(pdfjulkaistu);
+        } else {
+            Element pdfluotu = docBase.getDocument().createElement("meta");
+            pdfluotu.setAttribute("name", "pdfluotu");
+            pdfluotu.setAttribute("content", new SimpleDateFormat("d.M.yyyy").format(new Date()));
+            pdfluotu.setAttribute("translate", messages.translate("docgen.pdf-luotu", docBase.getKieli()));
+            docBase.getHeadElement().appendChild(pdfluotu);
+        }
 
         // Koulun nimi
         Element koulutEl = docBase.getDocument().createElement("koulut");
