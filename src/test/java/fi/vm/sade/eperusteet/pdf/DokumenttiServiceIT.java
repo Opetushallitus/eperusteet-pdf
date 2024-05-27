@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
@@ -31,7 +33,7 @@ public class DokumenttiServiceIT {
     }
 
     @Test
-    public void generateYlopsPdf() {
+    public void generateYlopsPdf() throws IOException {
         assertDoesNotThrow(() -> dokumenttiService.generateForYlops(1L, Kieli.FI, TestUtil.getTestJulkaisuJsonAsString("material/ylops.json")));
     }
 }
