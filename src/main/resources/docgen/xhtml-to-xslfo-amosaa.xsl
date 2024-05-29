@@ -290,7 +290,7 @@
         </fo:block>
 
     </xsl:template>
-    
+
     <xsl:template match="body">
         <fo:flow flow-name="xsl-region-body">
             <xsl:choose>
@@ -546,8 +546,20 @@
                         <fo:table-row keep-with-next="always">
                             <fo:table-cell>
                                 <fo:block>
-                                    <fo:external-graphic src="{@src}" content-width="scale-to-fit" content-height="100%"
-                                                         width="100%" scaling="uniform"/>
+                                    <xsl:choose>
+                                        <xsl:when test="@tyyppi='kansi'">
+                                            <fo:external-graphic src="{@src}" content-height="100mm" content-width="scale-to-fit"
+                                                                 width="100%" scaling="uniform"/>
+                                        </xsl:when>
+                                        <xsl:when test="@tyyppi='tunniste'">
+                                            <fo:external-graphic src="{@src}" content-height="15mm" content-width="scale-to-fit"
+                                                                 width="100%" scaling="uniform"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <fo:external-graphic src="{@src}" content-width="scale-to-fit" content-height="100%"
+                                                                 width="100%" scaling="uniform"/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
                                 </fo:block>
                             </fo:table-cell>
                         </fo:table-row>
