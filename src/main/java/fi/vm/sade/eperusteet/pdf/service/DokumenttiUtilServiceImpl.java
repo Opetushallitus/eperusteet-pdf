@@ -35,7 +35,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
@@ -153,6 +152,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
         }
 
         String base64 = Base64.getEncoder().encodeToString(kuva);
+        img.setAttribute("tyyppi", Kuvatyyppi.kansikuva.equals(kuvatyyppi) ? "kansi" : "tunniste");
         img.setAttribute("src", "data:image/jpg;base64," + base64);
 
         element.appendChild(img);
