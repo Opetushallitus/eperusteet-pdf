@@ -595,28 +595,29 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                                       MuodostumisSaantoDto muodostumisSaantoDto,
                                       StringBuilder builder) {
         if (muodostumisSaantoDto != null && muodostumisSaantoDto.getLaajuus() != null) {
+            Integer minimi = muodostumisSaantoDto.getLaajuus().getMinimi() != null ? muodostumisSaantoDto.getLaajuus().getMinimi() : null;
+            Integer maksimi = muodostumisSaantoDto.getLaajuus().getMaksimi() != null ? muodostumisSaantoDto.getLaajuus().getMaksimi() : null;
+
             builder.append(" ");
-            if (muodostumisSaantoDto.getLaajuus().getMinimi() != null
-                    && muodostumisSaantoDto.getLaajuus().getMaksimi() != null
-                    && muodostumisSaantoDto.getLaajuus().getMinimi()
-                    .equals(muodostumisSaantoDto.getLaajuus().getMaksimi())) {
+            if (minimi != null && minimi > 0 && minimi.equals(maksimi)) {
                 builder.append(muodostumisSaantoDto.getLaajuus().getMinimi());
-            } else if (muodostumisSaantoDto.getLaajuus().getMinimi() != null
-                    && muodostumisSaantoDto.getLaajuus().getMaksimi() != null) {
+            } else if (minimi != null && maksimi != null) {
                 builder.append(muodostumisSaantoDto.getLaajuus().getMinimi());
                 builder.append("-");
                 builder.append(muodostumisSaantoDto.getLaajuus().getMaksimi());
-            } else if (muodostumisSaantoDto.getLaajuus().getMinimi() != null) {
+            } else if (minimi != null && minimi > 0) {
                 builder.append(muodostumisSaantoDto.getLaajuus().getMinimi());
-            } else if (muodostumisSaantoDto.getLaajuus().getMaksimi() != null) {
+            } else if (maksimi != null && maksimi > 0) {
                 builder.append(muodostumisSaantoDto.getLaajuus().getMaksimi());
             }
 
-            if (muodostumisSaantoDto.getLaajuus().getYksikko() != null) {
-                builder.append(" ");
-                builder.append(muodostumisSaantoDto.getLaajuus().getYksikko());
-            } else {
-                builder.append(" ").append(messages.translate("docgen.laajuus.osp", docBase.getKieli()));
+            if ((minimi != null && minimi > 0) || (maksimi != null && maksimi > 0)) {
+                if (muodostumisSaantoDto.getLaajuus().getYksikko() != null) {
+                    builder.append(" ");
+                    builder.append(muodostumisSaantoDto.getLaajuus().getYksikko());
+                } else {
+                    builder.append(" ").append(messages.translate("docgen.laajuus.osp", docBase.getKieli()));
+                }
             }
         }
     }
