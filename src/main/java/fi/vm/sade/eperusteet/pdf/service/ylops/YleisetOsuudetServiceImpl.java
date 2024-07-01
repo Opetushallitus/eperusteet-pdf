@@ -91,15 +91,14 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
                                         }
                                     }
                                 }
-
                             }
+                        }
 
-                            if (lapsi.isNaytaPohjanTeksti()) {
-                                List<TekstiKappaleViiteExportDto> pohjaTekstit = getTekstiKappaleViiteOriginals(docBase.getOps().getId(), lapsi);
-                                pohjaTekstit.stream()
-                                        .filter(pohjaTeksti -> pohjaTeksti != null && pohjaTeksti.getTekstiKappale() != null && pohjaTeksti.getTekstiKappale().getTeksti() != null)
-                                        .forEach(pohjaTeksti -> addLokalisoituteksti(docBase, pohjaTeksti.getTekstiKappale().getTeksti(), "cite"));
-                            }
+                        if (lapsi.isNaytaPohjanTeksti()) {
+                            List<TekstiKappaleViiteExportDto> pohjaTekstit = getTekstiKappaleViiteOriginals(docBase.getOps().getId(), lapsi);
+                            pohjaTekstit.stream()
+                                    .filter(pohjaTeksti -> pohjaTeksti != null && pohjaTeksti.getTekstiKappale() != null && pohjaTeksti.getTekstiKappale().getTeksti() != null)
+                                    .forEach(pohjaTeksti -> addLokalisoituteksti(docBase, pohjaTeksti.getTekstiKappale().getTeksti(), "cite"));
                         }
 
                         // Opsin teksti luvulle
