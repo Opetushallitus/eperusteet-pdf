@@ -32,22 +32,15 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
     public void addYleisetOsuudet(DokumenttiYlops docBase) {
         Optional.ofNullable(docBase.getOps().getTekstit())
                 .ifPresent(tekstit -> {
-                    addTekstiKappale(docBase, tekstit, opetussuunnitelmaVanhaaRakennetta(docBase));
+                    addTekstiKappale(docBase, tekstit);
                 });
     }
 
-    private boolean opetussuunnitelmaVanhaaRakennetta(DokumenttiYlops docBase) {
-        if (KoulutusTyyppi.PERUSOPETUS.equals(docBase.getOps().getKoulutustyyppi())) {
-            return docBase.getOps().getTekstit().getLapset().stream().noneMatch(tekstiKappaleViite -> tekstiKappaleViite.getPerusteTekstikappaleId() != null);
-        }
-        return false;
+    private void addTekstiKappale(DokumenttiYlops docBase, TekstiKappaleViiteExportDto.Puu viite) {
+        addTekstiKappale(docBase, viite, false);
     }
 
-    private void addTekstiKappale(DokumenttiYlops docBase, TekstiKappaleViiteExportDto.Puu viite, boolean paataso) {
-        addTekstiKappale(docBase, viite, paataso, false);
-    }
-
-    private void addTekstiKappale(DokumenttiYlops docBase, TekstiKappaleViiteExportDto.Puu viite, boolean paataso, boolean liite) {
+    private void addTekstiKappale(DokumenttiYlops docBase, TekstiKappaleViiteExportDto.Puu viite, boolean liite) {
         for (TekstiKappaleViiteExportDto.Puu lapsi : viite.getLapset()) {
             if (lapsi != null && lapsi.getTekstiKappale() != null && !lapsi.isPiilotettu()) {
 
@@ -55,70 +48,63 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
                     continue;
                 }
 
-                // Ei näytetä yhteisen osien Pääkappaleiden otsikoita
-                // Opetuksen järjestäminen ja Opetuksen toteuttamisen lähtökohdat
-                if (paataso) {
-                    addTekstiKappale(docBase, lapsi, false, liite);
-                } else {
-                    if (hasTekstiSisalto(docBase, lapsi) || hasTekstiSisaltoRecursive(docBase, lapsi)) {
+                if (hasTekstiSisalto(docBase, lapsi) || hasTekstiSisaltoRecursive(docBase, lapsi)) {
 
-                        fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto perusteenTekstikappale = null;
-                        if (lapsi.getPerusteTekstikappaleId() != null) {
-                            perusteenTekstikappale = getPerusteTekstikappale(docBase.getPeruste(), lapsi.getPerusteTekstikappaleId());
-                            if (perusteenTekstikappale != null) {
-                                addHeader(docBase, getTextString(docBase, perusteenTekstikappale.getNimi()));
-                            }
+                    fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.TekstiKappaleDto perusteenTekstikappale = null;
+                    if (lapsi.getPerusteTekstikappaleId() != null) {
+                        perusteenTekstikappale = getPerusteTekstikappale(docBase.getPeruste(), lapsi.getPerusteTekstikappaleId());
+                        if (perusteenTekstikappale != null) {
+                            addHeader(docBase, getTextString(docBase, perusteenTekstikappale.getNimi()));
                         }
+                    }
 
-                        if (perusteenTekstikappale == null && lapsi.getTekstiKappale().getNimi() != null)  {
-                            addHeader(docBase, getTextString(docBase, lapsi.getTekstiKappale().getNimi()));
-                        }
+                    if (perusteenTekstikappale == null && lapsi.getTekstiKappale().getNimi() != null)  {
+                        addHeader(docBase, getTextString(docBase, lapsi.getTekstiKappale().getNimi()));
+                    }
 
-                        if (!opetussuunnitelmaVanhaaRakennetta(docBase)) {
+                    // Perusteen teksti luvulle jos valittu esittäminen
+                    if (lapsi.isNaytaPerusteenTeksti()) {
+                        if (perusteenTekstikappale != null) {
+                            addLokalisoituteksti(docBase, perusteenTekstikappale.getTeksti(),"cite");
 
-                            // Perusteen teksti luvulle jos valittu esittäminen
-                            if (lapsi.isNaytaPerusteenTeksti()) {
-                                if (perusteenTekstikappale != null) {
-                                    addLokalisoituteksti(docBase, perusteenTekstikappale.getTeksti(),"cite");
-
-                                    if (perusteenTekstikappale.getTunniste() != null && perusteenTekstikappale.getTunniste().equals(PerusteenOsaTunniste.LAAJAALAINENOSAAMINEN)) {
-                                        PerusteKaikkiDto peruste = docBase.getPeruste();
-                                        if (peruste.getAipeOpetuksenPerusteenSisalto() != null && peruste.getAipeOpetuksenPerusteenSisalto().getLaajaalaisetosaamiset() != null) {
-                                            peruste.getAipeOpetuksenPerusteenSisalto().getLaajaalaisetosaamiset().forEach(lao -> {
-                                                addLokalisoituteksti(docBase, lao.getNimi(),"h5i");
-                                                addLokalisoituteksti(docBase, lao.getKuvaus(),"cite");
-                                            });
-                                        }
-                                    }
+                            if (perusteenTekstikappale.getTunniste() != null && perusteenTekstikappale.getTunniste().equals(PerusteenOsaTunniste.LAAJAALAINENOSAAMINEN)) {
+                                PerusteKaikkiDto peruste = docBase.getPeruste();
+                                if (peruste.getAipeOpetuksenPerusteenSisalto() != null && peruste.getAipeOpetuksenPerusteenSisalto().getLaajaalaisetosaamiset() != null) {
+                                    peruste.getAipeOpetuksenPerusteenSisalto().getLaajaalaisetosaamiset().forEach(lao -> {
+                                        addLokalisoituteksti(docBase, lao.getNimi(),"h5i");
+                                        addLokalisoituteksti(docBase, lao.getKuvaus(),"cite");
+                                    });
                                 }
                             }
                         }
+                    }
 
-                        if (lapsi.isNaytaPohjanTeksti()) {
-                            List<TekstiKappaleViiteExportDto> pohjaTekstit = getTekstiKappaleViiteOriginals(docBase.getOps().getId(), lapsi);
-                            pohjaTekstit.stream()
-                                    .filter(pohjaTeksti -> pohjaTeksti != null && pohjaTeksti.getTekstiKappale() != null && pohjaTeksti.getTekstiKappale().getTeksti() != null)
-                                    .forEach(pohjaTeksti -> addLokalisoituteksti(docBase, pohjaTeksti.getTekstiKappale().getTeksti(), "cite"));
-                        }
 
-                        // Opsin teksti luvulle
-                        if (lapsi.getTekstiKappale().getTeksti() != null) {
-                            addLokalisoituteksti(docBase, lapsi.getTekstiKappale().getTeksti(), "div");
-                        }
+                    if (lapsi.isNaytaPohjanTeksti()) {
+                        List<TekstiKappaleViiteExportDto> pohjaTekstit = getTekstiKappaleViiteOriginals(docBase.getOps().getId(), lapsi);
+                        pohjaTekstit.stream()
+                                .filter(pohjaTeksti -> pohjaTeksti != null && pohjaTeksti.getTekstiKappale() != null && pohjaTeksti.getTekstiKappale().getTeksti() != null)
+                                .forEach(pohjaTeksti -> addLokalisoituteksti(docBase, pohjaTeksti.getTekstiKappale().getTeksti(), "cite"));
+                    }
 
-                        if (lapsi.getTekstiKappale().getNimi() != null) {
-                            docBase.getGenerator().increaseDepth();
-                        }
+                    // Opsin teksti luvulle
+                    if (lapsi.getTekstiKappale().getTeksti() != null) {
+                        addLokalisoituteksti(docBase, lapsi.getTekstiKappale().getTeksti(), "div");
+                    }
 
-                        // Rekursiivisesti
-                        addTekstiKappale(docBase, lapsi, false, liite);
+                    if (lapsi.getTekstiKappale().getNimi() != null) {
+                        docBase.getGenerator().increaseDepth();
+                    }
 
-                        if (lapsi.getTekstiKappale().getNimi() != null) {
-                            docBase.getGenerator().decreaseDepth();
-                            docBase.getGenerator().increaseNumber();
-                        }
+                    // Rekursiivisesti
+                    addTekstiKappale(docBase, lapsi, liite);
+
+                    if (lapsi.getTekstiKappale().getNimi() != null) {
+                        docBase.getGenerator().decreaseDepth();
+                        docBase.getGenerator().increaseNumber();
                     }
                 }
+
             }
         }
     }
@@ -166,7 +152,7 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
 
     public void addLiitteet(DokumenttiYlops docBase) {
         if (docBase.getOps().getTekstit() != null) {
-            addTekstiKappale(docBase, docBase.getOps().getTekstit(), false, true);
+            addTekstiKappale(docBase, docBase.getOps().getTekstit(), true);
         }
     }
 
