@@ -1530,7 +1530,11 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
         taitotasot.forEach(taitotaso -> {
 
-            addTeksti(docBase, getTextString(docBase, taitotaso.getNimi().getNimi()), "h5");
+            String taitotasoNimi = getTextString(docBase, taitotaso.getNimi().getNimi());
+            if (Optional.ofNullable(taitotaso.getTyoelamaOpintoMinimiLaajuus()).orElse(0) > 0 && Optional.ofNullable(taitotaso.getTyoelamaOpintoMaksimiLaajuus()).orElse(0) > 0) {
+                taitotasoNimi += ", " + taitotaso.getTyoelamaOpintoMinimiLaajuus() + " - " + taitotaso.getTyoelamaOpintoMaksimiLaajuus() + " " + messages.translate("docgen.laajuus.op", docBase.getKieli());
+            }
+            addTeksti(docBase, taitotasoNimi, "h5");
 
             String tavoitteet = getTextString(docBase, taitotaso.getTavoitteet());
             addTextWithTopic(tavoitteet, tavoiteTitle, docBase);
@@ -1567,18 +1571,18 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                     || StringUtils.isNotEmpty(suullinenVastaanottaminen)
                     || StringUtils.isNotEmpty(suullinenTuottaminen)
                     || StringUtils.isNotEmpty(vuorovaikutusJaMediaatio)) {
-                addTeksti(docBase, messages.translate("docgen.keskeiset-sisallot.title", docBase.getKieli()), "h5");
+                addTeksti(docBase, messages.translate("docgen.opiskelijan_osaaminen.title", docBase.getKieli()), "h5");
             }
 
-            addTextWithTopic(kielenkayttotarkoitus, "docgen.kielenkayttotarkoitus.title", docBase);
-            addTextWithTopic(aihealueet, "docgen.aihealueet.title", docBase);
-            addTextWithTopic(viestintataidot, "docgen.viestintataidot.title", docBase);
-            addTextWithTopic(opiskelijantaidot, "docgen.opiskelijantaidot.title", docBase);
+            addTextWithTopic(kielenkayttotarkoitus, "docgen.kielenkayttotarkoitus.title", "docgen.info.opiskelija", docBase);
+            addTextWithTopic(aihealueet, "docgen.aihealueet.title", "docgen.info.opiskelija", docBase);
+            addTextWithTopic(viestintataidot, "docgen.viestintataidot.title", "docgen.info.opiskelija", docBase);
+            addTextWithTopic(opiskelijantaidot, "docgen.opiskelijantaidot.title", "docgen.info.opiskelija", docBase);
 
-            addTextWithTopic(opiskelijanTyoelamataidot, "docgen.opiskelijan_tyoelamataidot.title", docBase);
-            addTextWithTopic(suullinenVastaanottaminen, "docgen.suullinen_vastaanottaminen.title", docBase);
-            addTextWithTopic(suullinenTuottaminen, "docgen.suullinen_tuottaminen.title", docBase);
-            addTextWithTopic(vuorovaikutusJaMediaatio, "docgen.vuorovaikutus_ja_mediaatio.title", docBase);
+            addTextWithTopic(opiskelijanTyoelamataidot, "docgen.opiskelijan_tyoelamataidot.title", "docgen.info.opiskelija", docBase);
+            addTextWithTopic(suullinenVastaanottaminen, "docgen.suullinen_vastaanottaminen.title", "docgen.info.opiskelija", docBase);
+            addTextWithTopic(suullinenTuottaminen, "docgen.suullinen_tuottaminen.title", "docgen.info.opiskelija", docBase);
+            addTextWithTopic(vuorovaikutusJaMediaatio, "docgen.vuorovaikutus_ja_mediaatio.title", "docgen.info.opiskelija",  docBase);
         });
     }
 
@@ -1614,8 +1618,15 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
     }
 
     private void addTextWithTopic(String text, String translationKey, DokumenttiBase docBase) {
+        addTextWithTopic(text, translationKey, null, docBase);
+    }
+
+    private void addTextWithTopic(String text, String translationKey, String subHeaderTranslationKey, DokumenttiBase docBase) {
         if (StringUtils.isNotEmpty(text)) {
             addTeksti(docBase, messages.translate(translationKey, docBase.getKieli()), "h6");
+            if (!ObjectUtils.isEmpty(subHeaderTranslationKey)) {
+                addTeksti(docBase, messages.translate(subHeaderTranslationKey, docBase.getKieli()), "p");
+            }
             addTeksti(docBase, text, "div");
         }
     }
