@@ -1579,7 +1579,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             addTextWithTopic(viestintataidot, "docgen.viestintataidot.title", "docgen.info.opiskelija", docBase);
             addTextWithTopic(opiskelijantaidot, "docgen.opiskelijantaidot.title", "docgen.info.opiskelija", docBase);
 
-            addTextWithTopic(opiskelijanTyoelamataidot, "docgen.opiskelijan_tyoelamataidot.title", "docgen.info.opiskelija", docBase);
+            addTextWithTopic(opiskelijanTyoelamataidot, null, "docgen.info.opiskelija", docBase);
             addTextWithTopic(suullinenVastaanottaminen, "docgen.suullinen_vastaanottaminen.title", "docgen.info.opiskelija", docBase);
             addTextWithTopic(suullinenTuottaminen, "docgen.suullinen_tuottaminen.title", "docgen.info.opiskelija", docBase);
             addTextWithTopic(vuorovaikutusJaMediaatio, "docgen.vuorovaikutus_ja_mediaatio.title", "docgen.info.opiskelija",  docBase);
@@ -1623,7 +1623,9 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
     private void addTextWithTopic(String text, String translationKey, String subHeaderTranslationKey, DokumenttiBase docBase) {
         if (StringUtils.isNotEmpty(text)) {
-            addTeksti(docBase, messages.translate(translationKey, docBase.getKieli()), "h6");
+            if (!ObjectUtils.isEmpty(translationKey)) {
+                addTeksti(docBase, messages.translate(translationKey, docBase.getKieli()), "h6");
+            }
             if (!ObjectUtils.isEmpty(subHeaderTranslationKey)) {
                 addTeksti(docBase, messages.translate(subHeaderTranslationKey, docBase.getKieli()), "p");
             }

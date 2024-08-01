@@ -1550,7 +1550,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             addH6Teksti(viestintataidot, "docgen.viestintataidot.title", "docgen.info.opiskelija", docBase);
             addH6Teksti(opiskelijantaidot, "docgen.opiskelijantaidot.title", "docgen.info.opiskelija", docBase);
 
-            addH6Teksti(opiskelijanTyoelamataidot, "docgen.opiskelijan_tyoelamataidot.title", "docgen.info.opiskelija", docBase);
+            addH6Teksti(opiskelijanTyoelamataidot, null, "docgen.info.opiskelija", docBase);
             addH6Teksti(suullinenVastaanottaminen, "docgen.suullinen_vastaanottaminen.title", "docgen.info.opiskelija", docBase);
             addH6Teksti(suullinenTuottaminen, "docgen.suullinen_tuottaminen.title", "docgen.info.opiskelija", docBase);
             addH6Teksti(vuorovaikutusJaMediaatio, "docgen.vuorovaikutus_ja_mediaatio.title", "docgen.info.opiskelija", docBase);
@@ -1594,7 +1594,9 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
     private void addH6Teksti(String text, String headerTranslationKey, String subHeaderTranslationKey, DokumenttiPeruste docBase) {
         if (!ObjectUtils.isEmpty(text)) {
-            addTeksti(docBase, messages.translate(headerTranslationKey, docBase.getKieli()), "h6");
+            if (!ObjectUtils.isEmpty(headerTranslationKey)) {
+                addTeksti(docBase, messages.translate(headerTranslationKey, docBase.getKieli()), "h6");
+            }
             if (!ObjectUtils.isEmpty(subHeaderTranslationKey)) {
                 addTeksti(docBase, messages.translate(subHeaderTranslationKey, docBase.getKieli()), "p");
             }
