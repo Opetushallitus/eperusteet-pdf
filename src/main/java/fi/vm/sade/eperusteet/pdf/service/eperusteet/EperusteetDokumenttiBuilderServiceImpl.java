@@ -112,7 +112,6 @@ import javax.xml.xpath.XPathFactory;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -1516,11 +1515,14 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
         kotoSisalto.getTaitotasot().forEach(taitotaso -> {
 
-            KoodiDto taitotasoNimi = taitotaso.getNimi();
-            addTeksti(docBase, getTextString(docBase, taitotasoNimi.getNimi()), "h5");
+            String taitotasoNimi = getTextString(docBase, taitotaso.getNimi().getNimi());
+            if (Optional.ofNullable(taitotaso.getTyoelamaOpintoMinimiLaajuus()).orElse(0) > 0 && Optional.ofNullable(taitotaso.getTyoelamaOpintoMaksimiLaajuus()).orElse(0) > 0) {
+                taitotasoNimi += ", " + taitotaso.getTyoelamaOpintoMinimiLaajuus() + " - " + taitotaso.getTyoelamaOpintoMaksimiLaajuus() + " " + messages.translate("docgen.laajuus.op", docBase.getKieli());
+            }
+            addTeksti(docBase, taitotasoNimi, "h5");
 
             String tavoitteet = getTextString(docBase, taitotaso.getTavoitteet());
-            addKotoH6Teksti(tavoitteet, "docgen.tavoitteet.title", docBase);
+            addH6Teksti(tavoitteet, "docgen.tavoitteet.title", docBase);
 
             String kielenkayttotarkoitus = getTextString(docBase, taitotaso.getKielenkayttotarkoitus());
             String aihealueet = getTextString(docBase, taitotaso.getAihealueet());
@@ -1540,18 +1542,18 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                     || !ObjectUtils.isEmpty(suullinenVastaanottaminen)
                     || !ObjectUtils.isEmpty(suullinenTuottaminen)
                     || !ObjectUtils.isEmpty(vuorovaikutusJaMediaatio)) {
-                addTeksti(docBase, messages.translate("docgen.keskeiset-sisallot.title", docBase.getKieli()), "h5");
+                addTeksti(docBase, messages.translate("docgen.opiskelijan_osaaminen.title", docBase.getKieli()), "h5");
             }
 
-            addKotoH6Teksti(kielenkayttotarkoitus, "docgen.kielenkayttotarkoitus.title", docBase);
-            addKotoH6Teksti(aihealueet, "docgen.aihealueet.title", docBase);
-            addKotoH6Teksti(viestintataidot, "docgen.viestintataidot.title", docBase);
-            addKotoH6Teksti(opiskelijantaidot, "docgen.opiskelijantaidot.title", docBase);
+            addH6Teksti(kielenkayttotarkoitus, "docgen.kielenkayttotarkoitus.title", "docgen.info.opiskelija", docBase);
+            addH6Teksti(aihealueet, "docgen.aihealueet.title", "docgen.info.opiskelija", docBase);
+            addH6Teksti(viestintataidot, "docgen.viestintataidot.title", "docgen.info.opiskelija", docBase);
+            addH6Teksti(opiskelijantaidot, "docgen.opiskelijantaidot.title", "docgen.info.opiskelija", docBase);
 
-            addKotoH6Teksti(opiskelijanTyoelamataidot, "docgen.opiskelijan_tyoelamataidot.title", docBase);
-            addKotoH6Teksti(suullinenVastaanottaminen, "docgen.suullinen_vastaanottaminen.title", docBase);
-            addKotoH6Teksti(suullinenTuottaminen, "docgen.suullinen_tuottaminen.title", docBase);
-            addKotoH6Teksti(vuorovaikutusJaMediaatio, "docgen.vuorovaikutus_ja_mediaatio.title", docBase);
+            addH6Teksti(opiskelijanTyoelamataidot, "docgen.opiskelijan_tyoelamataidot.title", "docgen.info.opiskelija", docBase);
+            addH6Teksti(suullinenVastaanottaminen, "docgen.suullinen_vastaanottaminen.title", "docgen.info.opiskelija", docBase);
+            addH6Teksti(suullinenTuottaminen, "docgen.suullinen_tuottaminen.title", "docgen.info.opiskelija", docBase);
+            addH6Teksti(vuorovaikutusJaMediaatio, "docgen.vuorovaikutus_ja_mediaatio.title", "docgen.info.opiskelija", docBase);
         });
 
         docBase.getGenerator().increaseDepth();
@@ -1586,9 +1588,16 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         docBase.getGenerator().increaseNumber();
     }
 
-    private void addKotoH6Teksti(String text, String translationKey, DokumenttiPeruste docBase) {
+    private void addH6Teksti(String text, String translationKey, DokumenttiPeruste docBase) {
+        addH6Teksti(text, translationKey, null, docBase);
+    }
+
+    private void addH6Teksti(String text, String headerTranslationKey, String subHeaderTranslationKey, DokumenttiPeruste docBase) {
         if (!ObjectUtils.isEmpty(text)) {
-            addTeksti(docBase, messages.translate(translationKey, docBase.getKieli()), "h6");
+            addTeksti(docBase, messages.translate(headerTranslationKey, docBase.getKieli()), "h6");
+            if (!ObjectUtils.isEmpty(subHeaderTranslationKey)) {
+                addTeksti(docBase, messages.translate(subHeaderTranslationKey, docBase.getKieli()), "p");
+            }
             addTeksti(docBase, text, "div");
         }
     }
