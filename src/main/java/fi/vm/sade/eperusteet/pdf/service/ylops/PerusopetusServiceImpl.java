@@ -171,18 +171,24 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                     // otsikko
                     addHeader(docBase, getTextString(docBase, perusteLaajaalainenosaaminenDto.getNimi()));
 
+                    Optional<LaajaalainenosaaminenDto> opsLaajaalainenosaaminen = vlk.getLaajaalaisetosaamiset().stream()
+                            .filter((l -> perusteLaajaalainenosaaminenDto.getTunniste().equals(UUID.fromString(l.getLaajaalainenosaaminen().toString()))))
+                            .findFirst();
+
                     // Perusteen osa
-                    addLokalisoituteksti(docBase, perusteVlkLaajaalainenosaaminen.getKuvaus(), "cite");
+                    opsLaajaalainenosaaminen.ifPresent(laajaalainenosaaminen -> {
+                        if (laajaalainenosaaminen.isNaytaPerusteenPaatasonLao()) {
+                            addLokalisoituteksti(docBase, perusteLaajaalainenosaaminenDto.getKuvaus(), "cite");
+                        }
+
+                        if (laajaalainenosaaminen.isNaytaPerusteenVlkTarkennettuLao()) {
+                            addLokalisoituteksti(docBase, perusteVlkLaajaalainenosaaminen.getKuvaus(), "cite");
+                        }
+                    });
 
                     // Opsin osa
-                    if (perusteVlkLaajaalainenosaaminen.getLaajaalainenOsaaminen() != null) {
-                        Optional<LaajaalainenosaaminenDto> optLaajaalainenosaaminen = vlk.getLaajaalaisetosaamiset().stream()
-                                .filter((l -> laajaAlaisetOsaamisetMap.get(UUID.fromString(l.getLaajaalainenosaaminen().toString())) != null))
-                                .findFirst();
-
-                        optLaajaalainenosaaminen.ifPresent(laajaalainenosaaminen ->
-                                addLokalisoituteksti(docBase, laajaalainenosaaminen.getKuvaus(), "div"));
-                    }
+                    opsLaajaalainenosaaminen.ifPresent(laajaalainenosaaminen ->
+                            addLokalisoituteksti(docBase, laajaalainenosaaminen.getKuvaus(), "div"));
 
                     docBase.getGenerator().decreaseDepth();
                     docBase.getGenerator().decreaseDepth();
