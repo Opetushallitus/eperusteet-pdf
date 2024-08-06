@@ -182,6 +182,9 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                         }
 
                         if (laajaalainenosaaminen.isNaytaPerusteenVlkTarkennettuLao()) {
+                            if(laajaalainenosaaminen.isNaytaPerusteenPaatasonLao()) {
+                                addHeader(docBase, messages.translate("laaja-alaisen-osaamisen-alueen-vuosiluokkakokonaisuuden-kuvaus", docBase.getKieli()));
+                            }
                             addLokalisoituteksti(docBase, perusteVlkLaajaalainenosaaminen.getKuvaus(), "cite");
                         }
                     });
