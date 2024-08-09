@@ -243,6 +243,24 @@ public class DokumenttiUtils {
         }
     }
 
+    public static void addTekstiosa(DokumenttiBase docBase, LokalisoituTekstiDto pohjanTekstiosa, TekstiosaDto tekstiosa, String tagi) {
+        if (tekstiosa != null) {
+            LokalisoituTekstiDto otsikko = tekstiosa.getOtsikko();
+            LokalisoituTekstiDto teksti = tekstiosa.getTeksti();
+            if (otsikko != null) {
+                addLokalisoituteksti(docBase, otsikko, tagi);
+            }
+
+            if (pohjanTekstiosa != null) {
+                addLokalisoituteksti(docBase, pohjanTekstiosa, tagi);
+            }
+
+            if (teksti != null) {
+                addLokalisoituteksti(docBase, teksti, tagi);
+            }
+        }
+    }
+
     public static void addTekstiosa(DokumenttiBase docBase, TekstiosaDto tekstiosa, String tagi) {
         if (tekstiosa != null) {
             LokalisoituTekstiDto otsikko = tekstiosa.getOtsikko();
