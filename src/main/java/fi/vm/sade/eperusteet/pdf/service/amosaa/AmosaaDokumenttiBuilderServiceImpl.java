@@ -1356,8 +1356,10 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         });
         docBase.getBodyElement().appendChild(tavoitteetEl);
 
-        addTeksti(docBase, messages.translate("docgen.keskeiset-sisallot.title", docBase.getKieli()), "h5");
-        addTeksti(docBase, getTextString(docBase, opintokokonaisuus.getKeskeisetSisallot()), "div");
+        if (opintokokonaisuus.getKeskeisetSisallot() != null) {
+            addTeksti(docBase, messages.translate("docgen.keskeiset-sisallot.title", docBase.getKieli()), "h5");
+            addTeksti(docBase, getTextString(docBase, opintokokonaisuus.getKeskeisetSisallot()), "div");
+        }
 
         addTeksti(docBase, messages.translate("docgen.arviointi.title", docBase.getKieli()), "h5");
 
