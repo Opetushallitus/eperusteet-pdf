@@ -370,13 +370,14 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                 });
             }
 
-            addTavoitteetJaSisaltoalueet(docBase, perusteOaVlkDto, oaVlkDto);
+            addTavoitteetJaSisaltoalueet(docBase, perusteOaVlkDto, oaVlkDto, pohjanVlkDto);
         } else if (isValinnainen) {
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getTehtava(), pohjanVlkDto.getTehtava(), null, messages.translate("valinnaisen-tehtava", docBase.getKieli()));
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getTyotavat(), pohjanVlkDto.getTyotavat(), null, messages.translate("oppiaine-tyotavat", docBase.getKieli()));
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getOhjaus(), pohjanVlkDto.getOhjaus(), null, messages.translate("oppiaine-ohjaus", docBase.getKieli()));
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getArviointi(), pohjanVlkDto.getArviointi(), null, messages.translate("docgen.arviointi.title", docBase.getKieli()));
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getTavoitteistaJohdetutOppimisenTavoitteet(), pohjanVlkDto.getTavoitteistaJohdetutOppimisenTavoitteet(), null, messages.translate("docgen.tavoitteista-johdetut-oppimisen-tavoitteet.title", docBase.getKieli()));
+            addTavoitteetJaSisaltoalueet(docBase, null, oaVlkDto, pohjanVlkDto);
         } else {
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getTehtava(), pohjanVlkDto.getTehtava(), null);
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getYleistavoitteet(), pohjanVlkDto.getYleistavoitteet(), null);
@@ -384,13 +385,14 @@ public class PerusopetusServiceImpl implements PerusopetusService {
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getOhjaus(), pohjanVlkDto.getOhjaus(), null);
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getArviointi(), pohjanVlkDto.getArviointi(), null);
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getTavoitteistaJohdetutOppimisenTavoitteet(), pohjanVlkDto.getTavoitteistaJohdetutOppimisenTavoitteet(), null);
-            addTavoitteetJaSisaltoalueet(docBase, null, oaVlkDto);
+            addTavoitteetJaSisaltoalueet(docBase, null, oaVlkDto, pohjanVlkDto);
         }
     }
 
     private void addTavoitteetJaSisaltoalueet(DokumenttiBase docBase,
                                               OppiaineenVuosiluokkaKokonaisuusDto perusteOaVlkDto,
-                                              OppiaineenVuosiluokkakokonaisuusDto oaVlkDto) {
+                                              OppiaineenVuosiluokkakokonaisuusDto oaVlkDto,
+                                              OppiaineenVuosiluokkakokonaisuusDto pohjanVlkDto) {
 
         // Tavoitteet vuosiluokittain
         if (oaVlkDto.getVuosiluokat() != null) {
@@ -403,13 +405,16 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                     .forEach(oaVuosiluokka -> {
                         // Vuosiluokka otsikko
                         addHeader(docBase, messages.translate(oaVuosiluokka.getVuosiluokka().toString(), docBase.getKieli()));
-                        addVuosiluokanTavoitteetJaKeskeisetsisallot(docBase, oaVuosiluokka, perusteOaVlkDto);
+
+                        OppiaineenVuosiluokkaDto pohjanVuosiluokka = pohjanVlkDto.getVuosiluokat().stream().filter(pVuosiluokka -> pVuosiluokka.getVuosiluokka().equals(oaVuosiluokka.getVuosiluokka())).findFirst().orElse(null);
+                        addVuosiluokanTavoitteetJaKeskeisetsisallot(docBase, oaVuosiluokka, pohjanVuosiluokka, perusteOaVlkDto);
                     });
         }
     }
 
     private void addVuosiluokanTavoitteetJaKeskeisetsisallot(DokumenttiBase docBase,
                                                              OppiaineenVuosiluokkaDto oaVuosiluokka,
+                                                             OppiaineenVuosiluokkaDto pohjaOppiaineenVuosiluokka,
                                                              OppiaineenVuosiluokkaKokonaisuusDto perusteOaVlkDto) {
         if (oaVuosiluokka.getTavoitteet() != null && !oaVuosiluokka.getTavoitteet().isEmpty()) {
 
@@ -545,6 +550,23 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                                     }
 
                                 }
+                            });
+                } else if(!CollectionUtils.isEmpty(opetuksentavoite.getSisaltoalueet())) {
+
+                    if (pohjaOppiaineenVuosiluokka != null) {
+                        pohjaOppiaineenVuosiluokka.getTavoitteet().stream().filter(tavoite -> tavoite.getTunniste().equals(opetuksentavoite.getTunniste())).findFirst().ifPresent(pohjaOppiaineenVuosiluokanTavoite -> {
+                            pohjaOppiaineenVuosiluokanTavoite.getSisaltoalueet().stream()
+                                    .filter(sisaltoalue -> sisaltoalue.getSisaltoalueet() != null)
+                                    .forEach(sisaltoalue -> {
+                                        addLokalisoituteksti(docBase, sisaltoalue.getSisaltoalueet().getKuvaus(), "cite");
+                                    });
+                        });
+                    }
+
+                    opetuksentavoite.getSisaltoalueet().stream()
+                            .filter(sisaltoalue -> sisaltoalue.getSisaltoalueet() != null)
+                            .forEach(sisaltoalue -> {
+                                addLokalisoituteksti(docBase, sisaltoalue.getSisaltoalueet().getKuvaus(), "div");
                             });
                 }
             }
