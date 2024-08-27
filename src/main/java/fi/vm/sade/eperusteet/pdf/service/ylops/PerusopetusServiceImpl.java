@@ -27,6 +27,7 @@ import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpsVuosiluokkakokonaisuusExportDt
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.VuosiluokkakokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiosaDto;
 import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -51,6 +52,7 @@ import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.hasLokalisoituteksti;
 
 @Service
+@Log4j2
 public class PerusopetusServiceImpl implements PerusopetusService {
 
     @Autowired
@@ -406,7 +408,18 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                         // Vuosiluokka otsikko
                         addHeader(docBase, messages.translate(oaVuosiluokka.getVuosiluokka().toString(), docBase.getKieli()));
 
-                        OppiaineenVuosiluokkaDto pohjanVuosiluokka = pohjanVlkDto.getVuosiluokat().stream().filter(pVuosiluokka -> pVuosiluokka.getVuosiluokka().equals(oaVuosiluokka.getVuosiluokka())).findFirst().orElse(null);
+                        log.info("pohjanVlkDto : {} ", pohjanVlkDto);
+                        log.info("oaVuosiluokka : {} ", oaVuosiluokka);
+
+                        OppiaineenVuosiluokkaDto pohjanVuosiluokka = pohjanVlkDto
+                                .getVuosiluokat()
+                                .stream()
+                                .filter(pVuosiluokka -> pVuosiluokka
+                                        .getVuosiluokka()
+                                        .equals(oaVuosiluokka
+                                                .getVuosiluokka()))
+                                .findFirst()
+                                .orElse(null);
                         addVuosiluokanTavoitteetJaKeskeisetsisallot(docBase, oaVuosiluokka, pohjanVuosiluokka, perusteOaVlkDto);
                     });
         }
