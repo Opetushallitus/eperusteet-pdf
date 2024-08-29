@@ -33,6 +33,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -406,7 +407,9 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                         // Vuosiluokka otsikko
                         addHeader(docBase, messages.translate(oaVuosiluokka.getVuosiluokka().toString(), docBase.getKieli()));
 
-                        OppiaineenVuosiluokkaDto pohjanVuosiluokka = pohjanVlkDto.getVuosiluokat().stream().filter(pVuosiluokka -> pVuosiluokka.getVuosiluokka().equals(oaVuosiluokka.getVuosiluokka())).findFirst().orElse(null);
+                        OppiaineenVuosiluokkaDto pohjanVuosiluokka = Optional.ofNullable(pohjanVlkDto.getVuosiluokat()).orElse(Collections.emptySet())
+                                .stream().filter(pVuosiluokka -> pVuosiluokka.getVuosiluokka().equals(oaVuosiluokka.getVuosiluokka())).findFirst().orElse(null);
+
                         addVuosiluokanTavoitteetJaKeskeisetsisallot(docBase, oaVuosiluokka, pohjanVuosiluokka, perusteOaVlkDto);
                     });
         }
