@@ -416,6 +416,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                 if (perusteOpetuksentavoiteDto != null) {
                     addLokalisoituteksti(docBase, perusteOpetuksentavoiteDto.getTavoite().orElse(null), "h5");
 
+                    addTeksti(docBase, messages.translate("paikallinen-tarkennus", docBase.getKieli()), "h6");
                     addLokalisoituteksti(docBase, opetuksentavoite.getTavoite(), "div");
 
                     if (!ObjectUtils.isEmpty(perusteOpetuksentavoiteDto.getOppiaineenTavoitteenOpetuksenTavoitteet())) {
