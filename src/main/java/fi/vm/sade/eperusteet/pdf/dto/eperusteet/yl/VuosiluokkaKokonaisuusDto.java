@@ -25,6 +25,7 @@ public class VuosiluokkaKokonaisuusDto implements ReferenceableDto {
     private TekstiOsaDto tehtava;
     private TekstiOsaDto siirtymaSeuraavaan;
     private TekstiOsaDto laajaalainenOsaaminen;
+
     @JsonProperty("laajaalaisetOsaamiset")
     private Set<VuosiluokkaKokonaisuudenLaajaalainenOsaaminenDto> laajaalaisetOsaamiset;
 

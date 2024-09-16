@@ -10,6 +10,7 @@ import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaNimiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpsOppiaineExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpsVuosiluokkakokonaisuusDto;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpsVuosiluokkakokonaisuusExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.PerusteInfoDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +32,7 @@ public class OpetussuunnitelmaExportDto extends OpetussuunnitelmaBaseDto {
     private OpetussuunnitelmaNimiDto pohja;
     private TekstiKappaleViiteExportDto.Puu tekstit;
 
-    private Set<OpsVuosiluokkakokonaisuusDto> vuosiluokkakokonaisuudet;
+    private Set<OpsVuosiluokkakokonaisuusExportDto> vuosiluokkakokonaisuudet;
     private Set<OpsOppiaineExportDto> oppiaineet;
 
     private List<Lops2019LaajaAlainenOsaaminenDto> laajaAlaisetOsaamiset = new ArrayList<>();
