@@ -200,15 +200,19 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                     });
                     
                     if (perusteVlkLaajaalainenosaaminen.getLaajaalainenOsaaminen() != null) {
-                        pohjanVlk.flatMap(pVlk -> pVlk.getLaajaalaisetosaamiset().stream()
+                        Optional<LaajaalainenosaaminenDto> pohjanLao = pohjanVlk.flatMap(pVlk -> pVlk.getLaajaalaisetosaamiset().stream()
                                 .filter(l -> l.getLaajaalainenosaaminen().equals(perusteVlkLaajaalainenosaaminen.getLaajaalainenOsaaminen()))
-                                .findFirst()).ifPresent(laajaalainenosaaminen ->
-                                addLokalisoituteksti(docBase, laajaalainenosaaminen.getKuvaus(), "div"));
+                                .findFirst());
+                        Optional<LaajaalainenosaaminenDto> opsinLao = vlk.getLaajaalaisetosaamiset().stream()
+                                .filter(l -> l.getLaajaalainenosaaminen().equals(perusteVlkLaajaalainenosaaminen.getLaajaalainenOsaaminen()))
+                                .findFirst();
 
-                        vlk.getLaajaalaisetosaamiset().stream()
-                                .filter(l -> l.getLaajaalainenosaaminen().equals(perusteVlkLaajaalainenosaaminen.getLaajaalainenOsaaminen()))
-                                .findFirst().ifPresent(laajaalainenosaaminen ->
-                                addLokalisoituteksti(docBase, laajaalainenosaaminen.getKuvaus(), "div"));
+                        if (pohjanLao.isPresent() && (opsinLao.isEmpty()
+                                || !getTextString(docBase.getKieli(), pohjanLao.get().getKuvaus()).equals(getTextString(docBase.getKieli(), opsinLao.get().getKuvaus())))) {
+                            addLokalisoituteksti(docBase, pohjanLao.get().getKuvaus(), "div");
+                        }
+
+                        opsinLao.ifPresent(laajaalainenosaaminenDto -> addLokalisoituteksti(docBase, laajaalainenosaaminenDto.getKuvaus(), "div"));
                     }
 
                     docBase.getGenerator().decreaseDepth();
