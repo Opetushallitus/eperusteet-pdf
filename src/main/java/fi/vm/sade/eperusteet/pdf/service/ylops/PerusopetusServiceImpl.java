@@ -198,11 +198,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                             addLokalisoituteksti(docBase, perusteVlkLaajaalainenosaaminen.getKuvaus(), "cite");
                         }
                     });
-
-                    // Opsin osa
-                    opsLaajaalainenosaaminen.ifPresent(laajaalainenosaaminen ->
-                            addLokalisoituteksti(docBase, laajaalainenosaaminen.getKuvaus(), "div"));
-
+                    
                     if (perusteVlkLaajaalainenosaaminen.getLaajaalainenOsaaminen() != null) {
                         pohjanVlk.flatMap(pVlk -> pVlk.getLaajaalaisetosaamiset().stream()
                                 .filter(l -> l.getLaajaalainenosaaminen().equals(perusteVlkLaajaalainenosaaminen.getLaajaalainenOsaaminen()))
