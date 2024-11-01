@@ -371,6 +371,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                 });
             }
 
+            addOppiaineYleisetOsiot(docBase, oaVlkDto.getSisaltoalueinfo(), null, perusteOaVlkDto.getSisaltoalueinfo().orElse(null));
             addTavoitteetJaSisaltoalueet(docBase, perusteOaVlkDto, oaVlkDto, pohjanVlkDto);
         } else if (isValinnainen) {
             addOppiaineYleisetOsiot(docBase, oaVlkDto.getTehtava(), pohjanVlkDto.getTehtava(), null, messages.translate("valinnaisen-tehtava", docBase.getKieli()));
