@@ -1033,6 +1033,11 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 addTeksti(docBase, getTextString(docBase, vt.getTeksti()), "div");
             });
 
+            if (oppiaineenVuosiluokkaKokonaisuus.getSisaltoalueinfo().isPresent()) {
+                addTeksti(docBase, getTextString(docBase, oppiaineenVuosiluokkaKokonaisuus.getSisaltoalueinfo().get().getOtsikko()), "h6");
+                addTeksti(docBase, getTextString(docBase, oppiaineenVuosiluokkaKokonaisuus.getSisaltoalueinfo().get().getTeksti()), "div");
+            }
+
             oppiaineenVuosiluokkaKokonaisuus.getSisaltoalueet()
                     .stream()
                     .sorted(Comparator.comparing(sisaltoalue -> getTextString(docBase, sisaltoalue.getNimi().get())))
