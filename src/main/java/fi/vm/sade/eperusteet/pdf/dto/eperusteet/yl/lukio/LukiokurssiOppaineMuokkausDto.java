@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LukiokurssiOppaineMuokkausDto implements Serializable, IdHolder {
-    @NotNull
     private Long id;
     private List<KurssinOppiaineDto> oppiaineet = new ArrayList<>();
 
