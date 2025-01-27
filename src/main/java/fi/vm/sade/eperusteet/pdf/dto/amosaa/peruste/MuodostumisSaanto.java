@@ -6,14 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.io.Serializable;
 
 @Data
-@Embeddable
 @EqualsAndHashCode
 public class MuodostumisSaanto implements Serializable {
 
@@ -64,16 +59,11 @@ public class MuodostumisSaanto implements Serializable {
     @Getter
     @Setter
     @EqualsAndHashCode
-    @Embeddable
     public static class Laajuus implements Serializable {
 
-        @Column(name = "laajuus_min")
         private Integer minimi;
-        @Column(name = "laajuus_max")
         private Integer maksimi;
 
-        @Column(name = "laajuus_yksikko")
-        @Enumerated(EnumType.STRING)
         private LaajuusYksikko yksikko;
 
         public Laajuus(Integer minimi, Integer maksimi, LaajuusYksikko yksikko) {
@@ -94,12 +84,9 @@ public class MuodostumisSaanto implements Serializable {
     @Getter
     @Setter
     @EqualsAndHashCode
-    @Embeddable
     public static class Koko implements Serializable {
 
-        @Column(name = "koko_min")
         private Integer minimi;
-        @Column(name = "koko_max")
         Integer maksimi;
 
         public Koko(Integer minimi, Integer maksimi) {
