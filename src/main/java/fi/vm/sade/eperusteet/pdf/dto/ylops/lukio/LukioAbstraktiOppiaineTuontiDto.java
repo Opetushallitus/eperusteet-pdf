@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -13,8 +12,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LukioAbstraktiOppiaineTuontiDto implements Serializable {
-    @NotNull
     private LokalisoituTekstiDto nimi;
-    @NotNull
     private UUID tunniste;
 }

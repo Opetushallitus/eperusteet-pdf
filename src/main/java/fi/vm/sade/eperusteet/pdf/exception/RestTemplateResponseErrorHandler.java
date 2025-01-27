@@ -15,22 +15,22 @@ public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
 
     @Override
     public boolean hasError(ClientHttpResponse httpResponse) throws IOException {
-        return (httpResponse.getStatusCode().series() == CLIENT_ERROR || httpResponse.getStatusCode().series() == SERVER_ERROR);
+        return httpResponse.getStatusCode().is4xxClientError() || httpResponse.getStatusCode().is5xxServerError();
     }
 
     @Override
     public void handleError(ClientHttpResponse httpResponse) throws IOException {
-        if (httpResponse.getStatusCode().series() == SERVER_ERROR) {
-            throw new ServiceException("Remote server error " + httpResponse.getRawStatusCode());
-        } else if (httpResponse.getStatusCode().series() == CLIENT_ERROR) {
+        if (httpResponse.getStatusCode().is5xxServerError()) {
+            throw new ServiceException("Remote server error " + httpResponse.getStatusCode());
+        } else if (httpResponse.getStatusCode().is4xxClientError()) {
             if (httpResponse.getStatusCode() == HttpStatus.NOT_FOUND) {
-                throw new ServiceException("Ei löytynyt " + httpResponse.getRawStatusCode());
+                throw new ServiceException("Ei löytynyt " + httpResponse.getStatusCode());
             } else if (httpResponse.getStatusCode() == HttpStatus.BAD_REQUEST) {
-                throw new ServiceException("Virheellinen pyyntö " + httpResponse.getRawStatusCode());
+                throw new ServiceException("Virheellinen pyyntö " + httpResponse.getStatusCode());
             } else if (httpResponse.getStatusCode() == HttpStatus.FORBIDDEN) {
-                throw new ServiceException("Pyyntö estetty " + httpResponse.getRawStatusCode());
+                throw new ServiceException("Pyyntö estetty " + httpResponse.getStatusCode());
             } else if (httpResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                throw new ServiceException("Ei oikeuksia " + httpResponse.getRawStatusCode());
+                throw new ServiceException("Ei oikeuksia " + httpResponse.getStatusCode());
             }
         }
     }
