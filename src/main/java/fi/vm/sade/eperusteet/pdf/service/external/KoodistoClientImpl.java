@@ -40,16 +40,7 @@ public class KoodistoClientImpl implements KoodistoClient {
     HttpEntity httpEntity;
 
     @Autowired
-    private RestTemplateBuilder restTemplateBuilder;
-
-    private RestTemplate restTemplate = new RestTemplate();
-
-    @PostConstruct
-    protected void init() {
-        restTemplate = restTemplateBuilder
-                .errorHandler(new RestTemplateResponseErrorHandler())
-                .build();
-    }
+    private RestTemplate restTemplate;
 
     @Override
     @Cacheable(value = "koodistot")
