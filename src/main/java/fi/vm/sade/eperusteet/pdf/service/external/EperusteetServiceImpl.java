@@ -41,7 +41,8 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Value("${fi.vm.sade.eperusteet.pdf.eperusteet-service:''}")
     private String eperusteetServiceUrl;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Autowired
     HttpEntity httpEntity;

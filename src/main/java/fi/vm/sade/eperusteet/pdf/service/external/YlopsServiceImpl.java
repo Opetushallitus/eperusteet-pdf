@@ -30,20 +30,11 @@ public class YlopsServiceImpl implements YlopsService {
     @Value("${fi.vm.sade.eperusteet.pdf.ylops-service:''}")
     private String ylopsServiceUrl;
 
+    @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
-    private RestTemplateBuilder restTemplateBuilder;
-
-    @Autowired
     HttpEntity httpEntity;
-
-    @PostConstruct
-    protected void init() {
-        restTemplate = restTemplateBuilder
-                .errorHandler(new RestTemplateResponseErrorHandler())
-                .build();
-    }
 
     @Override
     public OrganisaatioDto getOrganisaatio(String oid) {
