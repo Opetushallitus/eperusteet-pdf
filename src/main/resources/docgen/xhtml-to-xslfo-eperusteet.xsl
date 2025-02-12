@@ -532,7 +532,33 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:attribute>
-            <xsl:apply-templates select="*|text()"/>
+
+            <xsl:choose>
+                <xsl:when test="@number">
+                    <fo:table table-layout="fixed" width="100%">
+                        <fo:table-column column-width="20mm"/>
+                        <fo:table-column column-width="proportional-column-width(1)"/>
+                        <fo:table-body>
+                            <fo:table-row>
+                                <fo:table-cell>
+                                    <fo:block>
+                                        <xsl:value-of select="@number"/>
+                                    </fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block>
+                                        <xsl:apply-templates select="*|text()"/>
+                                    </fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                        </fo:table-body>
+                    </fo:table>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates select="*|text()"/>
+                </xsl:otherwise>
+            </xsl:choose>
+
         </fo:block>
     </xsl:template>
 
@@ -549,7 +575,33 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:attribute>
-            <xsl:apply-templates select="*|text()"/>
+
+            <xsl:choose>
+                <xsl:when test="@number">
+                    <fo:table table-layout="fixed" width="100%">
+                        <fo:table-column column-width="20mm"/>
+                        <fo:table-column column-width="proportional-column-width(1)"/>
+                        <fo:table-body>
+                            <fo:table-row>
+                                <fo:table-cell>
+                                    <fo:block>
+                                        <xsl:value-of select="@number"/>
+                                    </fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block>
+                                        <xsl:apply-templates select="*|text()"/>
+                                    </fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                        </fo:table-body>
+                    </fo:table>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates select="*|text()"/>
+                </xsl:otherwise>
+            </xsl:choose>
+
         </fo:block>
     </xsl:template>
 
@@ -1279,7 +1331,8 @@
         /html/body//h1 |
         /html/body//h2 |
         /html/body//h3 |
-        /html/body//h4">
+        /html/body//h4 |
+        /html/body//h5">
             <fo:block text-align-last="justify" font-size="12pt"
                       space-after="0.25em" text-align="start" text-indent="-1cm">
 
@@ -1295,7 +1348,9 @@
                             <xsl:text>2cm</xsl:text>
                         </xsl:when>
                         <xsl:when test="name()='h4'">
-                            <!-- No number -->
+                            <xsl:text>2.5cm</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="name()='h5'">
                             <xsl:text>3cm</xsl:text>
                         </xsl:when>
                     </xsl:choose>
@@ -1327,10 +1382,8 @@
                     </xsl:attribute>
 
                     <xsl:if test="@number">
-                        <xsl:if test="name() != 'h4'">
-                            <xsl:value-of select="@number"/>
-                            <xsl:text> </xsl:text>
-                        </xsl:if>
+                        <xsl:value-of select="@number"/>
+                        <xsl:text> </xsl:text>
                     </xsl:if>
                     <xsl:apply-templates select="*|text()"/>
                 </fo:basic-link>
