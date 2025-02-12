@@ -49,6 +49,9 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
     @Autowired
     private CommonExternalService commonExternalService;
 
+    @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
+
     @Override
     public void buildImages(DokumenttiBase docBase, GeneratorData generatorData) {
         XPathFactory xPathfactory = XPathFactory.newInstance();
@@ -184,5 +187,15 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
             throw new BusinessRuleViolationException("kuva-uuid-ei-loytynyt");
         }
         return uuid;
+    }
+
+    private RestTemplate createRestTemplate(List<MediaType> mediaTypes) {
+        ByteArrayHttpMessageConverter converter = new ByteArrayHttpMessageConverter();
+        converter.setSupportedMediaTypes(mediaTypes);
+
+        return restTemplateBuilder
+                .messageConverters(List.of(converter))
+                .errorHandler(new RestTemplateResponseErrorHandler())
+                .build();
     }
 }

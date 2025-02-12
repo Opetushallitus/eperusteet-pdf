@@ -62,13 +62,25 @@ public class CommonExternalServiceImpl implements CommonExternalService{
 
     private static final String EPERUSTEET_API = "/api/perusteet/";
 
+    private RestTemplate restTemplate = new RestTemplate();
+
     @Autowired
-    private RestTemplate restTemplate;
+    HttpEntity httpEntity;
+
+    @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
 
     @Autowired
     private RestClientFactory restClientFactory;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @PostConstruct
+    protected void init() {
+        restTemplate = restTemplateBuilder
+                .errorHandler(new RestTemplateResponseErrorHandler())
+                .build();
+    }
 
     @Override
     public InputStream getLiitetiedosto(Long id, UUID fileName, DokumenttiTyyppi tyyppi) {

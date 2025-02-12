@@ -29,11 +29,20 @@ public class AmosaaServiceImpl implements AmosaaService {
     @Value("${fi.vm.sade.eperusteet.pdf.amosaa-service:''}")
     private String amosaaServiceUrl;
 
-    @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
+
+    @Autowired
     HttpEntity httpEntity;
+
+    @PostConstruct
+    protected void init() {
+        restTemplate = restTemplateBuilder
+                .errorHandler(new RestTemplateResponseErrorHandler())
+                .build();
+    }
 
     @Override
     public PerusteKaikkiDto getPerusteKaikkiDto(Long cachedPerusteId) {
