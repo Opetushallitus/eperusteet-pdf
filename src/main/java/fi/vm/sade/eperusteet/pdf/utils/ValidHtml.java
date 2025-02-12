@@ -1,8 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.utils;
 
-import org.jsoup.safety.Safelist;
+import org.jsoup.safety.Whitelist;
 
-import jakarta.validation.Payload;
+import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -25,23 +25,23 @@ public @interface ValidHtml {
     Class<? extends Payload>[] payload() default {};
 
     enum WhitelistType {
-        MINIMAL(Safelist.none()),
-        SIMPLIFIED(Safelist.none().addTags("p", "strong", "em", "i", "s", "ol", "li", "ul")),
+        MINIMAL(Whitelist.none()),
+        SIMPLIFIED(Whitelist.none().addTags("p", "strong", "em", "i", "s", "ol", "li", "ul")),
         NORMAL(getNormalWhiteList()),
         NORMAL_PDF(getNormalWhiteList().removeAttributes("a", "routenode"));
 
-        private final Safelist whitelist;
+        private final Whitelist whitelist;
 
-        WhitelistType(Safelist whitelist) {
+        WhitelistType(Whitelist whitelist) {
             this.whitelist = whitelist;
         }
 
-        public Safelist getWhitelist() {
+        public Whitelist getWhitelist() {
             return whitelist;
         }
 
-        private static Safelist getNormalWhiteList() {
-            return Safelist.none()
+        private static Whitelist getNormalWhiteList() {
+            return Whitelist.none()
                     .addTags("p", "span", "strong", "em", "i", "s", "ol", "li", "ul", "blockquote", "table", "caption",
                             "tbody", "tr", "td", "hr", "pre", "th", "thead", "a", "abbr", "comment", "figcaption", "br")
                     .addAttributes("table", "align", "border", "cellpadding", "cellspacing", "style", "summary")

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.OsaAlueTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class OsaAlueDto {
     private LokalisoituTekstiDto nimi;
     private LokalisoituTekstiDto kuvaus;
 
+    @ApiModelProperty("Määrittää osaamisalueiden tyypit (vanha vai uusi)")
     private OsaAlueTyyppi tyyppi;
     private KoodiDto koodi;
     private String koodiUri;

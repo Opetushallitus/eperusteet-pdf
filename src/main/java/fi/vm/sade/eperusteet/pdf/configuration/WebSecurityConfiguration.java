@@ -3,37 +3,35 @@ package fi.vm.sade.eperusteet.pdf.configuration;
 import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
 import fi.vm.sade.javautils.http.auth.CasAuthenticator;
 import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
-import org.apereo.cas.client.session.SingleSignOutFilter;
-import org.apereo.cas.client.validation.Cas20ProxyTicketValidator;
-import org.apereo.cas.client.validation.TicketValidator;
+import org.jasig.cas.client.session.SingleSignOutFilter;
+import org.jasig.cas.client.validation.Cas20ProxyTicketValidator;
+import org.jasig.cas.client.validation.TicketValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Profile({"default", "hahtuva"})
 @Configuration
-@EnableMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @EnableWebSecurity
-public class WebSecurityConfiguration {
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Value("${host.alb}")
     private String host;
 
     @Value("${web.url.cas}")
-    private String webUrlCas;
+    private String webCasUrl;
 
     @Value("${fi.vm.sade.eperusteet.oph_username:''}")
     private String username;
@@ -49,7 +47,12 @@ public class WebSecurityConfiguration {
 
     @Bean
     public CasAuthenticator casAuthenticator() {
-        return new CasAuthenticator(webUrlCas, username, password, host, null, false, null);
+        return new CasAuthenticator(webCasUrl, username, password, host, null, false, null);
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new OphUserDetailsServiceImpl(host, DefaultConfigs.CALLER_ID, casAuthenticator());
     }
 
     @Bean
@@ -64,27 +67,31 @@ public class WebSecurityConfiguration {
     @Bean
     public CasAuthenticationProvider casAuthenticationProvider() {
         CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
-        casAuthenticationProvider.setAuthenticationUserDetailsService(new OphUserDetailsServiceImpl());
+        casAuthenticationProvider.setUserDetailsService(userDetailsService());
         casAuthenticationProvider.setServiceProperties(serviceProperties());
         casAuthenticationProvider.setTicketValidator(ticketValidator());
-        casAuthenticationProvider.setKey(this.casKey);
+        casAuthenticationProvider.setKey(casKey);
         return casAuthenticationProvider;
     }
 
     @Bean
     public TicketValidator ticketValidator() {
-        org.apereo.cas.client.validation.Cas20ProxyTicketValidator ticketValidator = new Cas20ProxyTicketValidator(this.webUrlCas);
+        Cas20ProxyTicketValidator ticketValidator = new Cas20ProxyTicketValidator(webCasUrl);
         ticketValidator.setAcceptAnyProxy(true);
         return ticketValidator;
     }
 
     @Bean
-    public CasAuthenticationFilter casAuthenticationFilter(HttpSecurity http) throws Exception {
+    public CasAuthenticationFilter casAuthenticationFilter() throws Exception {
         OpintopolkuCasAuthenticationFilter casAuthenticationFilter = new OpintopolkuCasAuthenticationFilter(serviceProperties());
-        casAuthenticationFilter.setAuthenticationManager(authenticationManager(http));
+        casAuthenticationFilter.setAuthenticationManager(authenticationManager());
         casAuthenticationFilter.setFilterProcessesUrl("/j_spring_cas_security_check");
-        casAuthenticationFilter.setAuthenticationSuccessHandler(new SavedRequestAwareAuthenticationSuccessHandler());
         return casAuthenticationFilter;
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) {
+        auth.authenticationProvider(casAuthenticationProvider());
     }
 
     @Bean
@@ -94,39 +101,18 @@ public class WebSecurityConfiguration {
         return singleSignOutFilter;
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
         http
-                .headers(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/actuator/health").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-                        .anyRequest().authenticated())
-                .addFilter(casAuthenticationFilter(http))
+                .headers().disable()
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+                .antMatchers("/actuator/health").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/pdf/**").authenticated()
+                .anyRequest().permitAll()
+                .and()
+                .addFilter(casAuthenticationFilter())
                 .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
-        return http.build();
-    }
-
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .headers().disable()
-//                .csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
-//                .antMatchers("/actuator/health").permitAll()
-//                .antMatchers(HttpMethod.POST, "/api/pdf/**").authenticated()
-//                .anyRequest().permitAll()
-//                .and()
-//                .addFilter(casAuthenticationFilter())
-//                .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
-//    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(casAuthenticationProvider());
-        return authenticationManagerBuilder.build();
     }
 }

@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
@@ -17,8 +18,10 @@ import java.util.Optional;
 @AllArgsConstructor
 @Builder
 public class LukioKurssiLuontiDto implements Serializable {
+    @NotNull
     private LukiokurssiTyyppi tyyppi;
     private List<KurssinOppiaineDto> oppiaineet;
+    @NotNull
     private LokalisoituTekstiDto nimi;
     private String koodiArvo;
     private String koodiUri;

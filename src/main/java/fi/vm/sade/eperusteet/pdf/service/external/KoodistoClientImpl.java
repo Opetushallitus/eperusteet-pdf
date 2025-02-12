@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import jakarta.annotation.PostConstruct;
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +40,16 @@ public class KoodistoClientImpl implements KoodistoClient {
     HttpEntity httpEntity;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private RestTemplateBuilder restTemplateBuilder;
+
+    private RestTemplate restTemplate = new RestTemplate();
+
+    @PostConstruct
+    protected void init() {
+        restTemplate = restTemplateBuilder
+                .errorHandler(new RestTemplateResponseErrorHandler())
+                .build();
+    }
 
     @Override
     @Cacheable(value = "koodistot")

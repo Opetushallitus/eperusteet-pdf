@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import jakarta.annotation.PostConstruct;
+import javax.annotation.PostConstruct;
 
 @Service
 @Profile("!test")
@@ -29,11 +29,20 @@ public class AmosaaServiceImpl implements AmosaaService {
     @Value("${fi.vm.sade.eperusteet.pdf.amosaa-service:''}")
     private String amosaaServiceUrl;
 
-    @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
+
+    @Autowired
     HttpEntity httpEntity;
+
+    @PostConstruct
+    protected void init() {
+        restTemplate = restTemplateBuilder
+                .errorHandler(new RestTemplateResponseErrorHandler())
+                .build();
+    }
 
     @Override
     public PerusteKaikkiDto getPerusteKaikkiDto(Long cachedPerusteId) {
