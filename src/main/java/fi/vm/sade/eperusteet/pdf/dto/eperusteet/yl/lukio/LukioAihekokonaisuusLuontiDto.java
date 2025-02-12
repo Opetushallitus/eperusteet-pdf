@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @Builder
 public class LukioAihekokonaisuusLuontiDto extends UpdateDto<LukioAihekokonaisuusLuontiDto> implements Serializable {
+    @NotNull
     private LokalisoituTekstiDto otsikko;
     private Optional<LokalisoituTekstiDto> yleiskuvaus;
     private Long jnro;

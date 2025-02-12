@@ -8,14 +8,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class LukiokurssiMuokkausDto implements Serializable, IdHolder {
+    @NotNull
     private Long id;
+    @NotNull
     private LukiokurssiTyyppi tyyppi;
+    @NotNull
     private LokalisoituTekstiDto nimi;
     private String koodiArvo;
     private String koodiUri;
