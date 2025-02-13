@@ -3,16 +3,14 @@ package fi.vm.sade.eperusteet.pdf.utils;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiAmosaa;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
-import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiPeruste;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kieli;
 import fi.vm.sade.eperusteet.pdf.dto.enums.LaajuusYksikko;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.teksti.TekstiosaDto;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
 import org.jsoup.parser.Parser;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -278,8 +276,8 @@ public class DokumenttiUtils {
         if (string == null) {
             return "";
         }
-        string = removeInternalLink(string);
         String cleanXmlString = Jsoup.clean(stripNonValidXMLCharacters(string), ValidHtml.WhitelistType.NORMAL_PDF.getWhitelist());
+        cleanXmlString = removeInternalLink(cleanXmlString);
         return StringEscapeUtils.unescapeHtml4(cleanXmlString.replace("&nbsp;", " "));
     }
 
