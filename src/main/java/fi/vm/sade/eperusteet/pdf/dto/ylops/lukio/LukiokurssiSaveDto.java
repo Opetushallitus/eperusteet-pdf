@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -15,13 +14,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LukiokurssiSaveDto implements Serializable {
-    @NotNull
     private long oppiaineId;
-    @NotNull
     private LokalisoituTekstiDto nimi;
-    @NotNull
     private LukiokurssiTyyppi.Paikallinen tyyppi;
-    @NotNull
     private BigDecimal laajuus = BigDecimal.ONE;
     private LokalisoituTekstiDto kuvaus;
     private String koodiUri;

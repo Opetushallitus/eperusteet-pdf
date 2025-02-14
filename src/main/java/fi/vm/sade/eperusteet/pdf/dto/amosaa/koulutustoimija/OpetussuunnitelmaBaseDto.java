@@ -7,7 +7,6 @@ import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
 import fi.vm.sade.eperusteet.pdf.dto.enums.JotpaTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.OpsTyyppi;
 import fi.vm.sade.eperusteet.utils.domain.utils.Tila;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,7 +39,6 @@ public class OpetussuunnitelmaBaseDto {
     private CachedPerusteBaseDto peruste;
 
     @Deprecated
-    @ApiModelProperty(hidden = true)
     private Tila tila2016;
 
     private JotpaTyyppi jotpatyyppi;

@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.Date;
 
 @Service
@@ -30,20 +30,11 @@ public class YlopsServiceImpl implements YlopsService {
     @Value("${fi.vm.sade.eperusteet.pdf.ylops-service:''}")
     private String ylopsServiceUrl;
 
+    @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
-    private RestTemplateBuilder restTemplateBuilder;
-
-    @Autowired
     HttpEntity httpEntity;
-
-    @PostConstruct
-    protected void init() {
-        restTemplate = restTemplateBuilder
-                .errorHandler(new RestTemplateResponseErrorHandler())
-                .build();
-    }
 
     @Override
     public OrganisaatioDto getOrganisaatio(String oid) {
