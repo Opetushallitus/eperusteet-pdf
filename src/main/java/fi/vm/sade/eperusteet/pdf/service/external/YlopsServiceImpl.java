@@ -30,6 +30,9 @@ public class YlopsServiceImpl implements YlopsService {
     @Value("${fi.vm.sade.eperusteet.pdf.ylops-service:''}")
     private String ylopsServiceUrl;
 
+    @Value("${fi.vm.sade.eperusteet.pdf.ylops-service.internal:${fi.vm.sade.eperusteet.pdf.ylops-service:''}}")
+    private String ylopsServiceInternalUrl;
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -39,7 +42,7 @@ public class YlopsServiceImpl implements YlopsService {
     @Override
     public OrganisaatioDto getOrganisaatio(String oid) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API + "ulkopuoliset/organisaatiot/{oid}",
+            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceInternalUrl + API + "ulkopuoliset/organisaatiot/{oid}",
                     HttpMethod.GET,
                     httpEntity,
                     String.class,
@@ -53,7 +56,7 @@ public class YlopsServiceImpl implements YlopsService {
     @Override
     public PerusteKaikkiDto getOpetussuunnitelmaPeruste(Long perusteId, Date aikaleima) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceUrl + API + "ulkopuoliset/peruste/{perusteId}/julkaisuhetki/{aikaleima}",
+            ResponseEntity<String> response = restTemplate.exchange(ylopsServiceInternalUrl + API + "ulkopuoliset/peruste/{perusteId}/julkaisuhetki/{aikaleima}",
                     HttpMethod.GET,
                     httpEntity,
                     String.class,
