@@ -85,4 +85,8 @@ public enum KoulutusTyyppi {
     public static List<String> ammatilliset() {
         return Arrays.asList(AMMATTITUTKINTO.toString(), ERIKOISAMMATTITUTKINTO.toString(), PERUSTUTKINTO.toString());
     }
+
+    public boolean isYleissivistava() {
+        return isOneOf(LUKIOKOULUTUS, AIKUISTENLUKIOKOULUTUS, PERUSOPETUS, AIKUISTENPERUSOPETUS, LISAOPETUS, ESIOPETUS, VARHAISKASVATUS, PERUSOPETUSVALMISTAVA, LUKIOVALMISTAVAKOULUTUS, TPO);
+    }
 }
