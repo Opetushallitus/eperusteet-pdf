@@ -239,7 +239,12 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 Element peruste = docBase.getDocument().createElement("peruste");
                 peruste.setTextContent(nimi);
                 docBase.getHeadElement().appendChild(peruste);
-                perusteenNimi.setAttribute("translate", messages.translate("perusteen-nimi", docBase.getKieli()));
+
+                if (KoulutusTyyppi.of(docBase.getPeruste().getKoulutustyyppi()).isYleissivistava()) {
+                    perusteenNimi.setAttribute("translate", messages.translate("perusteen-nimi-yleissivistava", docBase.getKieli()));
+                } else {
+                    perusteenNimi.setAttribute("translate", messages.translate("perusteen-nimi", docBase.getKieli()));
+                }
             }
             docBase.getHeadElement().appendChild(perusteenNimi);
         }
