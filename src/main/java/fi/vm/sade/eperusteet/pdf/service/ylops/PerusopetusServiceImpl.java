@@ -665,7 +665,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
         }
 
         // Oppimäärä otsikko
-        addHeader(docBase, getTextString(docBase, oppiaine.getNimi()));
+        addHeader(docBase, getTextString(docBase, oppiaine.getNimi()), false);
 
         docBase.getGenerator().increaseDepth();
 

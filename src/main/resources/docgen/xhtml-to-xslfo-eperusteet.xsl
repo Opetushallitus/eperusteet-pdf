@@ -1333,81 +1333,85 @@
         /html/body//h3 |
         /html/body//h4 |
         /html/body//h5">
-            <fo:block text-align-last="justify" font-size="12pt"
-                      space-after="0.25em" text-align="start" text-indent="-1cm">
+            <xsl:if test="@showInMenu='true'">
+                <fo:block text-align-last="justify" font-size="12pt"
+                          space-after="0.25em" text-align="start" text-indent="-1cm">
 
-                <xsl:attribute name="start-indent">
-                    <xsl:choose>
-                        <xsl:when test="name()='h1'">
-                            <xsl:text>1cm</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="name()='h2'">
-                            <xsl:text>1.5cm</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="name()='h3'">
-                            <xsl:text>2cm</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="name()='h4'">
-                            <xsl:text>2.5cm</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="name()='h5'">
-                            <xsl:text>3cm</xsl:text>
-                        </xsl:when>
-                    </xsl:choose>
-                </xsl:attribute>
-
-                <xsl:if test="name()='h1'">
-                    <xsl:attribute name="color">
-                        <xsl:text>#007EC5</xsl:text>
-                    </xsl:attribute>
-                    <xsl:attribute name="space-before">
-                        <xsl:text>0.5em</xsl:text>
-                    </xsl:attribute>
-                </xsl:if>
-
-                <fo:basic-link>
-                    <xsl:attribute name="internal-destination">
+                    <xsl:attribute name="start-indent">
                         <xsl:choose>
-                            <xsl:when test="@id">
-                                <xsl:value-of select="@id"/>
+                            <xsl:when test="name()='h1'">
+                                <xsl:text>1cm</xsl:text>
                             </xsl:when>
-                            <xsl:when test="name(preceding-sibling::*[1])='a' and
-                              preceding-sibling::*[1][@name]">
-                                <xsl:value-of select="preceding-sibling::*[1]/@name"/>
+                            <xsl:when test="name()='h2'">
+                                <xsl:text>1.5cm</xsl:text>
                             </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:value-of select="generate-id()"/>
-                            </xsl:otherwise>
+                            <xsl:when test="name()='h3'">
+                                <xsl:text>2cm</xsl:text>
+                            </xsl:when>
+                            <xsl:when test="name()='h4'">
+                                <xsl:text>2.5cm</xsl:text>
+                            </xsl:when>
+                            <xsl:when test="name()='h5'">
+                                <xsl:text>3cm</xsl:text>
+                            </xsl:when>
                         </xsl:choose>
                     </xsl:attribute>
 
-                    <xsl:if test="@number">
-                        <xsl:value-of select="@number"/>
-                        <xsl:text> </xsl:text>
+                    <xsl:if test="name()='h1'">
+                        <xsl:attribute name="color">
+                            <xsl:text>#007EC5</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="space-before">
+                            <xsl:text>0.5em</xsl:text>
+                        </xsl:attribute>
                     </xsl:if>
-                    <xsl:apply-templates select="*|text()"/>
-                </fo:basic-link>
 
-                <fo:leader leader-pattern="dots" leader-pattern-width="8pt"/>
+                    <fo:basic-link>
+                        <xsl:attribute name="internal-destination">
+                            <xsl:choose>
+                                <xsl:when test="@id">
+                                    <xsl:value-of select="@id"/>
+                                </xsl:when>
+                                <xsl:when test="name(preceding-sibling::*[1])='a' and
+                                  preceding-sibling::*[1][@name]">
+                                    <xsl:value-of select="preceding-sibling::*[1]/@name"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="generate-id()"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:attribute>
 
-                <fo:page-number-citation>
-                    <xsl:attribute name="ref-id">
-                        <xsl:choose>
-                            <xsl:when test="@id">
-                                <xsl:value-of select="@id"/>
-                            </xsl:when>
-                            <xsl:when test="name(preceding-sibling::*[1])='a' and
-                              preceding-sibling::*[1][@name]">
-                                <xsl:value-of select="preceding-sibling::*[1]/@name"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:value-of select="generate-id()"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:attribute>
-                </fo:page-number-citation>
+                        <xsl:if test="@number">
+                            <xsl:if test="@showHeaderNumber='true'">
+                                <xsl:value-of select="@number"/>
+                                <xsl:text> </xsl:text>
+                            </xsl:if>
+                        </xsl:if>
+                        <xsl:apply-templates select="*|text()"/>
+                    </fo:basic-link>
 
-            </fo:block>
+                    <fo:leader leader-pattern="dots" leader-pattern-width="8pt"/>
+
+                    <fo:page-number-citation>
+                        <xsl:attribute name="ref-id">
+                            <xsl:choose>
+                                <xsl:when test="@id">
+                                    <xsl:value-of select="@id"/>
+                                </xsl:when>
+                                <xsl:when test="name(preceding-sibling::*[1])='a' and
+                                  preceding-sibling::*[1][@name]">
+                                    <xsl:value-of select="preceding-sibling::*[1]/@name"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="generate-id()"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:attribute>
+                    </fo:page-number-citation>
+
+                </fo:block>
+            </xsl:if>
         </xsl:for-each>
     </xsl:template>
 
