@@ -125,6 +125,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeader;
+import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeaderForceMenu;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addLokalisoituteksti;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addTeksti;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getList;
@@ -985,13 +986,15 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
     private void addOppimaarat(DokumenttiPeruste docBase, Set<OppiaineDto> oppimaarat, Long vuosiluokkaId) {
         if (!ObjectUtils.isEmpty(oppimaarat)) {
+            docBase.getGenerator().increaseDepth();
             oppimaarat.stream()
                     .filter(oppimaara -> oppimaara.getNimi().isPresent())
                     .sorted(Comparator.comparing(oppiaine -> LokalisoituTekstiDto.getOrDefault(oppiaine.getNimiOrDefault(LokalisoituTekstiDto.of("")), docBase.getKieli(), "")))
                     .sorted(Comparator.comparing(oppiaine -> oppiaine.getJnroOrDefault(99L)))
                     .forEach(oppimaara -> {
                         // Oppimäärän nimi
-                        addTeksti(docBase, getTextString(docBase, getOptionalValue(oppimaara.getNimi())), "h5");
+                        addHeader(docBase, getTextString(docBase, getOptionalValue(oppimaara.getNimi())), false, true);
+
                         // Tekstikappale
                         oppimaara.getVapaatTekstit().forEach(vt -> {
                             addTeksti(docBase, getTextString(docBase, vt.getNimi()), "h6");
@@ -1006,6 +1009,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
                         addVuosiluokkakokonaisuus(docBase, oppimaara.getKohdealueet(), vuosiluokkaKokonaisuus);
                     });
+            docBase.getGenerator().decreaseDepth();
         }
     }
 
@@ -1253,7 +1257,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 && tunniste != PerusteenOsaTunniste.LAAJAALAINENOSAAMINEN
                 && tunniste != PerusteenOsaTunniste.RAKENNE) {
             String nimi = getTextString(docBase, tk.getNimi());
-            addHeader(docBase, nimi);
+            addHeaderForceMenu(docBase, nimi);
 
             String teksti = getTextString(docBase, tk.getTeksti());
             addTeksti(docBase, teksti, "div");

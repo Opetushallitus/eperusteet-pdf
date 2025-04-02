@@ -98,19 +98,32 @@ public class DokumenttiUtils {
         addHeader(docBase, text, null);
     }
 
+    public static void addHeaderForceMenu(DokumenttiBase docBase, String text) {
+        addHeader(docBase, text, null, true, true);
+    }
+
     public static void addHeader(DokumenttiBase docBase, String text, String id) {
-        addHeader(docBase, text, id, true);
+        addHeader(docBase, text, id, true, false);
     }
 
     public static void addHeader(DokumenttiBase docBase, String text, boolean showHeaderNumber) {
-        addHeader(docBase, text, null, showHeaderNumber);
+        addHeader(docBase, text, null, showHeaderNumber, false);
+    }
+
+    public static void addHeader(DokumenttiBase docBase, String text, boolean showHeaderNumber, boolean showInMenu) {
+        addHeader(docBase, text, null, showHeaderNumber, showInMenu);
     }
 
     public static void addHeader(DokumenttiBase docBase, String text, String id, boolean showHeaderNumber) {
+        addHeader(docBase, text, id, showHeaderNumber, false);
+    }
+
+    public static void addHeader(DokumenttiBase docBase, String text, String id, boolean showHeaderNumber, boolean showInMenu) {
         if (text != null) {
             Element header = docBase.getDocument().createElement("h" + docBase.getGenerator().getDepth());
             header.setAttribute("number", docBase.getGenerator().generateNumber());
             header.setAttribute("showHeaderNumber", showHeaderNumber + "");
+            header.setAttribute("showInMenu", (docBase.getGenerator().getDepth() < 5 || showInMenu) + "");
             header.appendChild(docBase.getDocument().createTextNode(cleanHtml(text)));
             if (id != null) {
                 header.setAttribute("id", id);

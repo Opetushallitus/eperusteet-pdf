@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeader;
+import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeaderForceMenu;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addLokalisoituteksti;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
 
@@ -54,12 +55,12 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
                     if (lapsi.getPerusteTekstikappaleId() != null) {
                         perusteenTekstikappale = getPerusteTekstikappale(docBase.getPeruste(), lapsi.getPerusteTekstikappaleId());
                         if (perusteenTekstikappale != null) {
-                            addHeader(docBase, getTextString(docBase, perusteenTekstikappale.getNimi()));
+                            addHeaderForceMenu(docBase, getTextString(docBase, perusteenTekstikappale.getNimi()));
                         }
                     }
 
                     if (perusteenTekstikappale == null && lapsi.getTekstiKappale().getNimi() != null)  {
-                        addHeader(docBase, getTextString(docBase, lapsi.getTekstiKappale().getNimi()));
+                        addHeaderForceMenu(docBase, getTextString(docBase, lapsi.getTekstiKappale().getNimi()));
                     }
 
                     // Perusteen teksti luvulle jos valittu esittäminen
