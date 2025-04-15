@@ -947,7 +947,9 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
                             // Oppiaineet
                             perusopetuksenPerusteenSisaltoDto.getOppiaineet().stream()
-                                    .filter(oppiaine -> oppiaine.getVuosiluokkakokonaisuus(vuosiluokka.getId()).isPresent())
+                                    .filter(oppiaine -> oppiaine.getVuosiluokkakokonaisuus(vuosiluokka.getId()).isPresent()
+                                            || oppiaine.getOppimaarat().stream()
+                                                .anyMatch(oppimaarat -> oppimaarat.getVuosiluokkakokonaisuudet().stream().anyMatch(vlk -> vuosiluokka.getId().equals(vlk.getVuosiluokkaKokonaisuus().getIdLong()))))
                                     .filter(oppiaine -> oppiaine.getNimi().isPresent())
                                     .sorted(Comparator.comparing(oppiaine -> LokalisoituTekstiDto.getOrDefault(oppiaine.getNimiOrDefault(LokalisoituTekstiDto.of("")), docBase.getKieli(), "")))
                                     .sorted(Comparator.comparing(oppiaine -> oppiaine.getJnroOrDefault(99L)))
