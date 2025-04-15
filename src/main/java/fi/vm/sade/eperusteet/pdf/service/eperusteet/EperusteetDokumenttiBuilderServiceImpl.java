@@ -112,8 +112,10 @@ import javax.xml.xpath.XPathFactory;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -948,8 +950,10 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                             // Oppiaineet
                             perusopetuksenPerusteenSisaltoDto.getOppiaineet().stream()
                                     .filter(oppiaine -> oppiaine.getVuosiluokkakokonaisuus(vuosiluokka.getId()).isPresent()
-                                            || oppiaine.getOppimaarat().stream()
-                                                .anyMatch(oppimaarat -> oppimaarat.getVuosiluokkakokonaisuudet().stream().anyMatch(vlk -> vuosiluokka.getId().equals(vlk.getVuosiluokkaKokonaisuus().getIdLong()))))
+                                            || Optional.ofNullable(oppiaine.getOppimaarat())
+                                            .orElse(Collections.emptySet())
+                                            .stream()
+                                            .anyMatch(oppimaara -> oppimaara.getVuosiluokkakokonaisuus(vuosiluokka.getId()).isPresent()))
                                     .filter(oppiaine -> oppiaine.getNimi().isPresent())
                                     .sorted(Comparator.comparing(oppiaine -> LokalisoituTekstiDto.getOrDefault(oppiaine.getNimiOrDefault(LokalisoituTekstiDto.of("")), docBase.getKieli(), "")))
                                     .sorted(Comparator.comparing(oppiaine -> oppiaine.getJnroOrDefault(99L)))
@@ -973,7 +977,13 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                                                 .ifPresent(oppiaineenVuosiluokkaKokonaisuusDto -> addVuosiluokkakokonaisuus(docBase, oppiaine.getKohdealueet(), oppiaineenVuosiluokkaKokonaisuusDto));
 
                                         // Oppimäärät
-                                        addOppimaarat(docBase, oppiaine.getOppimaarat(), vuosiluokka.getId());
+                                        addOppimaarat(
+                                                docBase,
+                                                Optional.ofNullable(oppiaine.getOppimaarat())
+                                                        .orElse(Collections.emptySet())
+                                                        .stream().filter(oppimaara -> oppimaara.getVuosiluokkakokonaisuus(vuosiluokka.getId()).isPresent())
+                                                        .collect(Collectors.toSet()),
+                                                vuosiluokka.getId());
 
                                         docBase.getGenerator().increaseNumber();
                                     });
