@@ -43,4 +43,10 @@ public class OppiaineDto extends OppiaineBaseUpdateDto {
                 .filter(v -> v.getVuosiluokkaKokonaisuus().toString().equals(tunniste.toString()))
                 .findAny();
     }
+
+    public Optional<OppiaineenVuosiluokkaKokonaisuusDto> getVuosiluokkakokonaisuus(Long id) {
+        return vuosiluokkakokonaisuudet.stream()
+                .filter(v -> v.getVuosiluokkaKokonaisuus().getIdLong().equals(id))
+                .findAny();
+    }
 }
