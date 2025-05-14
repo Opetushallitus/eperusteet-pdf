@@ -1598,6 +1598,10 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 .map(koodi -> Long.parseLong(koodi.getKoodi()))
                 .collect(Collectors.toSet());
 
+        if (koodit.isEmpty()) {
+            return;
+        }
+
         List<OsaamismerkkiDto> osaamismerkit = eperusteetService.getOsaamismerkit(koodit);
 
         Set<OsaamismerkkiKategoriaDto> kategoriat = osaamismerkit.stream()
