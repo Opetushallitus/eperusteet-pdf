@@ -98,6 +98,10 @@ public class DokumenttiUtils {
         addHeader(docBase, text, null);
     }
 
+    public static void addHeaderNoNumber(DokumenttiBase docBase, String text) {
+        addHeader(docBase, text, null, false);
+    }
+
     public static void addHeaderForceMenu(DokumenttiBase docBase, String text) {
         addHeader(docBase, text, null, true, true);
     }
