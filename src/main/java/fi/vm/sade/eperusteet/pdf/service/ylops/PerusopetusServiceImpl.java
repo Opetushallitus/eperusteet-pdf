@@ -453,12 +453,14 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                         perusteOpetuksentavoiteDto.getOppiaineenTavoitteenOpetuksenTavoitteet().forEach(ot -> addTeksti(docBase, getTextString(docBase, ot.getTavoite().get()), "p"));
                     }
 
-                    if (!ObjectUtils.isEmpty(perusteOpetuksentavoiteDto.getTavoitteistaJohdetutOppimisenTavoitteet())) {
+                    if (!ObjectUtils.isEmpty(perusteOpetuksentavoiteDto.getTavoitteistaJohdetutOppimisenTavoitteet())
+                            && perusteOpetuksentavoiteDto.getTavoitteistaJohdetutOppimisenTavoitteet().isPresent()) {
                         addTeksti(docBase, messages.translate("tavoitteista-johdetut-oppimisen-tavoitteet", docBase.getKieli()), "h6");
                         addTeksti(docBase, getTextString(docBase, perusteOpetuksentavoiteDto.getTavoitteistaJohdetutOppimisenTavoitteet().get()), "div");
                     }
 
-                    if (!ObjectUtils.isEmpty(getTextString(docBase, opetuksentavoite.getArvioinninKuvaus()))) {
+                    if (!ObjectUtils.isEmpty(perusteOpetuksentavoiteDto.getArvioinninKuvaus())
+                            && perusteOpetuksentavoiteDto.getArvioinninKuvaus().isPresent()) {
                         addTeksti(docBase, messages.translate("arvioinnin-kohde", docBase.getKieli()), "h6");
                         addLokalisoituteksti(docBase, opetuksentavoite.getArvioinninKuvaus(), "div");
                     }
