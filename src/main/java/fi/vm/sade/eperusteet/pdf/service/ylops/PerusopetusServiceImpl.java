@@ -462,7 +462,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                     if (!ObjectUtils.isEmpty(perusteOpetuksentavoiteDto.getArvioinninKuvaus())
                             && perusteOpetuksentavoiteDto.getArvioinninKuvaus().isPresent()) {
                         addTeksti(docBase, messages.translate("arvioinnin-kohde", docBase.getKieli()), "h6");
-                        addLokalisoituteksti(docBase, opetuksentavoite.getArvioinninKuvaus(), "div");
+                        addLokalisoituteksti(docBase, perusteOpetuksentavoiteDto.getArvioinninKuvaus().get(), "div");
                     }
 
                     // Tavoitteen arviointi
