@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.pdf.dto.common.ArviointiAsteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import fi.vm.sade.eperusteet.pdf.exception.ServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import jakarta.annotation.PostConstruct;
 
+@Slf4j
 @Service
 @Profile("!test")
 public class AmosaaServiceImpl implements AmosaaService {
@@ -40,7 +42,7 @@ public class AmosaaServiceImpl implements AmosaaService {
         try {
             ResponseEntity<String> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_PERUSTEET_API + "{id}/kaikki",
                     HttpMethod.GET,
-                    httpEntity,
+                    null,
                     String.class,
                     cachedPerusteId);
             return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
