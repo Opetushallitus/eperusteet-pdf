@@ -16,7 +16,7 @@
 
 	<properties>
 		<pdfbox.version>2.0.34</pdfbox.version>
-		<fop.version>2.10</fop.version>
+		<fop.version>2.11</fop.version>
 	</properties>
 
 	<dependencies>
