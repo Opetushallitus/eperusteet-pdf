@@ -33,7 +33,7 @@ public class CommonExternalServiceMock implements CommonExternalService {
     }
 
     @Override
-    public void postPdfData(byte[] pdfData, Long dokumenttiId, DokumenttiTyyppi tyyppi) {
+    public void postPdfData(byte[] pdfData, byte[] xmlData, Long dokumenttiId, DokumenttiTyyppi tyyppi) {
     }
 
     @Override

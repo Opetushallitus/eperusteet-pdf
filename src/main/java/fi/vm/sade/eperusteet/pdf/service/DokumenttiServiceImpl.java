@@ -28,6 +28,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.transform.TransformerException;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @Slf4j
@@ -120,10 +121,11 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         }
     }
 
-    private void handleConversionAndSending(Document doc, DokumenttiMetaDto metaData, GeneratorData generatorData) throws DokumenttiException, IOException, TransformerException, SAXException {
-        byte[] pdfData = pdfService.xhtml2pdf(doc, metaData, generatorData.getTyyppi());
+    private void handleConversionAndSending(Document document, DokumenttiMetaDto metaData, GeneratorData generatorData) throws DokumenttiException, IOException, TransformerException, SAXException {
+        ByteArrayOutputStream xmlStream = pdfService.convertOps2XML(document);
+        byte[] pdfData = pdfService.xhtml2pdf(document, xmlStream, metaData, generatorData.getTyyppi());
         log.info("PDF-dokumentti luotu. Lähetetään kutsuvalle servicelle...");
-        commonExternalService.postPdfData(pdfData, generatorData.getDokumenttiId(), generatorData.getTyyppi());
+        commonExternalService.postPdfData(pdfData, xmlStream.toByteArray(), generatorData.getDokumenttiId(), generatorData.getTyyppi());
     }
 
     private void handleError(Exception ex, Long dokumenttiId, DokumenttiTyyppi tyyppi) {
