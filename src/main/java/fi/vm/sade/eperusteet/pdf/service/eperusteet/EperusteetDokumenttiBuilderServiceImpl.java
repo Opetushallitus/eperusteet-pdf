@@ -2155,7 +2155,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     }
 
     private boolean osaamistavoitteellaSisaltoa(Osaamistavoite2020Dto tavoite, Kieli kieli) {
-        if (tavoite == null) {
+        if (tavoite == null || tavoite.getTavoitteet() == null || tavoite.getTavoitteet().getVaatimukset() == null) {
             return false;
         }
         return tavoite.getTavoitteet().getVaatimukset().stream()
