@@ -126,10 +126,6 @@ public class LokalisoituTekstiDto {
         return tekstit.get(kieli);
     }
 
-    public boolean containsKey(Kieli kieli) {
-        return tekstit.containsKey(kieli);
-    }
-
     public static LokalisoituTekstiDto localizeLaterById(Long id) {
         return id == null ? null : new LokalisoituTekstiDto(id, null, emptyMap);
     }
