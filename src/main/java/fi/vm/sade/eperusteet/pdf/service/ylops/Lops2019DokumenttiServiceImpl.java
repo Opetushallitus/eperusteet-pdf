@@ -278,7 +278,7 @@ public class Lops2019DokumenttiServiceImpl implements Lops2019DokumenttiService 
 
         // Arviointi
         Lops2019ArviointiDto arviointi = oa.getArviointi();
-        if (arviointi != null) {
+        if (arviointi != null && arviointi.getKuvaus() != null) {
             addTeksti(docBase, messages.translate("arviointi", docBase.getKieli()), "h6");
             addLokalisoituteksti(docBase, arviointi.getKuvaus(), "cite");
         }
