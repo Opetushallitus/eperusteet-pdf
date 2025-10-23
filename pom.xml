@@ -15,7 +15,7 @@
 	<version>1.0-SNAPSHOT</version>
 
 	<properties>
-		<pdfbox.version>2.0.34</pdfbox.version>
+		<pdfbox.version>2.0.35</pdfbox.version>
 		<fop.version>2.11</fop.version>
 	</properties>
 
