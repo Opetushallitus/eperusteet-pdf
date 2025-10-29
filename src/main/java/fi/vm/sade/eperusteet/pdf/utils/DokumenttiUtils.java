@@ -319,4 +319,14 @@ public class DokumenttiUtils {
         return ul;
     }
 
+    public static Element createSpacer(DokumenttiBase docBase, String marginBottom) {
+        Element spacer = docBase.getDocument().createElement("div");
+        spacer.setAttribute("style", "margin-bottom: " + marginBottom + ";");
+        return spacer;
+    }
+
+    public static Element createSpacer(DokumenttiBase docBase) {
+        return createSpacer(docBase, "20px");
+    }
+
 }

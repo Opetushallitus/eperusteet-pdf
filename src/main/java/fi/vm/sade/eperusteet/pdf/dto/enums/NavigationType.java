@@ -51,7 +51,9 @@ public enum NavigationType {
     koulutuksenosa,
     laajaalainenosaaminen,
     osaamiskokonaisuus,
-    osaamiskokonaisuus_paa_alue;
+    osaamiskokonaisuus_paa_alue,
+    kaantajataito,
+    kaantajataitotasoasteikko;
 
     public static NavigationType of(String type) {
         for (NavigationType t : values()) {
