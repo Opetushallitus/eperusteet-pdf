@@ -79,6 +79,10 @@ public class PerusteKaikkiDto extends PerusteBaseDto {
     @JsonProperty("digitaalinenosaaminen")
     private DigitaalisenOsaamisenSisaltoDto digitaalisenOsaamisenSisalto;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("kielijakaantajatutkinto")
+    private KieliJaKaantajaTutkintoSisaltoDto kieliJaKaantajaTutkintoPerusteenSisalto;
+
     @JsonIgnore
     public Set<PerusteenSisaltoDto> getSisallot() {
         if (PerusteTyyppi.OPAS.equals(this.getTyyppi())) {
@@ -104,6 +108,8 @@ public class PerusteKaikkiDto extends PerusteBaseDto {
                 return Collections.singleton(this.getTuvasisalto());
             } else if (this.getDigitaalisenOsaamisenSisalto() != null) {
                 return Collections.singleton(this.getDigitaalisenOsaamisenSisalto());
+            } else if (this.getKieliJaKaantajaTutkintoPerusteenSisalto() != null) {
+                return Collections.singleton(this.getKieliJaKaantajaTutkintoPerusteenSisalto());
             }
         }
         return new HashSet<>();
