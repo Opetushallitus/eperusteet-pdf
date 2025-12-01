@@ -542,7 +542,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             td.appendChild(p);
             p.setTextContent(nimi);
             if (!ObjectUtils.isEmpty(kuvaus)) {
-                td.appendChild(newItalicElement(docBase, kuvaus));
+                addTeksti(docBase, kuvaus, "div", td);
             }
 
             if (rakenneOsa.getPakollinen() != null && rakenneOsa.getPakollinen()) {
