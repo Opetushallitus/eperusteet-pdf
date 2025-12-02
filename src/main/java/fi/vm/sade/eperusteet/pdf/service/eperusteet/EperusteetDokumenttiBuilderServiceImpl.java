@@ -135,7 +135,6 @@ import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.createSpacer;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getList;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.newBoldElement;
-import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.newItalicElement;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.sisaltaaDokumentinKielenSisallon;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.tagTeksti;
 
@@ -584,7 +583,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 th.appendChild(p);
                 p.appendChild(newBoldElement(docBase.getDocument(), nimi.toUpperCase()));
                 if (!ObjectUtils.isEmpty(kuvaus)) {
-                    th.appendChild(newItalicElement(docBase, kuvaus));
+                    addTeksti(docBase, kuvaus, "div", th);
                 }
                 break;
             case 2:
@@ -595,7 +594,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 td.appendChild(p);
                 p.appendChild(newBoldElement(docBase.getDocument(), nimi));
                 if (!ObjectUtils.isEmpty(kuvaus)) {
-                    td.appendChild(newItalicElement(docBase, kuvaus));
+                    addTeksti(docBase, kuvaus, "div", td);
                 }
                 break;
 
@@ -605,7 +604,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 td.appendChild(p);
                 p.appendChild(newBoldElement(docBase.getDocument(), nimi));
                 if (!ObjectUtils.isEmpty(kuvaus)) {
-                    td.appendChild(newItalicElement(docBase, kuvaus));
+                    addTeksti(docBase, kuvaus, "div", td);
                 }
                 break;
         }
