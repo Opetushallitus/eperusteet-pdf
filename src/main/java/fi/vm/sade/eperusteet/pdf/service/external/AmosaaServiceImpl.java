@@ -19,6 +19,8 @@ import org.springframework.web.client.RestTemplate;
 
 import jakarta.annotation.PostConstruct;
 
+import java.io.InputStream;
+
 @Slf4j
 @Service
 @Profile("!test")
@@ -40,12 +42,11 @@ public class AmosaaServiceImpl implements AmosaaService {
     @Override
     public PerusteKaikkiDto getPerusteKaikkiDto(Long cachedPerusteId) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(amosaaServiceUrl + AMOSAA_PERUSTEET_API + "{id}/kaikki",
+            return restTemplate.execute(amosaaServiceUrl + AMOSAA_PERUSTEET_API + "{id}/kaikki",
                     HttpMethod.GET,
                     null,
-                    String.class,
+                    response -> objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class),
                     cachedPerusteId);
-            return objectMapper.readValue(response.getBody(), PerusteKaikkiDto.class);
         } catch (Exception e) {
             throw new ServiceException("Perustedataa ei saatu haettua: " + e.getMessage());
         }
