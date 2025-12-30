@@ -6,8 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.kios.KaantajaTaitoDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.kios.KaantajaTaitotasoasteikkoDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.kios.*;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.ReferenceableDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteTila;
@@ -76,7 +75,11 @@ public abstract class PerusteenOsaDto implements ReferenceableDto {
             @JsonSubTypes.Type(value = OsaamiskokonaisuusDto.class),
             @JsonSubTypes.Type(value = OsaamiskokonaisuusPaaAlueDto.class),
             @JsonSubTypes.Type(value = KaantajaTaitoDto.class),
-            @JsonSubTypes.Type(value = KaantajaTaitotasoasteikkoDto.class)
+            @JsonSubTypes.Type(value = KaantajaTaitotasoasteikkoDto.class),
+            @JsonSubTypes.Type(value = KaantajaKielitaitoDto.class),
+            @JsonSubTypes.Type(value = KaantajaTaitotasokuvausDto.class),
+            @JsonSubTypes.Type(value = KaantajaAihealueDto.class),
+            @JsonSubTypes.Type(value = KaantajaTodistusmalliDto.class)
     })
     public static abstract class Laaja extends PerusteenOsaDto implements Navigable {
         public abstract String getOsanTyyppi();
