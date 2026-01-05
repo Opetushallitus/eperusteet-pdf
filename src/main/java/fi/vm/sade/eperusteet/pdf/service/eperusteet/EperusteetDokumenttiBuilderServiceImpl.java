@@ -30,6 +30,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.ammattitaitovaatimukset.Ammattit
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArvioinninKohdeDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArvioinninKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArviointiDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.kios.*;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.Lops2019OppiaineKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.Lops2019SisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019ArviointiDto;
@@ -62,8 +63,6 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteSuppeaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.TuvaLaajaAlainenOsaaminenDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.kios.KaantajaTaitoDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.kios.KaantajaTaitotasoasteikkoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoKielitaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoOpintoDto;
@@ -1220,6 +1219,18 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             } else if (po instanceof KaantajaTaitotasoasteikkoDto) {
                 KaantajaTaitotasoasteikkoDto kaantajaTaitotasoasteikko = (KaantajaTaitotasoasteikkoDto) po;
                 addKaantajaTaitotasoasteikko(docBase, kaantajaTaitotasoasteikko, po, lapsi);
+            } else if (po instanceof KaantajaAihealueDto) {
+                KaantajaAihealueDto kaantajaAihealue = (KaantajaAihealueDto) po;
+                addKaantajaAihealue(docBase, kaantajaAihealue, po, lapsi);
+            } else if (po instanceof KaantajaKielitaitoDto) {
+                KaantajaKielitaitoDto kaantajaKielitaito = (KaantajaKielitaitoDto) po;
+                addKaantajaKielitaito(docBase, kaantajaKielitaito, po, lapsi);
+            } else if (po instanceof KaantajaTaitotasokuvausDto) {
+                KaantajaTaitotasokuvausDto kaantajaTaitotasokuvaus = (KaantajaTaitotasokuvausDto) po;
+                addKaantajaTaitotasokuvaus(docBase, kaantajaTaitotasokuvaus, po, lapsi);
+            } else if (po instanceof KaantajaTodistusmalliDto) {
+                KaantajaTodistusmalliDto kaantajaTodistusmalli = (KaantajaTodistusmalliDto) po;
+                addKaantajaTodistusmalli(docBase, kaantajaTodistusmalli, po, lapsi);
             } else if (po instanceof TekstiKappaleDto) {
                 TekstiKappaleDto tk = (TekstiKappaleDto) po;
                 if (!tk.getLiite()) {
@@ -1731,6 +1742,243 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         addPerusteenOsat(docBase, lapsi);
         docBase.getGenerator().decreaseDepth();
         docBase.getGenerator().increaseNumber();
+    }
+
+    private void addKaantajaAihealue(DokumenttiPeruste docBase, KaantajaAihealueDto kaantajaAihealue, 
+                                     PerusteenOsaDto po, PerusteenOsaViiteDto.Laaja lapsi) {
+
+        // Header: nimi
+        addHeader(docBase, getTextString(docBase, kaantajaAihealue.getNimi()));
+
+        // kuvaus-prop
+        String kuvaus = getTextString(docBase, kaantajaAihealue.getKuvaus());
+        if (!ObjectUtils.isEmpty(kuvaus)) {
+            addTeksti(docBase, kuvaus, "div");
+        }
+
+        // List of kategoriat
+        if (kaantajaAihealue.getKategoriat() != null) {
+            kaantajaAihealue.getKategoriat().forEach(kategoria -> {
+                
+                // Subheader: nimi
+                String nimi = getTextString(docBase, kategoria.getNimi());
+                if (!ObjectUtils.isEmpty(nimi)) {
+                    addTeksti(docBase, nimi, "h5");
+                }
+                
+                // kategoria kuvaus
+                String kategoriaKuvaus = getTextString(docBase, kategoria.getKuvaus());
+                if (!ObjectUtils.isEmpty(kategoriaKuvaus)) {
+                    addTeksti(docBase, kategoriaKuvaus, "div");
+                }
+                
+                // perustaso
+                String perustaso = getTextString(docBase, kategoria.getPerustaso());
+                if (!ObjectUtils.isEmpty(perustaso)) {
+                    addTeksti(docBase, messages.translate("perustaso", docBase.getKieli()), "h6");
+                    addTeksti(docBase, perustaso, "div");
+                }
+                
+                // keskitaso
+                String keskitaso = getTextString(docBase, kategoria.getKeskitaso());
+                if (!ObjectUtils.isEmpty(keskitaso)) {
+                    addTeksti(docBase, messages.translate("keskitaso", docBase.getKieli()), "h6");
+                    addTeksti(docBase, keskitaso, "div");
+                }
+                
+                // ylintaso
+                String ylintaso = getTextString(docBase, kategoria.getYlintaso());
+                if (!ObjectUtils.isEmpty(ylintaso)) {
+                    addTeksti(docBase, messages.translate("ylin-taso", docBase.getKieli()), "h6");
+                    addTeksti(docBase, ylintaso, "div");
+                }
+                
+                // Add bottom margin after each kategoria
+                docBase.getBodyElement().appendChild(createSpacer(docBase));
+            });
+        }
+
+        docBase.getGenerator().increaseDepth();
+        addPerusteenOsat(docBase, lapsi);
+        docBase.getGenerator().decreaseDepth();
+        docBase.getGenerator().increaseNumber();
+    }
+
+    private void addKaantajaKielitaito(DokumenttiPeruste docBase, KaantajaKielitaitoDto kaantajaKielitaito, 
+                                       PerusteenOsaDto po, PerusteenOsaViiteDto.Laaja lapsi) {
+
+        // Header: nimi
+        addHeader(docBase, getTextString(docBase, kaantajaKielitaito.getNimi()));
+
+        // kuvaus-prop
+        String kuvaus = getTextString(docBase, kaantajaKielitaito.getKuvaus());
+        if (!ObjectUtils.isEmpty(kuvaus)) {
+            addTeksti(docBase, kuvaus, "div");
+        }
+
+        // List of taitotasot
+        if (kaantajaKielitaito.getTaitotasot() != null) {
+            kaantajaKielitaito.getTaitotasot().forEach(taitotaso -> {
+                
+                // Subheader: taitotaso koodi name
+                if (taitotaso.getTaitotaso() != null) {
+                    String taitotasoNimi = getTextString(docBase, taitotaso.getTaitotaso().getNimi());
+                    if (!ObjectUtils.isEmpty(taitotasoNimi)) {
+                        addTeksti(docBase, taitotasoNimi, "h5");
+                    }
+                }
+                
+                // kuvaus
+                String taitotasoKuvaus = getTextString(docBase, taitotaso.getKuvaus());
+                if (!ObjectUtils.isEmpty(taitotasoKuvaus)) {
+                    addTeksti(docBase, taitotasoKuvaus, "div");
+                }
+                
+                // Add bottom margin after each taitotaso
+                docBase.getBodyElement().appendChild(createSpacer(docBase));
+            });
+        }
+
+        docBase.getGenerator().increaseDepth();
+        addPerusteenOsat(docBase, lapsi);
+        docBase.getGenerator().decreaseDepth();
+        docBase.getGenerator().increaseNumber();
+    }
+
+    private void addKaantajaTaitotasokuvaus(DokumenttiPeruste docBase, KaantajaTaitotasokuvausDto kaantajaTaitotasokuvaus, 
+                                            PerusteenOsaDto po, PerusteenOsaViiteDto.Laaja lapsi) {
+
+        // Header: nimi
+        addHeader(docBase, getTextString(docBase, kaantajaTaitotasokuvaus.getNimi()));
+
+        // kuvaus-prop
+        String kuvaus = getTextString(docBase, kaantajaTaitotasokuvaus.getKuvaus());
+        if (!ObjectUtils.isEmpty(kuvaus)) {
+            addTeksti(docBase, kuvaus, "div");
+        }
+
+        // List of tutkintotasot
+        if (kaantajaTaitotasokuvaus.getTutkintotasot() != null) {
+            kaantajaTaitotasokuvaus.getTutkintotasot().forEach(tutkintotaso -> {
+                
+                // Subheader: nimi
+                String nimi = getTextString(docBase, tutkintotaso.getNimi());
+                if (!ObjectUtils.isEmpty(nimi)) {
+                    addTeksti(docBase, nimi, "h5");
+                }
+                
+                // List of osat
+                if (tutkintotaso.getOsat() != null) {
+                    tutkintotaso.getOsat().forEach(osa -> {
+                        
+                        // suorituksenOsa
+                        if (osa.getSuorituksenOsa() != null) {
+                            String suorituksenOsaNimi = getTextString(docBase, osa.getSuorituksenOsa().getNimi());
+                            if (!ObjectUtils.isEmpty(suorituksenOsaNimi)) {
+                                addTeksti(docBase, suorituksenOsaNimi, "h6");
+                            }
+                        }
+                        
+                        // List of taitotasot
+                        if (osa.getTaitotasot() != null) {
+                            osa.getTaitotasot().forEach(taitotaso -> {
+                                
+                                // taitotaso name
+                                if (taitotaso.getTaitotaso() != null) {
+                                    String taitotasoNimi = getTextString(docBase, taitotaso.getTaitotaso().getNimi());
+                                    if (!ObjectUtils.isEmpty(taitotasoNimi)) {
+                                        addTeksti(docBase, taitotasoNimi, "p");
+                                    }
+                                }
+                                
+                                // kuvaus
+                                String taitotasoKuvaus = getTextString(docBase, taitotaso.getKuvaus());
+                                if (!ObjectUtils.isEmpty(taitotasoKuvaus)) {
+                                    addTeksti(docBase, taitotasoKuvaus, "div");
+                                }
+                            });
+                        }
+                    });
+                }
+                
+                // Add bottom margin after each tutkintotaso
+                docBase.getBodyElement().appendChild(createSpacer(docBase));
+            });
+        }
+
+        docBase.getGenerator().increaseDepth();
+        addPerusteenOsat(docBase, lapsi);
+        docBase.getGenerator().decreaseDepth();
+        docBase.getGenerator().increaseNumber();
+    }
+
+    private void addKaantajaTodistusmalli(DokumenttiPeruste docBase, KaantajaTodistusmalliDto kaantajaTodistusmalli, 
+                                          PerusteenOsaDto po, PerusteenOsaViiteDto.Laaja lapsi) {
+
+        // Header: nimi
+        addHeader(docBase, getTextString(docBase, kaantajaTodistusmalli.getNimi()));
+
+        // kuvaus-prop
+        String kuvaus = getTextString(docBase, kaantajaTodistusmalli.getKuvaus());
+        if (!ObjectUtils.isEmpty(kuvaus)) {
+            addTeksti(docBase, kuvaus, "div");
+        }
+
+        // Process ylintaso
+        if (kaantajaTodistusmalli.getYlintaso() != null) {
+            addTeksti(docBase, messages.translate("ylin-taso", docBase.getKieli()), "h5");
+            addTodistusmalliTaitotasokuvaus(docBase, kaantajaTodistusmalli.getYlintaso());
+        }
+
+        // Process keskitaso
+        if (kaantajaTodistusmalli.getKeskitaso() != null) {
+            addTeksti(docBase, messages.translate("keskitaso", docBase.getKieli()), "h5");
+            addTodistusmalliTaitotasokuvaus(docBase, kaantajaTodistusmalli.getKeskitaso());
+        }
+
+        // Process perustaso
+        if (kaantajaTodistusmalli.getPerustaso() != null) {
+            addTeksti(docBase, messages.translate("perustaso", docBase.getKieli()), "h5");
+            addTodistusmalliTaitotasokuvaus(docBase, kaantajaTodistusmalli.getPerustaso());
+        }
+
+        docBase.getGenerator().increaseDepth();
+        addPerusteenOsat(docBase, lapsi);
+        docBase.getGenerator().decreaseDepth();
+        docBase.getGenerator().increaseNumber();
+    }
+
+    private void addTodistusmalliTaitotasokuvaus(DokumenttiPeruste docBase, KaantajaTodistusmalliTaitotasokuvausDto taitotasokuvaus) {
+        
+        if (taitotasokuvaus.getTaitotasot() != null) {
+            taitotasokuvaus.getTaitotasot().forEach(taitotaso -> {
+                
+                // taitotaso name
+                if (taitotaso.getTaitotaso() != null) {
+                    String taitotasoNimi = getTextString(docBase, taitotaso.getTaitotaso().getNimi());
+                    String asteikko = getTextString(docBase, taitotaso.getAsteikko());
+
+                    if (!ObjectUtils.isEmpty(taitotasoNimi)) {
+                        addTeksti(
+                                docBase,
+                                String.format(
+                                        "%s %s / %s (%s)",
+                                        messages.translate("taso", docBase.getKieli()),
+                                        taitotasoNimi,
+                                        asteikko,
+                                        messages.translate("evkn-asteikko", docBase.getKieli())
+                                ),
+                                "h6");
+                    }
+                }
+
+                // kuvaus
+                String kuvaus = getTextString(docBase, taitotaso.getKuvaus());
+                if (!ObjectUtils.isEmpty(kuvaus)) {
+                    addTeksti(docBase, kuvaus, "div");
+                }
+            });
+        }
     }
 
     private void addH6Teksti(String text, String translationKey, DokumenttiPeruste docBase) {

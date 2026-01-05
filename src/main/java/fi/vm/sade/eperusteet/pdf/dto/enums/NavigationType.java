@@ -53,7 +53,11 @@ public enum NavigationType {
     osaamiskokonaisuus,
     osaamiskokonaisuus_paa_alue,
     kaantajataito,
-    kaantajataitotasoasteikko;
+    kaantajataitotasoasteikko,
+    kaantajakielitaito,
+    kaantajataitotasokuvaus,
+    kaantajaaihealue,
+    kaantajatodistusmalli;
 
     public static NavigationType of(String type) {
         for (NavigationType t : values()) {
