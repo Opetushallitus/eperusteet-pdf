@@ -524,6 +524,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                 }
 
                 if (perusteOaVlkDto != null && perusteOaVlkDto.getSisaltoalueet() != null) {
+                    addTeksti(docBase, messages.translate("sisaltoalueet", docBase.getKieli()), "h5");
                     perusteOaVlkDto.getSisaltoalueet()
                             .stream()
                             .filter(perusteenKeskeinenSisaltoalue -> {
@@ -567,6 +568,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                                 }
                             });
                 } else if(!CollectionUtils.isEmpty(opetuksentavoite.getSisaltoalueet())) {
+                    addTeksti(docBase, messages.translate("sisaltoalueet", docBase.getKieli()), "h5");
 
                     if (pohjaOppiaineenVuosiluokka != null) {
                         pohjaOppiaineenVuosiluokka.getTavoitteet().stream().filter(tavoite -> tavoite.getTunniste().equals(opetuksentavoite.getTunniste())).findFirst().ifPresent(pohjaOppiaineenVuosiluokanTavoite -> {
@@ -583,6 +585,21 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                             .forEach(sisaltoalue -> {
                                 addLokalisoituteksti(docBase, sisaltoalue.getSisaltoalueet().getKuvaus(), "div");
                             });
+                }
+
+                if (!ObjectUtils.isEmpty(opetuksentavoite.getLaajattavoitteet())) {
+                    addTeksti(docBase, messages.translate("docgen.laaja_alaiset_osaamiset.title", docBase.getKieli()), "h5");
+                    opetuksentavoite.getLaajattavoitteet().stream()
+                            .map(tavoite ->
+                                docBase.getPeruste().getPerusopetuksenPerusteenSisalto().getLaajaalaisetosaamiset().stream()
+                                        .filter(laajaalainenosaaminenDto -> laajaalainenosaaminenDto.getTunniste().toString().equals(tavoite.getId()))
+                                        .findFirst()
+                            )
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .sorted(Comparator.comparing(laajaalainenosaaminenDto -> getTextString(docBase, laajaalainenosaaminenDto.getNimi())))
+                            .forEach(laajaalainenosaaminenDto -> addLokalisoituteksti(docBase, laajaalainenosaaminenDto.getNimi(), "p"));
+                    addTeksti(docBase, "", "div");
                 }
             }
         }
