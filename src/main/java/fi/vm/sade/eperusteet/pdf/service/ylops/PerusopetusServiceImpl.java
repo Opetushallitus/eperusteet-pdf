@@ -359,11 +359,25 @@ public class PerusopetusServiceImpl implements PerusopetusService {
         }
 
         if (perusteOaVlkDto != null) {
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTehtava(), pohjanVlkDto.getTehtava(), perusteOaVlkDto.getTehtava().orElse(null));
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getYleistavoitteet(), pohjanVlkDto.getYleistavoitteet(), null);
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getTyotavat(), pohjanVlkDto.getTyotavat(), perusteOaVlkDto.getTyotavat().orElse(null));
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getOhjaus(), pohjanVlkDto.getOhjaus(), perusteOaVlkDto.getOhjaus().orElse(null));
-            addOppiaineYleisetOsiot(docBase, oaVlkDto.getArviointi(), pohjanVlkDto.getArviointi(), perusteOaVlkDto.getArviointi().orElse(null));
+            addOppiaineYleisetOsiot(docBase,
+                    oaVlkDto.getTehtava(),
+                    pohjanVlkDto.getTehtava(),
+                    perusteOaVlkDto.getTehtava().orElse(TekstiOsaDto.builder().otsikko(LokalisoituTekstiDto.of(messages.translate("oppiaineen-tehtava", docBase.getKieli()))).build()));
+            addOppiaineYleisetOsiot(docBase,
+                    oaVlkDto.getYleistavoitteet(),
+                    pohjanVlkDto.getYleistavoitteet(), TekstiOsaDto.builder().otsikko(Optional.ofNullable(oaVlkDto.getYleistavoitteet()).map(TekstiosaDto::getOtsikko).orElse(null)).build());
+            addOppiaineYleisetOsiot(docBase,
+                    oaVlkDto.getTyotavat(),
+                    pohjanVlkDto.getTyotavat(),
+                    perusteOaVlkDto.getTyotavat().orElse(TekstiOsaDto.builder().otsikko(LokalisoituTekstiDto.of(messages.translate("oppiaine-tyotavat", docBase.getKieli()))).build()));
+            addOppiaineYleisetOsiot(docBase,
+                    oaVlkDto.getOhjaus(),
+                    pohjanVlkDto.getOhjaus(),
+                    perusteOaVlkDto.getOhjaus().orElse(TekstiOsaDto.builder().otsikko(LokalisoituTekstiDto.of(messages.translate("oppiaine-ohjaus", docBase.getKieli()))).build()));
+            addOppiaineYleisetOsiot(docBase,
+                    oaVlkDto.getArviointi(),
+                    pohjanVlkDto.getArviointi(),
+                    perusteOaVlkDto.getArviointi().orElse(TekstiOsaDto.builder().otsikko(LokalisoituTekstiDto.of(messages.translate("docgen.arviointi.title", docBase.getKieli()))).build()));
 
             if (!CollectionUtils.isEmpty(perusteOaVlkDto.getVapaatTekstit())) {
                 perusteOaVlkDto.getVapaatTekstit().forEach(vt -> {
@@ -616,7 +630,10 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                 addHeaderNoNumber(docBase, getTextString(docBase, otsikko));
             } else if (perusteTekstiOsaDto != null) {
                 addHeaderNoNumber(docBase, getTextString(docBase, perusteTekstiOsaDto.getOtsikko()));
-                addLokalisoituteksti(docBase, perusteTekstiOsaDto.getTeksti(), "cite");
+
+                if (!ObjectUtils.isEmpty(perusteTekstiOsaDto.getTeksti())) {
+                    addLokalisoituteksti(docBase, perusteTekstiOsaDto.getTeksti(), "cite");
+                }
             }
 
             if (!ObjectUtils.isEmpty(valinnaisenOtsikko)) {
