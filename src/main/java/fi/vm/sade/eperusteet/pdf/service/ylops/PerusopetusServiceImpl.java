@@ -365,19 +365,21 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                     perusteOaVlkDto.getTehtava().orElse(TekstiOsaDto.builder().otsikko(LokalisoituTekstiDto.of(messages.translate("oppiaineen-tehtava", docBase.getKieli()))).build()));
             addOppiaineYleisetOsiot(docBase,
                     oaVlkDto.getYleistavoitteet(),
-                    pohjanVlkDto.getYleistavoitteet(), TekstiOsaDto.builder().otsikko(Optional.ofNullable(oaVlkDto.getYleistavoitteet()).map(TekstiosaDto::getOtsikko).orElse(null)).build());
+                    pohjanVlkDto.getYleistavoitteet(), TekstiOsaDto.builder()
+                            .otsikko(LokalisoituTekstiDto.of(messages.translate("docgen.tavoitteet-ja-sisallot.title", docBase.getKieli())))
+                            .build());
             addOppiaineYleisetOsiot(docBase,
                     oaVlkDto.getTyotavat(),
                     pohjanVlkDto.getTyotavat(),
-                    perusteOaVlkDto.getTyotavat().orElse(TekstiOsaDto.builder().otsikko(LokalisoituTekstiDto.of(messages.translate("oppiaine-tyotavat", docBase.getKieli()))).build()));
+                    perusteOaVlkDto.getTyotavat().orElse(TekstiOsaDto.builder().otsikko(LokalisoituTekstiDto.of(messages.translate("oppimisymparistot_ja_tyotavat", docBase.getKieli()))).build()));
             addOppiaineYleisetOsiot(docBase,
                     oaVlkDto.getOhjaus(),
                     pohjanVlkDto.getOhjaus(),
-                    perusteOaVlkDto.getOhjaus().orElse(TekstiOsaDto.builder().otsikko(LokalisoituTekstiDto.of(messages.translate("oppiaine-ohjaus", docBase.getKieli()))).build()));
+                    perusteOaVlkDto.getOhjaus().orElse(TekstiOsaDto.builder().otsikko(LokalisoituTekstiDto.of(messages.translate("ohjaus_ja_tuki", docBase.getKieli()))).build()));
             addOppiaineYleisetOsiot(docBase,
                     oaVlkDto.getArviointi(),
                     pohjanVlkDto.getArviointi(),
-                    perusteOaVlkDto.getArviointi().orElse(TekstiOsaDto.builder().otsikko(LokalisoituTekstiDto.of(messages.translate("docgen.arviointi.title", docBase.getKieli()))).build()));
+                    perusteOaVlkDto.getArviointi().orElse(TekstiOsaDto.builder().otsikko(LokalisoituTekstiDto.of(messages.translate("oppilaan_oppimisen_arviointi", docBase.getKieli()))).build()));
 
             if (!CollectionUtils.isEmpty(perusteOaVlkDto.getVapaatTekstit())) {
                 perusteOaVlkDto.getVapaatTekstit().forEach(vt -> {
