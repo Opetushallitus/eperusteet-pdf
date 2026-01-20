@@ -43,14 +43,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeader;
-import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeaderNoNumber;
-import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addLokalisoituteksti;
-import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addTeksti;
-import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addTekstiosa;
-import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.cleanHtml;
-import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
-import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.hasLokalisoituteksti;
+import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.*;
 
 @Service
 public class PerusopetusServiceImpl implements PerusopetusService {
@@ -622,7 +615,11 @@ public class PerusopetusServiceImpl implements PerusopetusService {
     }
 
     private void addOppiaineYleisetOsiot(DokumenttiBase docBase, TekstiosaDto tekstiosa, TekstiosaDto pohjanTekstiosa, TekstiOsaDto perusteTekstiOsaDto) {
-        addOppiaineYleisetOsiot(docBase, tekstiosa, pohjanTekstiosa, perusteTekstiOsaDto, null);
+        if ((tekstiosa != null && getKielistettyTeksti(tekstiosa.getTeksti(), docBase.getKieli()) != null)
+                || (pohjanTekstiosa != null && getKielistettyTeksti(pohjanTekstiosa.getTeksti(), docBase.getKieli()) != null)
+                || (perusteTekstiOsaDto != null && getKielistettyTeksti(perusteTekstiOsaDto.getTeksti(), docBase.getKieli()) != null)) {
+            addOppiaineYleisetOsiot(docBase, tekstiosa, pohjanTekstiosa, perusteTekstiOsaDto, null);
+        }
     }
 
     private void addOppiaineYleisetOsiot(DokumenttiBase docBase, TekstiosaDto tekstiosa, TekstiosaDto pohjanTekstiosa, TekstiOsaDto perusteTekstiOsaDto, String valinnaisenOtsikko) {

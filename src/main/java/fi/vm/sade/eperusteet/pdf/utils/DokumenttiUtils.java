@@ -155,7 +155,7 @@ public class DokumenttiUtils {
         }
     }
 
-    private static String getKielistettyTeksti(LokalisoituTekstiDto lokalisoituTekstiDto, Kieli kieli) {
+    public static String getKielistettyTeksti(LokalisoituTekstiDto lokalisoituTekstiDto, Kieli kieli) {
         if (lokalisoituTekstiDto == null || kieli == null || lokalisoituTekstiDto.getTekstit() == null) {
             return null;
         }
