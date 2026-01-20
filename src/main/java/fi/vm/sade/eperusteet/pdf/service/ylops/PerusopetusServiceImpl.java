@@ -577,8 +577,6 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                                 }
                             });
                 } else if(!CollectionUtils.isEmpty(opetuksentavoite.getSisaltoalueet())) {
-                    addTeksti(docBase, messages.translate("sisaltoalueet", docBase.getKieli()), "h5");
-
                     if (pohjaOppiaineenVuosiluokka != null) {
                         pohjaOppiaineenVuosiluokka.getTavoitteet().stream().filter(tavoite -> tavoite.getTunniste().equals(opetuksentavoite.getTunniste())).findFirst().ifPresent(pohjaOppiaineenVuosiluokanTavoite -> {
                             pohjaOppiaineenVuosiluokanTavoite.getSisaltoalueet().stream()
@@ -615,16 +613,15 @@ public class PerusopetusServiceImpl implements PerusopetusService {
     }
 
     private void addOppiaineYleisetOsiot(DokumenttiBase docBase, TekstiosaDto tekstiosa, TekstiosaDto pohjanTekstiosa, TekstiOsaDto perusteTekstiOsaDto) {
-        if ((tekstiosa != null && getKielistettyTeksti(tekstiosa.getTeksti(), docBase.getKieli()) != null)
-                || (pohjanTekstiosa != null && getKielistettyTeksti(pohjanTekstiosa.getTeksti(), docBase.getKieli()) != null)
-                || (perusteTekstiOsaDto != null && getKielistettyTeksti(perusteTekstiOsaDto.getTeksti(), docBase.getKieli()) != null)) {
-            addOppiaineYleisetOsiot(docBase, tekstiosa, pohjanTekstiosa, perusteTekstiOsaDto, null);
-        }
+        addOppiaineYleisetOsiot(docBase, tekstiosa, pohjanTekstiosa, perusteTekstiOsaDto, null);
     }
 
     private void addOppiaineYleisetOsiot(DokumenttiBase docBase, TekstiosaDto tekstiosa, TekstiosaDto pohjanTekstiosa, TekstiOsaDto perusteTekstiOsaDto, String valinnaisenOtsikko) {
-        if (tekstiosa != null) {
-            LokalisoituTekstiDto otsikko = tekstiosa.getOtsikko();
+        if ((tekstiosa != null && getKielistettyTeksti(tekstiosa.getTeksti(), docBase.getKieli()) != null)
+                || (pohjanTekstiosa != null && getKielistettyTeksti(pohjanTekstiosa.getTeksti(), docBase.getKieli()) != null)
+                || (perusteTekstiOsaDto != null && getKielistettyTeksti(perusteTekstiOsaDto.getTeksti(), docBase.getKieli()) != null)) {
+
+            LokalisoituTekstiDto otsikko = Optional.ofNullable(tekstiosa).map(TekstiosaDto::getOtsikko).orElse(null);
             if (otsikko != null) {
                 addHeaderNoNumber(docBase, getTextString(docBase, otsikko));
             } else if (perusteTekstiOsaDto != null) {
@@ -643,7 +640,7 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                 addLokalisoituteksti(docBase, pohjanTekstiosa.getTeksti(), "div");
             }
 
-            if (!ObjectUtils.isEmpty(tekstiosa.getTeksti())) {
+            if (tekstiosa != null && tekstiosa.getTeksti() != null) {
                 addLokalisoituteksti(docBase, tekstiosa.getTeksti(), "div");
             }
         }
