@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import fi.vm.sade.eperusteet.pdf.dto.common.Liitteellinen;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.NavigationType;
 import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteTila;
@@ -19,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonTypeName("tekstikappale")
-public class TekstiKappaleDto extends PerusteenOsaDto.Laaja {
+public class TekstiKappaleDto extends PerusteenOsaDto.Laaja implements Liitteellinen {
     private LokalisoituTekstiDto teksti;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private KoodiDto osaamisala;
@@ -41,4 +42,5 @@ public class TekstiKappaleDto extends PerusteenOsaDto.Laaja {
     public NavigationType getNavigationType() {
         return NavigationType.viite;
     }
+
 }

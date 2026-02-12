@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.kios;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import fi.vm.sade.eperusteet.pdf.dto.common.Liitteellinen;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.NavigationType;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaDto;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonTypeName("kaantajatodistusmalli")
-public class KaantajaTodistusmalliDto extends PerusteenOsaDto.Laaja {
+public class KaantajaTodistusmalliDto extends PerusteenOsaDto.Laaja implements Liitteellinen {
 
     private LokalisoituTekstiDto kuvaus;
     private KaantajaTodistusmalliTaitotasokuvausDto ylintaso;
@@ -33,4 +34,3 @@ public class KaantajaTodistusmalliDto extends PerusteenOsaDto.Laaja {
     }
 
 }
-
