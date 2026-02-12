@@ -25,8 +25,8 @@ public enum KoulutusTyyppi {
     MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS("koulutustyyppi_30"),
     VAPAASIVISTYSTYOLUKUTAITO("koulutustyyppi_35"),
     TUTKINTOONVALMENTAVA("koulutustyyppi_40"),
-    MUU_KOULUTUS("koulutustyyppi_muu"),
-    AIKUISLUKIOKOULUTUS("koulutustyyppi_14");
+    KIELIKAANTAJATUTKINTO("koulutustyyppi_500"),
+    MUU_KOULUTUS("koulutustyyppi_muu");
 
     private final String tyyppi;
 
@@ -71,7 +71,7 @@ public enum KoulutusTyyppi {
     }
 
     public boolean isLukio() {
-        return isOneOf(LUKIOKOULUTUS, LUKIOVALMISTAVAKOULUTUS, AIKUISTENLUKIOKOULUTUS, AIKUISLUKIOKOULUTUS);
+        return isOneOf(LUKIOKOULUTUS, LUKIOVALMISTAVAKOULUTUS, AIKUISTENLUKIOKOULUTUS);
     }
 
     public boolean isPerusopetus() {
