@@ -1,14 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.service.eperusteet;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import fi.vm.sade.eperusteet.pdf.dto.common.AbstractRakenneOsaDto;
-import fi.vm.sade.eperusteet.pdf.dto.common.GeneratorData;
-import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.pdf.dto.common.MuodostumisSaantoDto;
-import fi.vm.sade.eperusteet.pdf.dto.common.RakenneModuuliDto;
-import fi.vm.sade.eperusteet.pdf.dto.common.RakenneOsaDto;
-import fi.vm.sade.eperusteet.pdf.dto.common.Reference;
-import fi.vm.sade.eperusteet.pdf.dto.common.TermiDto;
+import fi.vm.sade.eperusteet.pdf.dto.common.*;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiPeruste;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiRivi;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTaulukko;
@@ -210,7 +203,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             addPerusteenOsat(docBase, sisalto); // Tekstikappaleet
             addAipeSisalto(docBase);
         }
-        addTekstikappaleLiitteet(docBase, sisalto);
+        addLiitteet(docBase, sisalto);
         addFootnotes(docBase);
 
         // Kuvat
@@ -1189,6 +1182,9 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             if (po == null) {
                 continue;
             }
+            if (po instanceof Liitteellinen && ((Liitteellinen) po).isLiite()) {
+                continue;
+            }
             if (po instanceof TaiteenalaDto) {
                 TaiteenalaDto taiteenala = (TaiteenalaDto) po;
                 addTaiteenala(docBase, taiteenala);
@@ -1213,34 +1209,40 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             } else if (po instanceof KotoLaajaAlainenOsaaminenDto) {
                 KotoLaajaAlainenOsaaminenDto kotoLao = (KotoLaajaAlainenOsaaminenDto) po;
                 addKotoLaajaAlainenOsaaminen(docBase, kotoLao, po, lapsi);
-            } else if (po instanceof KaantajaTaitoDto) {
-                KaantajaTaitoDto kaantajaTaito = (KaantajaTaitoDto) po;
-                addKaantajaTaito(docBase, kaantajaTaito, po, lapsi);
-            } else if (po instanceof KaantajaTaitotasoasteikkoDto) {
-                KaantajaTaitotasoasteikkoDto kaantajaTaitotasoasteikko = (KaantajaTaitotasoasteikkoDto) po;
-                addKaantajaTaitotasoasteikko(docBase, kaantajaTaitotasoasteikko, po, lapsi);
-            } else if (po instanceof KaantajaAihealueDto) {
-                KaantajaAihealueDto kaantajaAihealue = (KaantajaAihealueDto) po;
-                addKaantajaAihealue(docBase, kaantajaAihealue, po, lapsi);
-            } else if (po instanceof KaantajaKielitaitoDto) {
-                KaantajaKielitaitoDto kaantajaKielitaito = (KaantajaKielitaitoDto) po;
-                addKaantajaKielitaito(docBase, kaantajaKielitaito, po, lapsi);
-            } else if (po instanceof KaantajaTaitotasokuvausDto) {
-                KaantajaTaitotasokuvausDto kaantajaTaitotasokuvaus = (KaantajaTaitotasokuvausDto) po;
-                addKaantajaTaitotasokuvaus(docBase, kaantajaTaitotasokuvaus, po, lapsi);
-            } else if (po instanceof KaantajaTodistusmalliDto) {
-                KaantajaTodistusmalliDto kaantajaTodistusmalli = (KaantajaTodistusmalliDto) po;
-                addKaantajaTodistusmalli(docBase, kaantajaTodistusmalli, po, lapsi);
-            } else if (po instanceof TekstiKappaleDto) {
+            }
+
+            addKieliKaantajaSisallot(po, lapsi, docBase);
+
+            if (po instanceof TekstiKappaleDto) {
                 TekstiKappaleDto tk = (TekstiKappaleDto) po;
-                if (!tk.getLiite()) {
-                    addTekstikappale(docBase, tk, po, lapsi);
-                }
+                addTekstikappale(docBase, tk, po, lapsi);
             }
         }
     }
 
-    private void addTekstikappaleLiitteet(DokumenttiPeruste docBase, PerusteenOsaViiteDto.Laaja parent) {
+    private void addKieliKaantajaSisallot(PerusteenOsaDto po, PerusteenOsaViiteDto.Laaja lapsi, DokumenttiPeruste docBase) {
+        if (po instanceof KaantajaTaitoDto) {
+            KaantajaTaitoDto kaantajaTaito = (KaantajaTaitoDto) po;
+            addKaantajaTaito(docBase, kaantajaTaito, po, lapsi);
+        } else if (po instanceof KaantajaTaitotasoasteikkoDto) {
+            KaantajaTaitotasoasteikkoDto kaantajaTaitotasoasteikko = (KaantajaTaitotasoasteikkoDto) po;
+            addKaantajaTaitotasoasteikko(docBase, kaantajaTaitotasoasteikko, po, lapsi);
+        } else if (po instanceof KaantajaAihealueDto) {
+            KaantajaAihealueDto kaantajaAihealue = (KaantajaAihealueDto) po;
+            addKaantajaAihealue(docBase, kaantajaAihealue, po, lapsi);
+        } else if (po instanceof KaantajaKielitaitoDto) {
+            KaantajaKielitaitoDto kaantajaKielitaito = (KaantajaKielitaitoDto) po;
+            addKaantajaKielitaito(docBase, kaantajaKielitaito, po, lapsi);
+        } else if (po instanceof KaantajaTaitotasokuvausDto) {
+            KaantajaTaitotasokuvausDto kaantajaTaitotasokuvaus = (KaantajaTaitotasokuvausDto) po;
+            addKaantajaTaitotasokuvaus(docBase, kaantajaTaitotasokuvaus, po, lapsi);
+        } else if (po instanceof KaantajaTodistusmalliDto) {
+            KaantajaTodistusmalliDto kaantajaTodistusmalli = (KaantajaTodistusmalliDto) po;
+            addKaantajaTodistusmalli(docBase, kaantajaTodistusmalli, po, lapsi);
+        }
+    }
+
+    private void addLiitteet(DokumenttiPeruste docBase, PerusteenOsaViiteDto.Laaja parent) {
         if (parent == null) {
             return;
         }
@@ -1249,14 +1251,16 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             if (po == null) {
                 continue;
             }
-            if (po instanceof TekstiKappaleDto) {
-                TekstiKappaleDto tk = (TekstiKappaleDto) po;
-                if (tk.getLiite()) {
+            if ((po instanceof Liitteellinen) && ((Liitteellinen) po).isLiite()) {
+                if (po instanceof TekstiKappaleDto) {
+                    TekstiKappaleDto tk = (TekstiKappaleDto) po;
                     addTekstikappale(docBase, tk, po, lapsi);
                 }
+
+                addKieliKaantajaSisallot(po, lapsi, docBase);
             }
 
-            addTekstikappaleLiitteet(docBase, lapsi);
+            addLiitteet(docBase, lapsi);
         }
     }
 

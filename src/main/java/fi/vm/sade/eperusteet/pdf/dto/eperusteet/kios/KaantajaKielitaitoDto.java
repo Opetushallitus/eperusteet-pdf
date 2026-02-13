@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.kios;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import fi.vm.sade.eperusteet.pdf.dto.common.Liitteellinen;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.NavigationType;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.peruste.PerusteenOsaDto;
@@ -17,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonTypeName("kaantajakielitaito")
-public class KaantajaKielitaitoDto extends PerusteenOsaDto.Laaja {
+public class KaantajaKielitaitoDto extends PerusteenOsaDto.Laaja implements Liitteellinen {
 
     private LokalisoituTekstiDto kuvaus;
     private List<KaantajaKielitaitoTaitotasoDto> taitotasot = new ArrayList<>();
@@ -32,5 +33,5 @@ public class KaantajaKielitaitoDto extends PerusteenOsaDto.Laaja {
     public NavigationType getNavigationType() {
         return NavigationType.kaantajakielitaito;
     }
-}
 
+}
