@@ -16,6 +16,7 @@ public enum KoulutustyyppiToteutus {
     VAPAASIVISTYSTYO("vapaasivistystyo"),
     TUTKINTOONVALMENTAVA("tutkintoonvalmentava"),
     KOTOUTUMISKOULUTUS("kotoutumiskoulutus"),
+    KIELITUTKINTO("kielitutkinto"),
     KAANTAJATUTKINTO("kaantajatutkinto");
 
     private final String tyyppi;
