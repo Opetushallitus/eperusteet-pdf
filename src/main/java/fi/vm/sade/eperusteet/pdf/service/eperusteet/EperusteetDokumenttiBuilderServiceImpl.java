@@ -200,7 +200,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         } else {
             addTutkinnonMuodostuminen(docBase);
             addTutkinnonosat(docBase);
-            addPerusteenOsat(docBase, sisalto); // Tekstikappaleet
+            addPerusteenOsat(docBase, sisalto);
             addAipeSisalto(docBase);
         }
         addLiitteet(docBase, sisalto);
@@ -1291,6 +1291,11 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                 && tunniste != PerusteenOsaTunniste.LAAJAALAINENOSAAMINEN
                 && tunniste != PerusteenOsaTunniste.RAKENNE) {
             String nimi = getTextString(docBase, tk.getNimi());
+
+            if (tk.getKoodi() != null) {
+                nimi = nimi + " (" + tk.getKoodi().getArvo() + ")";
+            }
+
             addHeaderForceMenu(docBase, nimi);
 
             String teksti = getTextString(docBase, tk.getTeksti());

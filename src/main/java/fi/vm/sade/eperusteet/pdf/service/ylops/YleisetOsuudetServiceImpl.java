@@ -55,7 +55,11 @@ public class YleisetOsuudetServiceImpl implements YleisetOsuudetService {
                     if (lapsi.getPerusteTekstikappaleId() != null) {
                         perusteenTekstikappale = getPerusteTekstikappale(docBase.getPeruste(), lapsi.getPerusteTekstikappaleId());
                         if (perusteenTekstikappale != null) {
-                            addHeaderForceMenu(docBase, getTextString(docBase, perusteenTekstikappale.getNimi()));
+                          String nimi = getTextString(docBase, perusteenTekstikappale.getNimi());
+                            if (perusteenTekstikappale.getKoodi() != null) {
+                              nimi = nimi + " (" + perusteenTekstikappale.getKoodi().getArvo() + ")";
+                          }
+                            addHeaderForceMenu(docBase, nimi);
                         }
                     }
 
