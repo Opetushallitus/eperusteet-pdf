@@ -7,8 +7,13 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.transform.TransformerException;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public interface PdfService {
-    byte[] xhtml2pdf(Document document, DokumenttiMetaDto meta, DokumenttiTyyppi tyypi) throws IOException, TransformerException, SAXException, DokumenttiException;
+    byte[] xhtml2pdf(Document document, ByteArrayOutputStream xmlStream, DokumenttiMetaDto meta, DokumenttiTyyppi tyypi)
+            throws IOException, TransformerException, SAXException, DokumenttiException;
+
+    ByteArrayOutputStream convertOps2XML(Document doc)
+            throws IOException, TransformerException, SAXException;
 }

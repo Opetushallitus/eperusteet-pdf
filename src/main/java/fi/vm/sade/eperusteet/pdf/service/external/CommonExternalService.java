@@ -16,7 +16,7 @@ public interface CommonExternalService {
 
     TermiDto getTermi(Long id, String avain, DokumenttiTyyppi dokumenttityyppi);
 
-    void postPdfData(byte[] pdfData, Long dokumenttiId, DokumenttiTyyppi tyyppi);
+    void postPdfData(byte[] pdfData, byte[] xmlData, Long dokumenttiId, DokumenttiTyyppi tyyppi);
 
     void updateDokumenttiTila(DokumenttiTila tila, Long dokumenttiId, DokumenttiTyyppi tyyppi);
 }
