@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DokumenttiUtils {
+
     public static String selectSubjectTranslationKey(DokumenttiTyyppi tyyppi) {
         if (tyyppi.equals(DokumenttiTyyppi.PERUSTE)) {
             return "docgen.meta.subject.peruste";
@@ -295,7 +296,8 @@ public class DokumenttiUtils {
         }
         String cleanXmlString = Jsoup.clean(stripNonValidXMLCharacters(string), ValidHtml.WhitelistType.NORMAL_PDF.getWhitelist());
         cleanXmlString = removeInternalLink(cleanXmlString);
-        return StringEscapeUtils.unescapeHtml4(cleanXmlString.replace("&nbsp;", " "));
+        String out = StringEscapeUtils.unescapeHtml4(cleanXmlString);
+        return PdfTextSanitizer.applyCharacterReplacements(out);
     }
 
     public static Element getList(DokumenttiBase docBase, Collection<LokalisoituTekstiDto> tekstit) {
