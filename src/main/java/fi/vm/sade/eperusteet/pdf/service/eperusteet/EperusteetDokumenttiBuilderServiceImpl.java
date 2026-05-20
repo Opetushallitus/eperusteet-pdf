@@ -28,6 +28,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.Lops2019OppiaineKaikkiD
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.Lops2019SisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019ArviointiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019OpiskeluymparistoTyotavatDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019OppiaineLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019OppiaineTavoitealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019OppiaineTavoitteetDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019TehtavaDto;
@@ -724,6 +725,12 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         if (tehtava != null && tehtava.getKuvaus() != null) {
             addTeksti(docBase, messages.translate("oppiaine-ja-tehtava", docBase.getKieli()), "h6");
             addLokalisoituteksti(docBase, tehtava.getKuvaus(), "div");
+        }
+
+        Lops2019OppiaineLaajaAlainenOsaaminenDto laajaAlaisetOsaamiset = oa.getLaajaAlaisetOsaamiset();
+        if (laajaAlaisetOsaamiset != null && laajaAlaisetOsaamiset.getKuvaus() != null) {
+            addTeksti(docBase, messages.translate("laaja-alainen-osaaminen", docBase.getKieli()), "h6");
+            addLokalisoituteksti(docBase, laajaAlaisetOsaamiset.getKuvaus(), "div");
         }
 
         Lops2019OpiskeluymparistoTyotavatDto opiskeluymparistoTyotavat = oa.getOpiskeluymparistoTyotavat();
