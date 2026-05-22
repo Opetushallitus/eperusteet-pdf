@@ -53,6 +53,14 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
             return tuvaLaajaAlainenOsaaminen.getNimi();
         }
 
+        if (opintokokonaisuus != null && opintokokonaisuus.getKooditettuNimi() != null) {
+            return opintokokonaisuus.getKooditettuNimi();
+        }
+
+        if (tosa != null && tosa.getKooditettuNimi() != null) {
+            return tosa.getKooditettuNimi();
+        }
+
         if (tekstiKappale != null) {
             return tekstiKappale.getNimi();
         }
