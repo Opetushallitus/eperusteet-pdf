@@ -34,7 +34,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v6
       - name: Download eperusteet-pdf-service-jar
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: eperusteet-pdf-service-jar
       - name: Build Docker Conainer
