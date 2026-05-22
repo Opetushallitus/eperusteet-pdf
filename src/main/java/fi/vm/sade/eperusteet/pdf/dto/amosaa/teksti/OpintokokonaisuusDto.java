@@ -1,6 +1,8 @@
 package fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.KooditettuDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.osaamismerkki.OsaamismerkkiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.LaajuusYksikko;
@@ -33,6 +35,7 @@ public class OpintokokonaisuusDto {
     private LokalisoituTekstiDto arvioinninKuvaus;
     private List<OpintokokonaisuusArviointiDto> arvioinnit = new ArrayList<>();
     private OsaamismerkkiKappaleDto osaamismerkkiKappale;
+    private LokalisoituTekstiDto kooditettuNimi;
 
     public String getKoodiArvo() {
         if (koodi != null) {
@@ -41,5 +44,4 @@ public class OpintokokonaisuusDto {
 
         return null;
     }
-
 }
