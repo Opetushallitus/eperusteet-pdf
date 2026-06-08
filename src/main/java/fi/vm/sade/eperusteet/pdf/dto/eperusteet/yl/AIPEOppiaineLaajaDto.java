@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl;
 
 import fi.vm.sade.eperusteet.pdf.dto.common.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.KevytTekstiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.KoodiDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,4 +30,5 @@ public class AIPEOppiaineLaajaDto extends AIPEOppiaineSuppeaDto {
     private List<KeskeinenSisaltoalueDto> sisaltoalueet;
     private List<AIPEKurssiDto> kurssit;
     private List<AIPEOppiaineLaajaDto> oppimaarat;
+    private List<KevytTekstiKappaleDto> vapaatTekstit;
 }
