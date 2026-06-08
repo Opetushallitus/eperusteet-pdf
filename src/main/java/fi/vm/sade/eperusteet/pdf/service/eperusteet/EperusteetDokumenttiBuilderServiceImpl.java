@@ -2578,6 +2578,13 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         addTekstiOsa(docBase, oppiaine.getArviointi());
         addTekstiOsa(docBase, oppiaine.getSisaltoalueinfo());
 
+        if (!CollectionUtils.isEmpty(oppiaine.getVapaatTekstit())) {
+          oppiaine.getVapaatTekstit().forEach(vapaaTeksti -> {
+              addTeksti(docBase, getTextString(docBase, vapaaTeksti.getNimi()), "h6");
+              addTeksti(docBase, getTextString(docBase, vapaaTeksti.getTeksti()), "div");
+          });
+      }
+
         if (oppiaine.getPakollinenKurssiKuvaus().isPresent()) {
             addTeksti(docBase, messages.translate("docgen.pakollinen_kurssi_kuvaus.title", docBase.getKieli()), "h5");
             addTeksti(docBase, getTextString(docBase, getOptionalValue(oppiaine.getPakollinenKurssiKuvaus())), "div");
