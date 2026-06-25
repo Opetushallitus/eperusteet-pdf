@@ -296,8 +296,15 @@ public class DokumenttiUtils {
         }
         String cleanXmlString = Jsoup.clean(stripNonValidXMLCharacters(string), ValidHtml.WhitelistType.NORMAL_PDF.getWhitelist());
         cleanXmlString = removeInternalLink(cleanXmlString);
+        cleanXmlString = stripImgAltAttributes(cleanXmlString);
         String out = StringEscapeUtils.unescapeHtml4(cleanXmlString);
         return PdfTextSanitizer.applyCharacterReplacements(out);
+    }
+
+    private static String stripImgAltAttributes(String html) {
+        org.jsoup.nodes.Document doc = Jsoup.parseBodyFragment(html);
+        doc.select("img[alt]").forEach(img -> img.removeAttr("alt"));
+        return doc.body().html();
     }
 
     public static Element getList(DokumenttiBase docBase, Collection<LokalisoituTekstiDto> tekstit) {
