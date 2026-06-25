@@ -81,7 +81,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
                     log.error(e.getMessage());
                     log.error("Liitettä ei löytynyt, id={}, UUID={}", generatorData.getId(), uuid);
                     element.removeAttribute("src");
-                    return;
+                    continue;
                 }
 
                 BufferedImage bufferedImage = null;
@@ -93,7 +93,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
                 if (bufferedImage == null) {
                     log.error("Liitettä ei löytynyt, id={}, UUID={}", generatorData.getId(), uuid);
                     element.removeAttribute("src");
-                    return;
+                    continue;
                 }
 
                 int width = bufferedImage.getWidth();
@@ -126,6 +126,7 @@ public class DokumenttiUtilServiceImpl implements DokumenttiUtilService {
                 element.setAttribute("width", String.valueOf(width));
                 element.setAttribute("height", String.valueOf(height));
                 element.setAttribute("src", "data:image/jpg;base64," + base64);
+                element.removeAttribute("alt");
             }
 
         } catch (XPathExpressionException | IOException | NullPointerException e) {
