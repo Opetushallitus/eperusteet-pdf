@@ -55,6 +55,9 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
     private Lops2019DokumenttiService lops2019DokumenttiService;
 
     @Autowired
+    private TaiteenperusopetusService taiteenperusopetusService;
+
+    @Autowired
     private YleisetOsuudetService yleisetOsuudetService;
 
     @Autowired
@@ -119,6 +122,11 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
             // Lukio
             if (KoulutustyyppiToteutus.LOPS2019.equals(ops.getToteutus())) {
                 lops2019DokumenttiService.addLops2019Sisalto(docBase);
+            }
+
+            // Taiteen perusopetus
+            if (KoulutustyyppiToteutus.TPO.equals(ops.getToteutus())) {
+                taiteenperusopetusService.addTaiteenalat(docBase);
             }
         }
 
