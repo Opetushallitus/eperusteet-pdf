@@ -14,6 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class TaiteenalaDto extends PerusteenOsaDto.Laaja {
 
     private LokalisoituTekstiDto teksti;
     private KoodiDto koodi;
+    private BigDecimal laajuus;
     private KevytTekstiKappaleDto kasvatus;
     private KevytTekstiKappaleDto yhteisetOpinnot;
     private KevytTekstiKappaleDto teemaopinnot;
@@ -38,6 +40,7 @@ public class TaiteenalaDto extends PerusteenOsaDto.Laaja {
     private KevytTekstiKappaleDto tyotavatOpetuksessa;
     private KevytTekstiKappaleDto oppimisenArviointiOpetuksessa;
     private List<KevytTekstiKappaleDto> vapaatTekstit;
+    private List<TaiteenosaDto> taiteenOsat;
 
     @Override
     public String getOsanTyyppi() {

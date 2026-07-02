@@ -12,6 +12,7 @@ import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaNimiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpsOppiaineExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpsVuosiluokkakokonaisuusExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.PerusteInfoDto;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.tpo.TaiteenalaDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,4 +42,5 @@ public class OpetussuunnitelmaExportDto extends OpetussuunnitelmaBaseDto {
     private List<Lops2019PaikallinenOppiaineExportDto> paikallisetOppiaineet = new ArrayList<>();
     private Set<Lops2019OppiaineJarjestysDto> oppiaineJarjestykset = new HashSet<>();
     private AIPESisaltoExportDto aipe;
+    private List<TaiteenalaDto> taiteenalat = new ArrayList<>();
 }
