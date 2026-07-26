@@ -64,30 +64,17 @@ public class PdfServiceImpl implements PdfService {
     private String docgenPath;
 
     @Override
-    public byte[] xhtml2pdf(Document document, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi) throws IOException, TransformerException, SAXException, DokumenttiException {
-        // Alustetaan Streamit
-        ByteArrayOutputStream xmlStream = new ByteArrayOutputStream();
-        ByteArrayOutputStream foStream = new ByteArrayOutputStream();
-        ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
-
-        // Muunnetaan ops objekti xml muotoon
-        convertOps2XML(document, xmlStream);
-
-        // Muunntetaan saatu xml malli fo:ksi
-        InputStream xmlInputStream = new ByteArrayInputStream(xmlStream.toByteArray());
-        convertXML2FO(xmlInputStream, selectTemplate(tyyppi), foStream);
-
-        // Muunnetaan saatu fo malli pdf:ksi
-        InputStream foInputStream = new ByteArrayInputStream(foStream.toByteArray());
-
-        convertFO2PDF(document, foInputStream, pdfStream, meta, tyyppi);
-
+    public byte[] xhtml2pdf(Document document, ByteArrayOutputStream xmlStream, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi) throws IOException, TransformerException, SAXException, DokumenttiException {
+        ByteArrayOutputStream foStream = convertXML2FO(xmlStream, selectTemplate(tyyppi));
+        ByteArrayOutputStream pdfStream = convertFO2PDF(document, foStream, meta, tyyppi);
         return pdfStream.toByteArray();
     }
 
     @SuppressWarnings("unchecked")
-    private void convertFO2PDF(Document doc, InputStream fo, OutputStream pdf, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi)
+    private ByteArrayOutputStream convertFO2PDF(Document doc, ByteArrayOutputStream foStream, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi)
             throws IOException, SAXException, TransformerException {
+        ByteArrayOutputStream pdf = new ByteArrayOutputStream();
+        InputStream foInputStream = new ByteArrayInputStream(foStream.toByteArray());
         FopFactory fopFactory = FopFactory.newInstance(config.getURI(), config.getInputStream());
 
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
@@ -130,13 +117,17 @@ public class PdfServiceImpl implements PdfService {
         // XSLT version
         transformer.setParameter("versionParam", "2.0");
 
-        Source src = new StreamSource(fo);
+        Source src = new StreamSource(foInputStream);
         Result res = new SAXResult(fop.getDefaultHandler());
 
         transformer.transform(src, res);
+
+        return pdf;
     }
 
-    private void convertOps2XML(Document doc, OutputStream xml) throws TransformerException {
+    @Override
+    public ByteArrayOutputStream convertOps2XML(Document doc) throws TransformerException {
+        ByteArrayOutputStream xmlStream = new ByteArrayOutputStream();
         TransformerFactory factory = TransformerFactory.newInstance();
         Transformer transformer = factory.newTransformer();
 
@@ -145,24 +136,30 @@ public class PdfServiceImpl implements PdfService {
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 
         Source src = new DOMSource(doc);
-        Result res = new StreamResult(xml);
+        Result res = new StreamResult(xmlStream);
 
         transformer.transform(src, res);
+
+        return xmlStream;
     }
 
-    private void convertXML2FO(InputStream xml, InputStream xslt, OutputStream fo) throws IOException, TransformerException {
+    private ByteArrayOutputStream convertXML2FO(ByteArrayOutputStream xmlStream, InputStream xslt) throws IOException, TransformerException {
+        ByteArrayOutputStream foStream = new ByteArrayOutputStream();
         try {
+            InputStream xmlInputStream = new ByteArrayInputStream(xmlStream.toByteArray());
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transformer = factory.newTransformer(new StreamSource(xslt));
             transformer.setParameter("docgenPath", docgenPath);
 
-            Source src = new StreamSource(xml);
-            Result res = new StreamResult(fo);
+            Source src = new StreamSource(xmlInputStream);
+            Result res = new StreamResult(foStream);
 
             transformer.transform(src, res);
         } finally {
-            fo.close();
+            foStream.close();
         }
+
+        return foStream;
     }
 
     private InputStream selectTemplate(DokumenttiTyyppi tyyppi) throws IOException, DokumenttiException {

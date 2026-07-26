@@ -172,11 +172,14 @@ public class CommonExternalServiceImpl implements CommonExternalService{
     }
 
     @Override
-    public void postPdfData(byte[] pdfDataBytes, Long dokumenttiId, DokumenttiTyyppi tyyppi) {
+    public void postPdfData(byte[] pdfDataBytes, byte[] xmlData, Long dokumenttiId, DokumenttiTyyppi tyyppi) {
         try {
             OphHttpClient client = restClientFactory.get(dokumenttiServiceUrls.get(tyyppi), true);
             String url = dokumenttiServiceInternalUrls.get(tyyppi) + "/api/dokumentit/pdf/data/" + dokumenttiId;
-            PdfData pdfData = PdfData.of(Base64.getEncoder().encodeToString(pdfDataBytes));
+            PdfData pdfData = PdfData.builder()
+                    .data(Base64.getEncoder().encodeToString(pdfDataBytes))
+                    .html(Base64.getEncoder().encodeToString(xmlData))
+                    .build();
 
             OphHttpRequest request = OphHttpRequest.Builder
                     .post(url)
@@ -206,7 +209,9 @@ public class CommonExternalServiceImpl implements CommonExternalService{
         try {
             OphHttpClient client = restClientFactory.get(dokumenttiServiceUrls.get(tyyppi), true);
             String url = dokumenttiServiceInternalUrls.get(tyyppi) + "/api/dokumentit/pdf/tila/" + dokumenttiId;
-            PdfData pdfData = new PdfData(null, tila.toString());
+            PdfData pdfData = PdfData.builder()
+                    .tila(tila.toString())
+                    .build();
 
             OphHttpRequest request = OphHttpRequest.Builder
                     .post(url)
