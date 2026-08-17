@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.pdf.service;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.pdf.utils.DokumenttiEventListener;
+import fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fop.apps.FOUserAgent;
@@ -65,6 +66,8 @@ public class PdfServiceImpl implements PdfService {
 
     @Override
     public byte[] xhtml2pdf(Document document, DokumenttiMetaDto meta, DokumenttiTyyppi tyyppi) throws IOException, TransformerException, SAXException, DokumenttiException {
+        DokumenttiUtils.sanitizeDocumentLinks(document);
+
         // Alustetaan Streamit
         ByteArrayOutputStream xmlStream = new ByteArrayOutputStream();
         ByteArrayOutputStream foStream = new ByteArrayOutputStream();

@@ -15,7 +15,10 @@ import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
@@ -305,6 +308,47 @@ public class DokumenttiUtils {
         org.jsoup.nodes.Document doc = Jsoup.parseBodyFragment(html);
         doc.select("img[alt]").forEach(img -> img.removeAttr("alt"));
         return doc.body().html();
+    }
+
+    public static void sanitizeDocumentLinks(Document doc) {
+        if (doc == null) {
+            return;
+        }
+        NodeList links = doc.getElementsByTagName("a");
+        for (int i = 0; i < links.getLength(); i++) {
+            Element a = (Element) links.item(i);
+            if (!a.hasAttribute("href")) {
+                continue;
+            }
+            String href = a.getAttribute("href").trim();
+            if (!isHttpUrl(href)) {
+                continue;
+            }
+            if (isValidHttpUrl(href)) {
+                a.setAttribute("href", href);
+            } else {
+                a.removeAttribute("href");
+            }
+        }
+    }
+
+    static boolean isValidHttpUrl(String href) {
+        if (href == null || href.isBlank()) {
+            return false;
+        }
+        try {
+            URI uri = new URI(href.trim());
+            String scheme = uri.getScheme();
+            return ("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme))
+                    && uri.getHost() != null && !uri.getHost().isBlank();
+        } catch (URISyntaxException e) {
+            return false;
+        }
+    }
+
+    private static boolean isHttpUrl(String href) {
+        return href.regionMatches(true, 0, "http://", 0, 7)
+                || href.regionMatches(true, 0, "https://", 0, 8);
     }
 
     public static Element getList(DokumenttiBase docBase, Collection<LokalisoituTekstiDto> tekstit) {
