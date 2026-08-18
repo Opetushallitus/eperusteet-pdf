@@ -13,6 +13,7 @@ public enum KoulutustyyppiToteutus {
     AMMATILLINEN("ammatillinen"),
     TPO("taiteenperusopetus"),
     LOPS2019("lops2019"),
+    AIPE("aipe"),
     VAPAASIVISTYSTYO("vapaasivistystyo"),
     TUTKINTOONVALMENTAVA("tutkintoonvalmentava"),
     KOTOUTUMISKOULUTUS("kotoutumiskoulutus"),

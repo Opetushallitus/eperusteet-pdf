@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.ylops;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import fi.vm.sade.eperusteet.pdf.dto.ylops.aipe.export.AIPESisaltoExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019LaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.Lops2019OppiaineJarjestysDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.export.Lops2019OpintojaksoExportDto;
@@ -9,7 +10,6 @@ import fi.vm.sade.eperusteet.pdf.dto.ylops.lops2019.export.Lops2019PaikallinenOp
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpetussuunnitelmaNimiDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpsOppiaineExportDto;
-import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpsVuosiluokkakokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.ops.OpsVuosiluokkakokonaisuusExportDto;
 import fi.vm.sade.eperusteet.pdf.dto.ylops.peruste.PerusteInfoDto;
 import lombok.AllArgsConstructor;
@@ -40,4 +40,5 @@ public class OpetussuunnitelmaExportDto extends OpetussuunnitelmaBaseDto {
     private List<Lops2019OppiaineExportDto> valtakunnallisetOppiaineet = new ArrayList<>();
     private List<Lops2019PaikallinenOppiaineExportDto> paikallisetOppiaineet = new ArrayList<>();
     private Set<Lops2019OppiaineJarjestysDto> oppiaineJarjestykset = new HashSet<>();
+    private AIPESisaltoExportDto aipe;
 }
