@@ -73,8 +73,9 @@ public class PerusteUtils {
                     return KoulutustyyppiToteutus.TUTKINTOONVALMENTAVA;
                 } else if (kt == KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS) {
                     return KoulutustyyppiToteutus.KOTOUTUMISKOULUTUS;
+                } else if (kt == KoulutusTyyppi.AIKUISTENPERUSOPETUS) {
+                    return KoulutustyyppiToteutus.AIPE;
                 }
-
             }
             return KoulutustyyppiToteutus.YKSINKERTAINEN;
         }
