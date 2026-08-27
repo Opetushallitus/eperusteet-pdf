@@ -7,16 +7,11 @@ import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.exception.BusinessRuleViolationException;
-import fi.vm.sade.eperusteet.pdf.exception.RestTemplateResponseErrorHandler;
 import fi.vm.sade.eperusteet.pdf.service.external.CommonExternalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 

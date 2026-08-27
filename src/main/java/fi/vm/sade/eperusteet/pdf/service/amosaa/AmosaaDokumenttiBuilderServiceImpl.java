@@ -968,7 +968,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
                             osaamistasonKriteeri.getKriteerit().forEach(kriteeriKriteeri -> {
                                 String kriteeriKriteeriText = getTextString(docBase, kriteeriKriteeri);
-                                if (org.apache.commons.lang.StringUtils.isNotEmpty(kriteeriKriteeriText)) {
+                                if (StringUtils.isNotEmpty(kriteeriKriteeriText)) {
                                     addTeksti(docBase, kriteeriKriteeriText, "li", kriteeriLista);
                                 }
                             });
