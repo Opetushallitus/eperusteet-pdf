@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Get profiles from command line argument, default to "dev"
-PROFILES="${1:-dev}"
+# Get profiles from command line argument, default to "local"
+PROFILES="${1:-local}"
 
 echo "Starting EperusteetPdfApplication with profiles: $PROFILES"
 

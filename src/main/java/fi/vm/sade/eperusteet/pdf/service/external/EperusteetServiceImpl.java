@@ -90,7 +90,7 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public List<OsaamismerkkiDto> getOsaamismerkit(Set<Long> koodit) {
         String url = UriComponentsBuilder
-                .fromHttpUrl(eperusteetServiceUrl + "/api/osaamismerkit/haku/julkiset")
+                .fromUriString(eperusteetServiceUrl + "/api/osaamismerkit/haku/julkiset")
                 .queryParam("koodit", koodit)
                 .build().toUriString();
 
