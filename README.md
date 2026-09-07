@@ -11,7 +11,7 @@ PDF-dokumenttien generointipalvelu ePerusteet-palvelukokonaisuudelle. Palvelu tu
 Javalla ja Spring Boot -viitekehyksellä toteutettu REST API -palvelu.
 
 **Teknologiat:**
-- Spring Boot 3.x
+- Spring Boot 4.x
 - Apache FOP (XSL-FO to PDF)
 - Apache PDFBox
 - Maven build
@@ -31,20 +31,25 @@ Palvelu ei käytä tietokantaa vaan toimii tilattomana palveluna, joka generoi P
 
 ### 3.1. Esivaatimukset
 
-Asenna haluammallasi tavalla:
+Asenna haluamallasi tavalla:
 
-- Amazon Corretto JDK 17 tai uudempi
+- Amazon Corretto JDK 21 tai uudempi
 - Maven 3.8 tai uudempi
+- konfiguroi Maven `~/.m2/settings.xml` GitHub Packages -kirjautumista varten (ks. alla)
+
+**Maven ja GitHub Packages:**
+
+Riippuvuudet (mm. `eperusteet-parent-pom`) haetaan GitHub Packagesista. Ilman autentikaatiota ensimmäinen `mvn`-ajo epäonnistuu.
+
+Lisää `~/.m2/settings.xml`-tiedostoon server-id `github`, joka vastaa pom.xml:n repository-id:tä. Mallina voi käyttää eperusteet-repon [`.github/maven/settings.xml`](https://github.com/Opetushallitus/eperusteet/blob/master/.github/maven/settings.xml)-tiedostoa. Lokaalisti käytä GitHub-käyttäjätunnusta ja [personal access tokenia](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) (`read:packages` -oikeus).
 
 **Huomioitavaa riippuvuuksista:**
 
-Käännösaikana tarvitaan pääsy OPH:n sisäiseen pakettien hallintaan, koska osa paketeista (esim. eperusteet-parent-pom) ei ole julkisissa Maven-repoissa. Konfiguroi Maven settings.xml tiedosto dev-settings.md ohjeiden mukaisesti.
-
 Ajoaikana palvelu riippuu seuraavista OPH-palveluista:
 - **CAS** - keskitetty autentikaatio
-- **eperusteet-service** - perusteiden sisältö
-- **eperusteet-amosaa-service** - AMOSAA-järjestämissuunnitelmien sisältö
-- **eperusteet-ylops-service** - paikallisten opetussuunnitelmien sisältö
+- **eperusteet-service** - perusteiden sisältö (`localhost:8080` local-profiilissa)
+- **eperusteet-ylops-service** - paikallisten opetussuunnitelmien sisältö (`localhost:8081`)
+- **eperusteet-amosaa-service** - AMOSAA-järjestämissuunnitelmien sisältö (`localhost:8082`)
 - **Koodistopalvelu** - koodistojen hallinta
 
 ### 3.2. Testien ajaminen
@@ -68,16 +73,18 @@ mvn test
 Palvelun saa käyntiin seuraavilla komennoilla:
 
 ```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=default,dev
+mvn spring-boot:run -Dspring-boot.run.profiles=default,local
 ```
 
 Tai käytä mukana tulevaa start-skriptiä:
 
 ```bash
-./start.sh dev
+./start.sh
 ```
 
-Palvelu käynnistyy oletuksena porttiin 8080. API on käytettävissä osoitteessa `http://localhost:8080/eperusteet-pdf-service/api`
+Oletusprofiili on `local`. Voit antaa profiilit myös argumenttina, esim. `./start.sh local`.
+
+Palvelu käynnistyy oletuksena porttiin 8083. API on käytettävissä osoitteessa `http://localhost:8083/eperusteet-pdf-service/api`
 
 **Huom:** Lokaalissa kehityksessä palvelu tarvitsee toimiakseen pääsyn muihin ePerusteet-palveluihin tai niiden mock-toteutuksiin.
 
@@ -87,8 +94,7 @@ IDEAssa saattaa olla helpompi avata projekti suoraan juuresta.
 
 Suositeltavat asetukset:
 - Aseta Maven automaattinen import päälle
-- Käytä projektiin asetettua Java-versiota
-- Aseta koodiformatointi käyttämään projektin määrittelemiä sääntöjä
+- Käytä projektiin asetettua Java-versiota (21)
 
 ### 3.5. Versiohallinta
 
@@ -97,17 +103,17 @@ Git käytäntönä projektissa on suosittu kehityshaaran squashausta päähaaraa
 ### 3.6. Yleisiä ongelmatilanteita
 
 **Maven build epäonnistuu:**
-- Varmista että Maven settings.xml on konfiguroitu oikein (dev-settings.md)
-- Tarkista internet-yhteys OPH:n repoihin
+- Varmista että `~/.m2/settings.xml` sisältää GitHub Packages -tunnukset (server-id `github`)
+- Tarkista internet-yhteys ja että personal access tokenilla on `read:packages` -oikeus
 - Tyhjennä Maven cache: `mvn dependency:purge-local-repository`
 
 **Palvelu ei käynnisty:**
-- Tarkista että portti 8080 on vapaana
+- Tarkista että portti 8083 on vapaana
 - Tarkista että määritetyt ePerusteet-palvelut ovat saavutettavissa
-- Tarkista lokitiedostosta virheilmoitukset
+- Tarkista konsoliloki
 
 **PDF-generointi epäonnistuu:**
-- Varmista että FOP-konfiguraatio löytyy määritetystä poluista
+- Varmista että FOP-konfiguraatio löytyy määritetystä polusta (`classpath:docgen/fop-dev.xconf` local-profiilissa)
 - Tarkista että tarvittavat fontit ovat saatavilla
 - Tarkista että XSL-tiedostot ovat oikeassa muodossa
 
@@ -127,7 +133,7 @@ Lokit löytyvät AWS:n CloudWatch-palvelusta.
 
 ### 4.4. Continuous Integration
 
-Buildipalveluna käytetään GitHub Actionsia. 
+Buildipalveluna käytetään GitHub Actionsia.
 
 Pushaaminen remoteen käynnistää:
 1. Testien ajamisen
@@ -155,13 +161,12 @@ Pushaaminen remoteen käynnistää:
 
 ### 6.1. Dokumentaatio
 
-- [Palvelukortti](https://wiki.eduuni.fi/display/ophpolku/ePerusteet+palvelukokonaisuus) - Yleiskatsaus palveluun
+- [Palvelukortti](https://wiki.eduuni.fi/spaces/ophPPK/pages/450081297/ePerusteet) - Yleiskatsaus palveluun
 
 ### 6.2. Lisenssi
 
-Katso LICENSE.txt
+EUPL 1.1
 
 ### 6.3. Yhteystiedot
 
 Opetushallitus / ePerusteet-tiimi
-
