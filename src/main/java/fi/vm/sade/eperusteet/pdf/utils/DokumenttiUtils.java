@@ -49,14 +49,14 @@ public class DokumenttiUtils {
         if (getKielistettyTeksti(lokalisoituTekstiDto, docBase.getKieli()) != null) {
             String teksti = getKielistettyTeksti(lokalisoituTekstiDto, docBase.getKieli());
             teksti = "<" + tagi + ">" + cleanHtml(teksti) + "</" + tagi + ">";
-
-            Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(teksti));
-            Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
-
+            Node imported = importHtmlFragment(docBase.getDocument(), teksti);
+            if (imported == null) {
+                return;
+            }
             if (el != null) {
-                el.appendChild(docBase.getDocument().importNode(node, true));
+                el.appendChild(imported);
             } else {
-                docBase.getBodyElement().appendChild(docBase.getDocument().importNode(node, true));
+                docBase.getBodyElement().appendChild(imported);
             }
         }
     }
@@ -81,12 +81,88 @@ public class DokumenttiUtils {
         if (teksti != null) {
             teksti = cleanHtml(teksti);
             teksti = "<" + tagi + ">" + teksti + "</" + tagi + ">";
-
-            Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(teksti));
-            Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
-
-            element.appendChild(doc.importNode(node, true));
+            Node imported = importHtmlFragment(doc, teksti);
+            if (imported != null) {
+                element.appendChild(imported);
+            }
         }
+    }
+
+    public static Node importHtmlFragment(Document target, String html) {
+        Node source = firstBodyChild(w3cFromJsoup(Jsoup.parseBodyFragment(html)));
+        return source == null ? null : copyWithoutNamespace(target, source);
+    }
+
+    private static Document w3cFromJsoup(org.jsoup.nodes.Document jsoupDocument) {
+        // XSLT templates match un-namespaced elements (match="div"). Jsoup W3CDom
+        // defaults to the XHTML namespace, which FOP then drops from the page flow.
+        return new W3CDom().namespaceAware(false).fromJsoup(jsoupDocument);
+    }
+
+    private static Node copyWithoutNamespace(Document target, Node source) {
+        short type = source.getNodeType();
+        if (type == Node.TEXT_NODE || type == Node.CDATA_SECTION_NODE) {
+            return target.createTextNode(source.getTextContent());
+        }
+        if (type != Node.ELEMENT_NODE) {
+            return null;
+        }
+        String name = source.getLocalName();
+        if (name == null || name.isEmpty()) {
+            name = source.getNodeName();
+        }
+        Element copy = target.createElement(name);
+        if (source.getAttributes() != null) {
+            for (int i = 0; i < source.getAttributes().getLength(); i++) {
+                Node attr = source.getAttributes().item(i);
+                String attrName = attr.getNodeName();
+                if (attrName != null && !attrName.startsWith("xmlns")) {
+                    copy.setAttribute(attrName, attr.getNodeValue());
+                }
+            }
+        }
+        Node child = source.getFirstChild();
+        while (child != null) {
+            Node copied = copyWithoutNamespace(target, child);
+            if (copied != null) {
+                copy.appendChild(copied);
+            }
+            child = child.getNextSibling();
+        }
+        return copy;
+    }
+
+    private static Node firstBodyChild(Document w3cDoc) {
+        Element root = w3cDoc.getDocumentElement();
+        if (root == null) {
+            return null;
+        }
+        Element body = directChildElement(root, "body");
+        Node parent = body != null ? body : root;
+        Node child = parent.getFirstChild();
+        while (child != null && isWhitespaceText(child)) {
+            child = child.getNextSibling();
+        }
+        return child;
+    }
+
+    private static Element directChildElement(Element parent, String name) {
+        Node child = parent.getFirstChild();
+        while (child != null) {
+            if (child.getNodeType() == Node.ELEMENT_NODE) {
+                String childName = child.getLocalName() != null ? child.getLocalName() : child.getNodeName();
+                if (name.equals(childName)) {
+                    return (Element) child;
+                }
+            }
+            child = child.getNextSibling();
+        }
+        return null;
+    }
+
+    private static boolean isWhitespaceText(Node node) {
+        return node.getNodeType() == Node.TEXT_NODE
+                && (node.getTextContent() == null || node.getTextContent().trim().isEmpty());
     }
 
     public static String tagTeksti(String teksti, String tagi) {
@@ -186,9 +262,10 @@ public class DokumenttiUtils {
                 .filter(str -> !StringUtils.isEmpty(str))
                 .forEach(str -> {
                     Element li = docBase.getDocument().createElement("li");
-                    Document doc = new W3CDom().fromJsoup(Jsoup.parse(str));
-                    Node node = doc.getDocumentElement().getChildNodes().item(1).getFirstChild();
-                    li.appendChild(docBase.getDocument().importNode(node, true));
+                    Node imported = importHtmlFragment(docBase.getDocument(), str);
+                    if (imported != null) {
+                        li.appendChild(imported);
+                    }
                     ul.appendChild(li);
                 });
         docBase.getBodyElement().appendChild(ul);
@@ -232,10 +309,10 @@ public class DokumenttiUtils {
     public static Element newItalicElement(DokumenttiBase docBase, String teksti) {
         Element emphasis = docBase.getDocument().createElement("em");
 
-        Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(cleanHtml(teksti)));
-        Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
-
-        emphasis.appendChild(docBase.getDocument().importNode(node, true));
+        Node imported = importHtmlFragment(docBase.getDocument(), cleanHtml(teksti));
+        if (imported != null) {
+            emphasis.appendChild(imported);
+        }
         return emphasis;
     }
 
@@ -364,9 +441,10 @@ public class DokumenttiUtils {
                 .filter(str -> !StringUtils.isEmpty(str))
                 .forEach(str -> {
                     Element li = docBase.getDocument().createElement("li");
-                    Document doc = new W3CDom().fromJsoup(Jsoup.parse(str));
-                    Node node = doc.getDocumentElement().getChildNodes().item(1).getFirstChild();
-                    li.appendChild(docBase.getDocument().importNode(node, true));
+                    Node imported = importHtmlFragment(docBase.getDocument(), str);
+                    if (imported != null) {
+                        li.appendChild(imported);
+                    }
                     ul.appendChild(li);
                 });
         return ul;

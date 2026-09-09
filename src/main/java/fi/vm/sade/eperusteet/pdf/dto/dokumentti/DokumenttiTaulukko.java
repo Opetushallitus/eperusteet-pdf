@@ -1,8 +1,7 @@
 package fi.vm.sade.eperusteet.pdf.dto.dokumentti;
 
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiRiviTyyppi;
-import org.jsoup.Jsoup;
-import org.jsoup.helper.W3CDom;
+import fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -39,17 +38,19 @@ public class DokumenttiTaulukko {
 
     public void addToDokumentti(DokumenttiBase docBase) {
         if (rivit.size() > 0) {
-            Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(this.toString()));
-            Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
-            docBase.getBodyElement().appendChild(docBase.getDocument().importNode(node, true));
+            Node node = DokumenttiUtils.importHtmlFragment(docBase.getDocument(), this.toString());
+            if (node != null) {
+                docBase.getBodyElement().appendChild(node);
+            }
         }
     }
 
     public void addToDokumentti(DokumenttiAmosaa docBase) {
         if (rivit.size() > 0) {
-            Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(this.toString()));
-            Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
-            docBase.getBodyElement().appendChild(docBase.getDocument().importNode(node, true));
+            Node node = DokumenttiUtils.importHtmlFragment(docBase.getDocument(), this.toString());
+            if (node != null) {
+                docBase.getBodyElement().appendChild(node);
+            }
         }
     }
 
