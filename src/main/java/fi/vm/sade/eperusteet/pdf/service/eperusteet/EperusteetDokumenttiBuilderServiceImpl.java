@@ -433,6 +433,13 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         addTekstiOsa(docBase, vaihe.getSiirtymaSeuraavaan());
         addTekstiOsa(docBase, vaihe.getPaikallisestiPaatettavatAsiat());
 
+        if (!CollectionUtils.isEmpty(vaihe.getVapaatTekstit())) {
+            vaihe.getVapaatTekstit().forEach(vapaaTeksti -> {
+                addTeksti(docBase, getTextString(docBase, vapaaTeksti.getNimi()), "h6");
+                addTeksti(docBase, getTextString(docBase, vapaaTeksti.getTeksti()), "div");
+            });
+        }
+
         if (vaihe.getOppiaineet().size() > 0) {
             vaihe.getOppiaineet().forEach(aipeOppiaine -> addOppiaine(docBase, vaihe, aipeOppiaine));
         }
