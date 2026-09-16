@@ -15,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TaiteenalaOsaViiteDto {
+public class TaiteenalaTekstiOsaViiteDto {
     private Long id;
     private Integer jarjestys;
 
@@ -28,7 +28,7 @@ public class TaiteenalaOsaViiteDto {
     private Date muokattu;
     private LokalisoituTekstiDto nimi;
 
-    public TaiteenalaOsaViiteDto(Integer jarjestys, LokalisoituTekstiDto nimi) {
+    public TaiteenalaTekstiOsaViiteDto(Integer jarjestys, LokalisoituTekstiDto nimi) {
         this.jarjestys = jarjestys;
         this.nimi = nimi;
     }
