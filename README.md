@@ -73,7 +73,7 @@ mvn test
 Palvelun saa käyntiin seuraavilla komennoilla:
 
 ```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=default,local
+mvn spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
 Tai käytä mukana tulevaa start-skriptiä:
