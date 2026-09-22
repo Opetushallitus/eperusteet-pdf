@@ -75,6 +75,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineenVuosiluokkaKokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.PerusopetuksenPerusteenSisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TaiteenalaDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TaiteenosaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TekstiOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.VuosiluokkaKokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
@@ -1346,19 +1347,20 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                                TaiteenalaDto taiteenala) {
         // Nimi
         LokalisoituTekstiDto nimi = taiteenala.getNimi();
-        addHeader(docBase, getTextString(docBase, nimi));
-
-        // Kuvaus
-        String kuvaus = getTextString(docBase, taiteenala.getTeksti());
-        if (!ObjectUtils.isEmpty(kuvaus)) {
-            addTeksti(docBase, kuvaus, "div");
-        }
+        addHeader(docBase, getTextString(docBase, nimi)
+                + getLaajuusSuffiksi(taiteenala.getLaajuus(), LaajuusYksikko.OPINTOPISTE, docBase.getKieli()));
 
         // Koodi
         KoodiDto koodi = taiteenala.getKoodi();
         if (koodi != null) {
             addTeksti(docBase, messages.translate("docgen.taiteenala.koodi", docBase.getKieli()), "h5");
             addTeksti(docBase, koodi.getArvo(), "div");
+        }
+
+        // Kuvaus
+        String kuvaus = getTextString(docBase, taiteenala.getTeksti());
+        if (!ObjectUtils.isEmpty(kuvaus)) {
+            addTeksti(docBase, kuvaus, "div");
         }
 
         // Aikuisten opetus
@@ -1383,6 +1385,39 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             addTeksti(docBase, getTextString(docBase, vapaaTeksti.getNimi()), "h5");
             addTeksti(docBase, getTextString(docBase, vapaaTeksti.getTeksti()), "div");
         });
+
+        if (!CollectionUtils.isEmpty(taiteenala.getTaiteenOsat())) {
+            docBase.getGenerator().increaseDepth();
+            taiteenala.getTaiteenOsat().forEach(taiteenosa -> addTaiteenosa(docBase, taiteenosa));
+            docBase.getGenerator().decreaseDepth();
+        }
+
+        docBase.getGenerator().increaseNumber();
+    }
+
+    private void addTaiteenosa(DokumenttiPeruste docBase, TaiteenosaDto taiteenosa) {
+        String nimi = getTextString(docBase, taiteenosa.getNimi());
+        if (ObjectUtils.isEmpty(nimi)
+                && (taiteenosa.getKuvaus() == null || ObjectUtils.isEmpty(getTextString(docBase, taiteenosa.getKuvaus())))
+                && CollectionUtils.isEmpty(taiteenosa.getTavoitteet())) {
+            return;
+        }
+
+        addHeader(docBase, nimi + getLaajuusSuffiksi(taiteenosa.getLaajuus(), LaajuusYksikko.OPINTOPISTE, docBase.getKieli()));
+
+        if (taiteenosa.getKuvaus() != null) {
+            String kuvaus = getTextString(docBase, taiteenosa.getKuvaus());
+            if (!ObjectUtils.isEmpty(kuvaus)) {
+                addTeksti(docBase, kuvaus, "div");
+            }
+        }
+
+        if (!CollectionUtils.isEmpty(taiteenosa.getTavoitteet())) {
+            addTeksti(docBase, messages.translate("tavoitteet", docBase.getKieli()), "h6");
+            Element div = docBase.getDocument().createElement("div");
+            div.appendChild(getList(docBase, taiteenosa.getTavoitteet()));
+            docBase.getBodyElement().appendChild(div);
+        }
 
         docBase.getGenerator().increaseNumber();
     }
@@ -2738,6 +2773,9 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
                     break;
                 case OSAAMISPISTE:
                     yksikkoAvain = "docgen.laajuus.osp";
+                    break;
+                case OPINTOPISTE:
+                    yksikkoAvain = "docgen.laajuus.op";
                     break;
                 default:
                     throw new NotImplementedException("Tuntematon laajuusyksikko: " + yksikko);
