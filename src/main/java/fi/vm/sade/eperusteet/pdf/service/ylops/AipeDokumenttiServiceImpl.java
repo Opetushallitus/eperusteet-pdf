@@ -139,11 +139,15 @@ public class AipeDokumenttiServiceImpl implements AipeDokumenttiService {
             addTeksti(docBase, messages.translate("docgen.liitetyt_tavoitteet", docBase.getKieli()) + ":", "p");
             Element ul = docBase.getDocument().createElement("ul");
             docBase.getBodyElement().appendChild(ul);
-            perusteSisalto.getTavoitteet().forEach(tavoite -> {
-                Element li = docBase.getDocument().createElement("li");
-                ul.appendChild(li);
-                li.setTextContent(getTextString(docBase, tavoite.getTavoite()));
-            });
+            perusteSisalto.getTavoitteet().stream()
+                    .filter(Objects::nonNull)
+                    .map(tavoite -> getTextString(docBase, tavoite.getTavoite()))
+                    .sorted(Comparator.comparingInt(tavoite -> Integer.parseInt(tavoite.replaceFirst("(?s)^\\D(\\d{1,2}).*", "$1"))))
+                    .forEach(tavoiteTeksti -> {
+                        Element li = docBase.getDocument().createElement("li");
+                        ul.appendChild(li);
+                        li.setTextContent(tavoiteTeksti);
+                    });
         }
     }
 
