@@ -71,7 +71,7 @@ public class PerusteUtils {
                     return KoulutustyyppiToteutus.VAPAASIVISTYSTYO;
                 } else if (kt == KoulutusTyyppi.TUTKINTOONVALMENTAVA) {
                     return KoulutustyyppiToteutus.TUTKINTOONVALMENTAVA;
-                } else if (kt == KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS) {
+                } else if (kt.isOneOf(KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS, KoulutusTyyppi.LUKUTAITOKOULUTUS)) {
                     return KoulutustyyppiToteutus.KOTOUTUMISKOULUTUS;
                 } else if (kt == KoulutusTyyppi.AIKUISTENPERUSOPETUS) {
                     return KoulutustyyppiToteutus.AIPE;

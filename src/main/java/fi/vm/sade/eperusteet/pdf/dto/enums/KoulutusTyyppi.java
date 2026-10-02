@@ -23,6 +23,7 @@ public enum KoulutusTyyppi {
     TPO("koulutustyyppi_999907"),
     VAPAASIVISTYSTYO("koulutustyyppi_10"),
     MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS("koulutustyyppi_30"),
+    LUKUTAITOKOULUTUS("koulutustyyppi_31"),
     VAPAASIVISTYSTYOLUKUTAITO("koulutustyyppi_35"),
     TUTKINTOONVALMENTAVA("koulutustyyppi_40"),
     KIELIKAANTAJATUTKINTO("koulutustyyppi_500"),
