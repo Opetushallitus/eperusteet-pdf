@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -24,6 +26,7 @@ public class OppiaineenVuosiluokkakokonaisuusDto implements ReferenceableDto {
     private TekstiosaDto sisaltoalueinfo;
     private Integer jnro;
     private Boolean piilotettu;
+    private List<VapaatekstiPaikallinentarkennusDto> vapaatTekstit = new ArrayList<>();
 
     private Set<OppiaineenVuosiluokkaDto> vuosiluokat;
 }

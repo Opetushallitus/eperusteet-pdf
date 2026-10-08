@@ -378,6 +378,15 @@ public class PerusopetusServiceImpl implements PerusopetusService {
                 perusteOaVlkDto.getVapaatTekstit().forEach(vt -> {
                     addTeksti(docBase, getTextString(docBase, vt.getNimi()), "h6");
                     addTeksti(docBase, getTextString(docBase, vt.getTeksti()), "div");
+
+                    if (!CollectionUtils.isEmpty(oaVlkDto.getVapaatTekstit())) {
+                        oaVlkDto.getVapaatTekstit().forEach(paikallinen -> {
+                            if (vt.getId().equals(paikallinen.getPerusteenVapaaTekstiId())) {
+                                addTeksti(docBase, messages.translate("paikallinen-tarkennus", docBase.getKieli()), "h6");
+                                addTeksti(docBase, getTextString(docBase, paikallinen.getPaikallinenTarkennus()), "div");
+                            }
+                        });
+                    }
                 });
             }
 
