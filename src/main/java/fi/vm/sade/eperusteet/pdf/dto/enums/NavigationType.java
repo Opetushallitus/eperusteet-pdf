@@ -57,7 +57,8 @@ public enum NavigationType {
     kaantajakielitaito,
     kaantajataitotasokuvaus,
     kaantajaaihealue,
-    kaantajatodistusmalli;
+    kaantajatodistusmalli,
+    lukutaitokoulutus_tavoitteetjasisaltoalueet;
 
     public static NavigationType of(String type) {
         for (NavigationType t : values()) {
