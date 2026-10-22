@@ -46,6 +46,7 @@ public abstract class PerusteenOsaDto {
             @JsonSubTypes.Type(value = KotoKielitaitotasoDto.class),
             @JsonSubTypes.Type(value = KotoLaajaAlainenOsaaminenDto.class),
             @JsonSubTypes.Type(value = KotoOpintoDto.class),
+            @JsonSubTypes.Type(value = TavoitesisaltoalueDto.class),
     })
     @Data
     @EqualsAndHashCode(callSuper = true)
