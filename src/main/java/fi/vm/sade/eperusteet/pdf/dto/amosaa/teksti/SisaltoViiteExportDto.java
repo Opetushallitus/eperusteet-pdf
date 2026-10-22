@@ -40,6 +40,7 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
     private KotoKielitaitotasoExportDto kotoKielitaitotaso;
     private KotoOpintoExportDto kotoOpinto;
     private KotoLaajaAlainenOsaaminenExportDto kotoLaajaAlainenOsaaminen;
+    private TavoitesisaltoalueExportDto tavoitesisaltoalue;
     private OsaamismerkkiKappaleDto osaamismerkkiKappale;
     private Long perusteenOsaId;
     private List<OmaOsaAlueExportDto> osaAlueet = new ArrayList<>();
@@ -77,6 +78,9 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
         }
         if (kotoLaajaAlainenOsaaminen != null && perusteenOsaDto instanceof fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoLaajaAlainenOsaaminenDto) {
             kotoLaajaAlainenOsaaminen.setPerusteenOsa((fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.KotoLaajaAlainenOsaaminenDto) perusteenOsaDto);
+        }
+        if (tavoitesisaltoalue != null && perusteenOsaDto instanceof fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.TavoitesisaltoalueDto) {
+            tavoitesisaltoalue.setPerusteenOsa((fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.TavoitesisaltoalueDto) perusteenOsaDto);
         }
 
         if (perusteenOsaDto instanceof fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.TekstiKappaleDto) {

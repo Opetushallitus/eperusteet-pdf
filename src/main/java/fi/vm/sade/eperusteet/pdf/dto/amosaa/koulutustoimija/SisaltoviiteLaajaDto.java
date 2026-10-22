@@ -10,6 +10,7 @@ import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.OpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.TuvaLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.SuorituspolkuDto;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TavoitesisaltoalueDto;
 import fi.vm.sade.eperusteet.pdf.dto.amosaa.teksti.TutkinnonosaDto;
 import fi.vm.sade.eperusteet.pdf.dto.enums.SisaltoTyyppi;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,7 @@ public class SisaltoviiteLaajaDto {
     private KotoKielitaitotasoDto kotoKielitaitotaso;
     private KotoOpintoDto kotoOpinto;
     private KotoLaajaAlainenOsaaminenDto kotoLaajaAlainenOsaaminen;
+    private TavoitesisaltoalueDto tavoitesisaltoalue;
     private Long perusteenOsaId;
 
     public OpetussuunnitelmaDto getOpetussuunnitelma() {
