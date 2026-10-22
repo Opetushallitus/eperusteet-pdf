@@ -13,7 +13,6 @@ import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteTila;
 import fi.vm.sade.eperusteet.pdf.dto.enums.PerusteenOsaTunniste;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.digi.OsaamiskokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.digi.OsaamiskokonaisuusPaaAlueDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lukutaitokoulutus.LukutaitokoulutusTavoitteetJaSisaltoalueetDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tuva.TuvaLaajaAlainenOsaaminenDto;
@@ -80,8 +79,7 @@ public abstract class PerusteenOsaDto implements ReferenceableDto {
             @JsonSubTypes.Type(value = KaantajaKielitaitoDto.class),
             @JsonSubTypes.Type(value = KaantajaTaitotasokuvausDto.class),
             @JsonSubTypes.Type(value = KaantajaAihealueDto.class),
-            @JsonSubTypes.Type(value = KaantajaTodistusmalliDto.class),
-            @JsonSubTypes.Type(value = LukutaitokoulutusTavoitteetJaSisaltoalueetDto.class)
+            @JsonSubTypes.Type(value = KaantajaTodistusmalliDto.class)
     })
     public static abstract class Laaja extends PerusteenOsaDto implements Navigable {
         public abstract String getOsanTyyppi();

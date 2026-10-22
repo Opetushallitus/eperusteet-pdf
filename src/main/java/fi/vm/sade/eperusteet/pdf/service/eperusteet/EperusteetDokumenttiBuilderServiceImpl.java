@@ -24,7 +24,6 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArvioinninKohdeDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArvioinninKohdealueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.arviointi.ArviointiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.kios.*;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lukutaitokoulutus.LukutaitokoulutusTavoitteetJaSisaltoalueetDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.Lops2019OppiaineKaikkiDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.Lops2019SisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lops2019.oppiaineet.Lops2019ArviointiDto;
@@ -1209,9 +1208,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             } else if (po instanceof TavoitesisaltoalueDto) {
                 TavoitesisaltoalueDto tavoitesisaltoalue = (TavoitesisaltoalueDto) po;
                 addTavoitesisaltoalue(docBase, tavoitesisaltoalue, po, lapsi);
-            } else if (po instanceof LukutaitokoulutusTavoitteetJaSisaltoalueetDto) {
-                LukutaitokoulutusTavoitteetJaSisaltoalueetDto tavoitteetJaSisaltoalueet = (LukutaitokoulutusTavoitteetJaSisaltoalueetDto) po;
-                addLukutaitokoulutusTavoitteetJaSisaltoalueet(docBase, tavoitteetJaSisaltoalueet, lapsi);
             } else if (po instanceof KoulutuksenOsaDto) {
                 KoulutuksenOsaDto koulutuksenOsa = (KoulutuksenOsaDto) po;
                 addKoulutuksenOsa(docBase, koulutuksenOsa, po, lapsi);
@@ -1497,42 +1493,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         });
 
         tavoitesisaltoalueTaulukko.addToDokumentti(docBase);
-
-        docBase.getGenerator().increaseDepth();
-        addPerusteenOsat(docBase, lapsi);
-        docBase.getGenerator().decreaseDepth();
-        docBase.getGenerator().increaseNumber();
-    }
-
-    private void addLukutaitokoulutusTavoitteetJaSisaltoalueet(DokumenttiPeruste docBase,
-                                                               LukutaitokoulutusTavoitteetJaSisaltoalueetDto tavoitteetJaSisaltoalueet,
-                                                               PerusteenOsaViiteDto.Laaja lapsi) {
-        String nimi = getTextString(docBase, tavoitteetJaSisaltoalueet.getNimi());
-        if (ObjectUtils.isEmpty(nimi)) {
-            nimi = messages.translate("docgen.nimeton-tavoitteet-ja-sisaltoalueet", docBase.getKieli());
-        }
-        addHeader(docBase, nimi);
-
-        if (!CollectionUtils.isEmpty(tavoitteetJaSisaltoalueet.getTavoitealueet())) {
-            tavoitteetJaSisaltoalueet.getTavoitealueet().forEach(tavoitealue -> {
-                String tavoitealueNimi = getTextString(docBase, tavoitealue.getNimi());
-                if (!ObjectUtils.isEmpty(tavoitealueNimi)) {
-                    addTeksti(docBase, tavoitealueNimi, "h5");
-                }
-
-                if (!CollectionUtils.isEmpty(tavoitealue.getTavoitteet())) {
-                    addTeksti(docBase, messages.translate("docgen.opiskelija-osaa", docBase.getKieli()), "h6");
-
-                    Element tavoitteetEl = docBase.getDocument().createElement("ul");
-                    tavoitealue.getTavoitteet().forEach(tavoite -> {
-                        Element tavoiteEl = docBase.getDocument().createElement("li");
-                        tavoiteEl.setTextContent(getTextString(docBase, tavoite));
-                        tavoitteetEl.appendChild(tavoiteEl);
-                    });
-                    docBase.getBodyElement().appendChild(tavoitteetEl);
-                }
-            });
-        }
 
         docBase.getGenerator().increaseDepth();
         addPerusteenOsat(docBase, lapsi);

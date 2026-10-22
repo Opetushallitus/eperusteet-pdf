@@ -66,7 +66,6 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoKielitaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoLaajaAlaisenOsaamisenAlueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoOpintoDto;
-import fi.vm.sade.eperusteet.pdf.dto.eperusteet.lukutaitokoulutus.LukutaitokoulutusTavoitteetJaSisaltoalueetDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
 import fi.vm.sade.eperusteet.pdf.service.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.pdf.service.external.AmosaaService;
@@ -436,9 +435,6 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                     break;
                 case KOTO_OPINTO:
                     addKotoOpinto(docBase, sisaltoViiteDto);
-                    break;
-                case LUKUTAITOKOULUTUS_TAVOITTEETJASISALTOALUEET:
-                    addLukutaitokoulutusTavoitteetJaSisaltoalueet(docBase, sisaltoViiteDto);
                     break;
                 case OSAAMISMERKKI:
                     addOsaamismerkkiKappale(docBase, sisaltoViiteDto.getOsaamismerkkiKappale());
@@ -1504,44 +1500,6 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             addKotoTaitotasot(docBase, taitotasoMap, perusteenOsaDto.getTaitotasot(), "docgen.tavoitteet-ja-sisallot.title");
 
             addKotoTaitotasoLaajaAlaisetOsaamiset(docBase, sisaltoViiteExportDto.getKotoOpinto().getLaajaAlaisetOsaamiset());
-        }
-    }
-
-    private void addLukutaitokoulutusTavoitteetJaSisaltoalueet(DokumenttiBase docBase, SisaltoViiteExportDto sisaltoViiteExportDto) {
-        Optional<PerusteenOsaViiteDto.Laaja> perusteenOsaViite = docBase.getPerusteenOsa(sisaltoViiteExportDto.getPerusteenOsaId());
-
-        if (perusteenOsaViite.isPresent()) {
-            LukutaitokoulutusTavoitteetJaSisaltoalueetDto perusteenOsaDto =
-                    (LukutaitokoulutusTavoitteetJaSisaltoalueetDto) perusteenOsaViite.get().getPerusteenOsa();
-
-            if (!CollectionUtils.isEmpty(perusteenOsaDto.getTavoitealueet())) {
-                perusteenOsaDto.getTavoitealueet().forEach(tavoitealue -> {
-                    String tavoitealueNimi = getTextString(docBase, tavoitealue.getNimi());
-                    if (!ObjectUtils.isEmpty(tavoitealueNimi)) {
-                        addTeksti(docBase, tavoitealueNimi, "h5");
-                    }
-
-                    if (!CollectionUtils.isEmpty(tavoitealue.getTavoitteet())) {
-                        addTeksti(docBase, messages.translate("docgen.opiskelija-osaa", docBase.getKieli()), "h6");
-
-                        Element tavoitteetEl = docBase.getDocument().createElement("ul");
-                        tavoitealue.getTavoitteet().forEach(tavoite -> {
-                            Element tavoiteEl = docBase.getDocument().createElement("li");
-                            tavoiteEl.setTextContent(getTextString(docBase, tavoite));
-                            tavoitteetEl.appendChild(tavoiteEl);
-                        });
-                        docBase.getBodyElement().appendChild(tavoitteetEl);
-                    }
-                });
-            }
-        }
-
-        if (sisaltoViiteExportDto.getLukutaitoTavoitealue() != null) {
-            String paikallinenTarkennus = getTextString(docBase, sisaltoViiteExportDto.getLukutaitoTavoitealue().getPaikallinenTarkennus());
-            if (!ObjectUtils.isEmpty(paikallinenTarkennus)) {
-                addTeksti(docBase, messages.translate("docgen.paikallinen-tarkennus", docBase.getKieli()), "h6");
-                addTeksti(docBase, paikallinenTarkennus, "div");
-            }
         }
     }
 
