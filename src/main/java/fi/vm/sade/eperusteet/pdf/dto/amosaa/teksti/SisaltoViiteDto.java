@@ -43,7 +43,6 @@ public class SisaltoViiteDto {
     private KotoKielitaitotasoDto kotoKielitaitotaso;
     private KotoOpintoDto kotoOpinto;
     private KotoLaajaAlainenOsaaminenDto kotoLaajaAlainenOsaaminen;
-    private LukutaitoTavoitealueDto lukutaitoTavoitealue;
     private Long perusteenOsaId;
     private String kommentti;
     private boolean naytaPerusteenTeksti;
