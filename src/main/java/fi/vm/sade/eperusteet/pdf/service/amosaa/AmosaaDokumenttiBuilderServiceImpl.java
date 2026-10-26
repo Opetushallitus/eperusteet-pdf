@@ -1519,7 +1519,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
         if (sisaltoViiteExportDto.getTavoitesisaltoalue() != null
                 && sisaltoViiteExportDto.getTavoitesisaltoalue().getPaikallinenTarkennus() != null) {
-            addTeksti(docBase, messages.translate("docgen.paikallinen-tarkennus", docBase.getKieli()), "h6");
+            addTeksti(docBase, messages.translate("paikallinen-tarkennus", docBase.getKieli()), "h6");
             addTeksti(docBase, getTextString(docBase, sisaltoViiteExportDto.getTavoitesisaltoalue().getPaikallinenTarkennus()), "div");
         }
     }
