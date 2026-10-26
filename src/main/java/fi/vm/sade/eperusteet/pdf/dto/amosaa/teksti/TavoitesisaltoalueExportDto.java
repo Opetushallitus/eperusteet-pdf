@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.TavoitesisaltoalueDto;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class TavoitesisaltoalueExportDto extends TavoitesisaltoalueDto {
-    private fi.vm.sade.eperusteet.pdf.dto.amosaa.peruste.TavoitesisaltoalueDto perusteenOsa;
+    private TavoitesisaltoalueDto perusteenOsa;
 }
