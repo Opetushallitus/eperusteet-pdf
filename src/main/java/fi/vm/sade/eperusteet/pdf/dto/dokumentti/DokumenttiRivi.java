@@ -25,8 +25,6 @@ public class DokumenttiRivi {
 
     public String getBackgroundColor() {
         switch (tyyppi) {
-            case HEADER:
-                return DokumenttiRiviBgColor.HEADER;
             case SUBHEADER:
                 return DokumenttiRiviBgColor.SUBHEADER;
         }
