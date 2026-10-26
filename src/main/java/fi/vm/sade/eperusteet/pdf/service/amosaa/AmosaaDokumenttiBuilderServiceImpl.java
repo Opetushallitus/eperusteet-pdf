@@ -38,10 +38,12 @@ import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiAmosaa;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiRivi;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTaulukko;
+import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiRiviTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.OmaOsaAlueTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.OpintokokonaisuusTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.SisaltoTyyppi;
+import fi.vm.sade.eperusteet.pdf.dto.enums.TavoiteAlueTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.TutkinnonOsaTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.GeneerinenArviointiasteikkoKaikkiDto;
@@ -63,6 +65,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.TutkinnonOsaKaikkiD
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.ValmaTelmaSisaltoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteSuppeaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoKielitaitotasoDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.TavoitesisaltoalueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoLaajaAlaisenOsaamisenAlueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoOpintoDto;
@@ -118,6 +121,7 @@ import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addTeksti;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.selectLaajuusYksikkoMessage;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.sisaltaaDokumentinKielenSisallon;
+import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.tagTeksti;
 
 @Slf4j
 @Service
@@ -429,6 +433,9 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                     break;
                 case KOTO_LAAJAALAINENOSAAMINEN:
                     addKotoLaajaAlainenOsaaminen(docBase, sisaltoViiteDto);
+                    break;
+                case TAVOITESISALTOALUE:
+                    addTavoitesisaltoalue(docBase, sisaltoViiteDto);
                     break;
                 case KOTO_KIELITAITOTASO:
                     addKotoKielitaitotaso(docBase, sisaltoViiteDto);
@@ -1458,6 +1465,63 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             });
         }
 
+    }
+
+    private void addTavoitesisaltoalue(DokumenttiBase docBase, SisaltoViiteExportDto sisaltoViiteExportDto) {
+        Optional<PerusteenOsaViiteDto.Laaja> perusteenOsaViite = docBase.getPerusteenOsa(sisaltoViiteExportDto.getPerusteenOsaId());
+
+        if (perusteenOsaViite.isPresent() && perusteenOsaViite.get().getPerusteenOsa() instanceof TavoitesisaltoalueDto perusteenOsaDto) {
+            String teksti = getTextString(docBase, perusteenOsaDto.getTeksti());
+            if (!ObjectUtils.isEmpty(teksti)) {
+                addTeksti(docBase, teksti, "div");
+            }
+
+            if (!CollectionUtils.isEmpty(perusteenOsaDto.getTavoitealueet())) {
+                addTeksti(docBase, messages.translate("docgen.tavoitteet-ja-keskeiset-sisallot.title", docBase.getKieli()), "h5");
+
+                DokumenttiTaulukko tavoitesisaltoalueTaulukko = new DokumenttiTaulukko();
+                tavoitesisaltoalueTaulukko.addOtsikkosarakkeet(
+                        messages.translate("docgen.tavoitteet.title", docBase.getKieli()),
+                        messages.translate("docgen.keskeiset-sisaltoalueet.title", docBase.getKieli()));
+
+                perusteenOsaDto.getTavoitealueet().forEach(tavoitealue -> {
+                    DokumenttiRivi rivi = new DokumenttiRivi();
+
+                    if (TavoiteAlueTyyppi.OTSIKKO.equals(tavoitealue.getTavoiteAlueTyyppi()) && tavoitealue.getOtsikko() != null) {
+                        rivi.addSarake(getTextString(docBase, tavoitealue.getOtsikko().getNimi()));
+                        rivi.setColspan(2);
+                        rivi.setTyyppi(DokumenttiRiviTyyppi.SUBHEADER);
+                    }
+
+                    if (TavoiteAlueTyyppi.TAVOITESISALTOALUE.equals(tavoitealue.getTavoiteAlueTyyppi())) {
+                        if (!CollectionUtils.isEmpty(tavoitealue.getTavoitteet())) {
+                            StringBuffer sarake = new StringBuffer();
+                            tavoitealue.getTavoitteet().forEach(tavoite -> {
+                                sarake.append(tagTeksti(getTextString(docBase, tavoite.getNimi()), "div"));
+                            });
+                            rivi.addSarake(sarake.toString());
+                        }
+
+                        if (!CollectionUtils.isEmpty(tavoitealue.getKeskeisetSisaltoalueet())) {
+                            StringBuffer sarake = new StringBuffer();
+                            tavoitealue.getKeskeisetSisaltoalueet().forEach(keskeinenSisaltoalue -> {
+                                sarake.append(tagTeksti(getTextString(docBase, keskeinenSisaltoalue), "div"));
+                            });
+                            rivi.addSarake(sarake.toString());
+                        }
+                    }
+                    tavoitesisaltoalueTaulukko.addRivi(rivi);
+                });
+
+                tavoitesisaltoalueTaulukko.addToDokumentti(docBase);
+            }
+        }
+
+        if (sisaltoViiteExportDto.getTavoitesisaltoalue() != null
+                && sisaltoViiteExportDto.getTavoitesisaltoalue().getPaikallinenTarkennus() != null) {
+            addTeksti(docBase, messages.translate("docgen.tavoitesisaltoalueen-paikallinen-tarkennus", docBase.getKieli()), "h6");
+            addTeksti(docBase, getTextString(docBase, sisaltoViiteExportDto.getTavoitesisaltoalue().getPaikallinenTarkennus()), "div");
+        }
     }
 
     private void addKotoLaajaAlainenOsaaminen(DokumenttiBase docBase, SisaltoViiteExportDto sisaltoViiteExportDto) {
