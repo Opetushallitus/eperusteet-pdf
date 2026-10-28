@@ -2043,12 +2043,13 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             LokalisoituTekstiDto ammattitaitovaatimukset) {
 
         String ammattitaitovaatimuksetText = getTextString(docBase, ammattitaitovaatimukset);
+        boolean ammattitaitovaatimuksia2019 = ammattitaitovaatimukset2019 != null && ammattitaitovaatimukset2019.hasSisalto();
 
-        if (!ObjectUtils.isEmpty(ammattitaitovaatimuksetText) || !CollectionUtils.isEmpty(ammattitaitovaatimuksetLista) || ammattitaitovaatimukset2019 != null) {
+        if (!ObjectUtils.isEmpty(ammattitaitovaatimuksetText) || !CollectionUtils.isEmpty(ammattitaitovaatimuksetLista) || ammattitaitovaatimuksia2019) {
             addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset.title", docBase.getKieli()), "h5");
         }
 
-        if (ammattitaitovaatimukset2019 != null) {
+        if (ammattitaitovaatimuksia2019) {
             addAmmattitaitovaatimukset2019(docBase, ammattitaitovaatimukset2019);
             return;
         }

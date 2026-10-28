@@ -1238,7 +1238,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                 }
 
                 // Ammattitaitovaatimukset
-                if (perusteenTutkinnonosa.getAmmattitaitovaatimukset2019() != null) {
+                if (perusteenTutkinnonosa.getAmmattitaitovaatimukset2019() != null && perusteenTutkinnonosa.getAmmattitaitovaatimukset2019().hasSisalto()) {
                     addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
                     addAmmattitaitovaatimukset2019(docBase, perusteenTutkinnonosa.getAmmattitaitovaatimukset2019());
                 } else if (perusteenTutkinnonosa.getAmmattitaitovaatimukset() != null) {

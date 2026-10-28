@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,4 +19,8 @@ public class Ammattitaitovaatimukset2019Dto {
     private LokalisoituTekstiDto kohde;
     private List<Ammattitaitovaatimus2019Dto> vaatimukset = new ArrayList<>();
     private List<AmmattitaitovaatimustenKohdealue2019Dto> kohdealueet = new ArrayList<>();
+
+    public boolean hasSisalto() {
+        return !CollectionUtils.isEmpty(kohdealueet) || !CollectionUtils.isEmpty(vaatimukset);
+    }
 }
