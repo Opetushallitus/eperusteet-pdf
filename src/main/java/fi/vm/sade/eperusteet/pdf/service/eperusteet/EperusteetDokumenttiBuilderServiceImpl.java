@@ -2608,11 +2608,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             addTeksti(docBase, getTextString(docBase, getOptionalValue(oppiaine.getSoveltavaKurssiKuvaus())), "div");
         }
 
-        if (oppiaine.getKielikasvatus().isPresent()) {
-            addTeksti(docBase, messages.translate("docgen.kielikasvatus.title", docBase.getKieli()), "h5");
-            addTeksti(docBase, getTextString(docBase, getOptionalValue(oppiaine.getKielikasvatus())), "div");
-        }
-
         // Tavoitteet
         if (!oppiaine.getTavoitteet().isEmpty()) {
             addTeksti(docBase, messages.translate("docgen.tavoitteet.title", docBase.getKieli()), "h5");
