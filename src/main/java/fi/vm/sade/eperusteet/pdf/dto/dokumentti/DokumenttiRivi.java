@@ -33,11 +33,6 @@ public class DokumenttiRivi {
     }
 
     public String getFontColor() {
-        switch (tyyppi) {
-            case HEADER:
-                return DokumenttiRiviFontColor.HEADER;
-        }
-
         return DokumenttiRiviFontColor.DEFAULT;
     }
 
