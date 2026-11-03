@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DokumenttiUtils {
 
@@ -316,7 +317,22 @@ public class DokumenttiUtils {
         return emphasis;
     }
 
+    /**
+     * Palauttaa laajuuden muodossa "minimi - laajuus", tai pelkän toisen arvon jos vain toinen on annettu.
+     * Palauttaa null, jos kumpaakaan ei ole annettu.
+     */
+    public static String laajuusVali(Number minimiLaajuus, Number laajuus) {
+        String vali = Stream.of(minimiLaajuus, laajuus)
+                .filter(Objects::nonNull)
+                .map(String::valueOf)
+                .collect(Collectors.joining(" - "));
+        return vali.isEmpty() ? null : vali;
+    }
+
     public static String selectLaajuusYksikkoMessage(LaajuusYksikko laajuusYksikko) {
+        if (laajuusYksikko == null) {
+            return "docgen.laajuus.op";
+        }
         switch (laajuusYksikko) {
             case OPINTOVIIKKO:
                 return "docgen.laajuus.ov";

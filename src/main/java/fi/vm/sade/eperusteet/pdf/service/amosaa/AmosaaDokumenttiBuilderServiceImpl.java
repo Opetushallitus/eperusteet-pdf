@@ -66,6 +66,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonosa.ValmaTelmaSisaltoDt
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.tutkinnonrakenne.TutkinnonOsaViiteSuppeaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoKielitaitotasoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.TavoitesisaltoalueDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.TavoiteAlueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoLaajaAlaisenOsaamisenAlueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoOpintoDto;
@@ -117,6 +118,7 @@ import java.util.stream.Stream;
 import static fi.vm.sade.eperusteet.pdf.dto.enums.RakenneModuuliRooli.VIRTUAALINEN;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addHeader;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addLokalisoituteksti;
+import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addStringList;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.addTeksti;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.getTextString;
 import static fi.vm.sade.eperusteet.pdf.utils.DokumenttiUtils.selectLaajuusYksikkoMessage;
@@ -1478,42 +1480,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
 
             if (!CollectionUtils.isEmpty(perusteenOsaDto.getTavoitealueet())) {
                 addTeksti(docBase, messages.translate("docgen.tavoitteet-ja-keskeiset-sisallot.title", docBase.getKieli()), "h5");
-
-                DokumenttiTaulukko tavoitesisaltoalueTaulukko = new DokumenttiTaulukko();
-                tavoitesisaltoalueTaulukko.addOtsikkosarakkeet(
-                        messages.translate("docgen.tavoitteet.title", docBase.getKieli()),
-                        messages.translate("docgen.keskeiset-sisaltoalueet.title", docBase.getKieli()));
-
-                perusteenOsaDto.getTavoitealueet().forEach(tavoitealue -> {
-                    DokumenttiRivi rivi = new DokumenttiRivi();
-
-                    if (TavoiteAlueTyyppi.OTSIKKO.equals(tavoitealue.getTavoiteAlueTyyppi()) && tavoitealue.getOtsikko() != null) {
-                        rivi.addSarake(getTextString(docBase, tavoitealue.getOtsikko().getNimi()));
-                        rivi.setColspan(2);
-                        rivi.setTyyppi(DokumenttiRiviTyyppi.SUBHEADER);
-                    }
-
-                    if (TavoiteAlueTyyppi.TAVOITESISALTOALUE.equals(tavoitealue.getTavoiteAlueTyyppi())) {
-                        if (!CollectionUtils.isEmpty(tavoitealue.getTavoitteet())) {
-                            StringBuffer sarake = new StringBuffer();
-                            tavoitealue.getTavoitteet().forEach(tavoite -> {
-                                sarake.append(tagTeksti(getTextString(docBase, tavoite.getNimi()), "div"));
-                            });
-                            rivi.addSarake(sarake.toString());
-                        }
-
-                        if (!CollectionUtils.isEmpty(tavoitealue.getKeskeisetSisaltoalueet())) {
-                            StringBuffer sarake = new StringBuffer();
-                            tavoitealue.getKeskeisetSisaltoalueet().forEach(keskeinenSisaltoalue -> {
-                                sarake.append(tagTeksti(getTextString(docBase, keskeinenSisaltoalue), "div"));
-                            });
-                            rivi.addSarake(sarake.toString());
-                        }
-                    }
-                    tavoitesisaltoalueTaulukko.addRivi(rivi);
-                });
-
-                tavoitesisaltoalueTaulukko.addToDokumentti(docBase);
+                addTavoitealueet(docBase, perusteenOsaDto.getTavoitealueet());
             }
         }
 
@@ -1522,6 +1489,144 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
             addTeksti(docBase, messages.translate("paikallinen-tarkennus", docBase.getKieli()), "h6");
             addTeksti(docBase, getTextString(docBase, sisaltoViiteExportDto.getTavoitesisaltoalue().getPaikallinenTarkennus()), "div");
         }
+    }
+
+    private void lisaaOtsikonTavoitteet(DokumenttiTaulukko taulukko, DokumenttiBase docBase, TavoiteAlueDto tavoitealue) {
+        String johdanto = johdantoTeksti(docBase, tavoitealue);
+        if (CollectionUtils.isEmpty(tavoitealue.getTavoitteet()) && johdanto == null) {
+            return;
+        }
+        DokumenttiRivi tavoiteRivi = new DokumenttiRivi();
+        StringBuffer tavoitteet = new StringBuffer();
+        if (johdanto != null) {
+            tavoitteet.append(tagTeksti(johdanto, "div"));
+        }
+        if (!CollectionUtils.isEmpty(tavoitealue.getTavoitteet())) {
+            tavoitealue.getTavoitteet().forEach(tavoite -> {
+                tavoitteet.append(tagTeksti(getTextString(docBase, tavoite.getNimi()), "div"));
+            });
+        }
+        tavoiteRivi.addSarake(tavoitteet.toString());
+
+        if (!CollectionUtils.isEmpty(tavoitealue.getKeskeisetSisaltoalueet())) {
+            StringBuffer sisaltoalueet = new StringBuffer();
+            tavoitealue.getKeskeisetSisaltoalueet().forEach(keskeinenSisaltoalue -> {
+                sisaltoalueet.append(tagTeksti(getTextString(docBase, keskeinenSisaltoalue), "div"));
+            });
+            tavoiteRivi.addSarake(sisaltoalueet.toString());
+        }
+        taulukko.addRivi(tavoiteRivi);
+    }
+
+    private void addTavoitealueet(DokumenttiBase docBase, List<TavoiteAlueDto> tavoitealueet) {
+        DokumenttiTaulukko tavoitesisaltoalueTaulukko = null;
+
+        for (TavoiteAlueDto tavoitealue : tavoitealueet) {
+            if (tavoitealue == null) {
+                continue;
+            }
+            if (vainTavoitteita(tavoitealue)) {
+                tavoitesisaltoalueTaulukko = suljeTavoitealueTaulukko(docBase, tavoitesisaltoalueTaulukko);
+                lisaaTavoitteetTekstina(docBase, tavoitealue);
+                continue;
+            }
+            if (tavoitesisaltoalueTaulukko == null) {
+                tavoitesisaltoalueTaulukko = new DokumenttiTaulukko();
+                tavoitesisaltoalueTaulukko.addOtsikkosarakkeet(
+                        messages.translate("docgen.tavoitteet.title", docBase.getKieli()),
+                        messages.translate("docgen.keskeiset-sisaltoalueet.title", docBase.getKieli()));
+            }
+
+            DokumenttiRivi rivi = new DokumenttiRivi();
+
+            if (TavoiteAlueTyyppi.OTSIKKO.equals(tavoitealue.getTavoiteAlueTyyppi()) && tavoitealue.getOtsikko() != null) {
+                rivi.addSarake(getTextString(docBase, tavoitealue.getOtsikko().getNimi()));
+                rivi.setColspan(2);
+                rivi.setTyyppi(DokumenttiRiviTyyppi.SUBHEADER);
+                tavoitesisaltoalueTaulukko.addRivi(rivi);
+                lisaaOtsikonTavoitteet(tavoitesisaltoalueTaulukko, docBase, tavoitealue);
+                continue;
+            }
+
+            if (TavoiteAlueTyyppi.TAVOITESISALTOALUE.equals(tavoitealue.getTavoiteAlueTyyppi())) {
+                String johdanto = johdantoTeksti(docBase, tavoitealue);
+                if (johdanto != null || !CollectionUtils.isEmpty(tavoitealue.getTavoitteet())) {
+                    StringBuffer sarake = new StringBuffer();
+                    if (johdanto != null) {
+                        sarake.append(tagTeksti(johdanto, "div"));
+                    }
+                    if (!CollectionUtils.isEmpty(tavoitealue.getTavoitteet())) {
+                        tavoitealue.getTavoitteet().forEach(tavoite -> {
+                            sarake.append(tagTeksti(getTextString(docBase, tavoite.getNimi()), "div"));
+                        });
+                    }
+                    rivi.addSarake(sarake.toString());
+                }
+
+                if (!CollectionUtils.isEmpty(tavoitealue.getKeskeisetSisaltoalueet())) {
+                    StringBuffer sarake = new StringBuffer();
+                    tavoitealue.getKeskeisetSisaltoalueet().forEach(keskeinenSisaltoalue -> {
+                        sarake.append(tagTeksti(getTextString(docBase, keskeinenSisaltoalue), "div"));
+                    });
+                    rivi.addSarake(sarake.toString());
+                }
+            }
+            tavoitesisaltoalueTaulukko.addRivi(rivi);
+        }
+
+        suljeTavoitealueTaulukko(docBase, tavoitesisaltoalueTaulukko);
+    }
+
+    private DokumenttiTaulukko suljeTavoitealueTaulukko(DokumenttiBase docBase, DokumenttiTaulukko taulukko) {
+        if (taulukko != null) {
+            taulukko.addToDokumentti(docBase);
+        }
+        return null;
+    }
+
+
+    private void lisaaTavoitteetTekstina(DokumenttiBase docBase, TavoiteAlueDto tavoitealue) {
+        if (tavoitealue.getOtsikko() != null) {
+            String otsikko = getTextString(docBase, tavoitealue.getOtsikko().getNimi());
+            if (otsikko != null && !otsikko.isBlank()) {
+                addTeksti(docBase, otsikko, "p");
+            }
+        }
+        String johdanto = johdantoTeksti(docBase, tavoitealue);
+        if (johdanto != null) {
+            addTeksti(docBase, johdanto, "p");
+        }
+        List<String> tavoitteet = new ArrayList<>();
+        if (tavoitealue.getTavoitteet() != null) {
+            for (var tavoite : tavoitealue.getTavoitteet()) {
+                if (tavoite == null) {
+                    continue;
+                }
+                String teksti = getTextString(docBase, tavoite.getNimi());
+                if (teksti != null && !teksti.isBlank()) {
+                    tavoitteet.add(teksti);
+                }
+            }
+        }
+        if (!tavoitteet.isEmpty()) {
+            addStringList(docBase, tavoitteet);
+        }
+    }
+
+    private boolean vainTavoitteita(TavoiteAlueDto tavoitealue) {
+        return !CollectionUtils.isEmpty(tavoitealue.getTavoitteet())
+                && CollectionUtils.isEmpty(tavoitealue.getKeskeisetSisaltoalueet());
+    }
+
+    private String johdantoTeksti(DokumenttiBase docBase, TavoiteAlueDto tavoitealue) {
+        if (tavoitealue == null || tavoitealue.getTavoitteidenJohdanto() == null) {
+            return null;
+        }
+        String teksti = getTextString(docBase, tavoitealue.getTavoitteidenJohdanto());
+        if (teksti == null || teksti.isBlank()) {
+            return null;
+        }
+        return teksti;
     }
 
     private void addKotoLaajaAlainenOsaaminen(DokumenttiBase docBase, SisaltoViiteExportDto sisaltoViiteExportDto) {
