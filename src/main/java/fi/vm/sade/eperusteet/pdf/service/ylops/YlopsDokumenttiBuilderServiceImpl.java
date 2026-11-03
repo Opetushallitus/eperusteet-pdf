@@ -58,6 +58,9 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
     private AipeDokumenttiService aipeDokumenttiService;
 
     @Autowired
+    private TpoDokumenttiService tpoDokumenttiService;
+
+    @Autowired
     private YleisetOsuudetService yleisetOsuudetService;
 
     @Autowired
@@ -127,6 +130,11 @@ public class YlopsDokumenttiBuilderServiceImpl implements YlopsDokumenttiBuilder
             // Aikuisten perusopetus
             if (KoulutusTyyppi.AIKUISTENPERUSOPETUS.equals(ops.getKoulutustyyppi())) {
                 aipeDokumenttiService.addAipeSisalto(docBase);
+            }
+
+            // Taiteen perusopetus
+            if (KoulutustyyppiToteutus.TPO.equals(ops.getToteutus())) {
+                tpoDokumenttiService.addTpoSisalto(docBase);
             }
         }
 

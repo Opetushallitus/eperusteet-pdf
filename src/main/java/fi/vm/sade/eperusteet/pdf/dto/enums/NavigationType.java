@@ -32,6 +32,7 @@ public enum NavigationType {
     opetuksenyleisettavoitteet,
     tekstikappale,
     taiteenala,
+    taiteenalavaihe,
     perusopetusoppiaineet,
     perusopetusoppiaine,
     vuosiluokkakokonaisuus,

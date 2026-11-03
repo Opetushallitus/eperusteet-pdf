@@ -74,7 +74,9 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OpetuksenTavoiteDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.OppiaineenVuosiluokkaKokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.PerusopetuksenPerusteenSisaltoDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.TavoiteAlueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TaiteenalaDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TaiteenalaVaiheDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TekstiOsaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.VuosiluokkaKokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.service.DokumenttiUtilService;
@@ -1201,7 +1203,10 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             }
             if (po instanceof TaiteenalaDto) {
                 TaiteenalaDto taiteenala = (TaiteenalaDto) po;
-                addTaiteenala(docBase, taiteenala);
+                addTaiteenala(docBase, taiteenala, lapsi);
+            } else if (po instanceof TaiteenalaVaiheDto) {
+                TaiteenalaVaiheDto vaihe = (TaiteenalaVaiheDto) po;
+                addTaiteenalaVaihe(docBase, vaihe, lapsi);
             } else if (po instanceof OpintokokonaisuusDto) {
                 OpintokokonaisuusDto opintokokonaisuus = (OpintokokonaisuusDto) po;
                 addOpintokokonaisuus(docBase, opintokokonaisuus, po, lapsi);
@@ -1343,7 +1348,8 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
     }
 
     private void addTaiteenala(DokumenttiPeruste docBase,
-                               TaiteenalaDto taiteenala) {
+                               TaiteenalaDto taiteenala,
+                               PerusteenOsaViiteDto.Laaja lapsi) {
         // Nimi
         LokalisoituTekstiDto nimi = taiteenala.getNimi();
         addHeader(docBase, getTextString(docBase, nimi));
@@ -1384,6 +1390,41 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             addTeksti(docBase, getTextString(docBase, vapaaTeksti.getTeksti()), "div");
         });
 
+        docBase.getGenerator().increaseDepth();
+        addPerusteenOsat(docBase, lapsi);
+        docBase.getGenerator().decreaseDepth();
+        docBase.getGenerator().increaseNumber();
+    }
+
+    private void addTaiteenalaVaihe(DokumenttiPeruste docBase, TaiteenalaVaiheDto vaihe, PerusteenOsaViiteDto.Laaja lapsi) {
+        String nimi = vaihe.getKoodi() != null
+                ? getTextString(docBase, vaihe.getKoodi().getNimi())
+                : messages.translate("docgen.taiteenala.nimeton-vaihe", docBase.getKieli());
+        if (vaihe.getLaajuus() != null) {
+            nimi += ", " + vaihe.getLaajuus() + " " + messages.translate("docgen.laajuus.op", docBase.getKieli());
+        }
+        addHeader(docBase, nimi);
+
+        String kuvaus = getTextString(docBase, vaihe.getKuvaus());
+        if (!ObjectUtils.isEmpty(kuvaus)) {
+            addTeksti(docBase, kuvaus, "div");
+        }
+
+        if (!CollectionUtils.isEmpty(vaihe.getTavoitealueet())) {
+            addTeksti(docBase, messages.translate("docgen.tavoitteet-ja-keskeiset-sisallot.title", docBase.getKieli()), "h5");
+            addTavoitealueetTaulukko(docBase, vaihe.getTavoitealueet());
+        }
+
+        if (vaihe.getVapaatTekstit() != null) {
+            vaihe.getVapaatTekstit().forEach(vapaaTeksti -> {
+                addTeksti(docBase, getTextString(docBase, vapaaTeksti.getNimi()), "h5");
+                addTeksti(docBase, getTextString(docBase, vapaaTeksti.getTeksti()), "div");
+            });
+        }
+
+        docBase.getGenerator().increaseDepth();
+        addPerusteenOsat(docBase, lapsi);
+        docBase.getGenerator().decreaseDepth();
         docBase.getGenerator().increaseNumber();
     }
 
@@ -1456,13 +1497,21 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         }
 
         addTeksti(docBase, messages.translate("docgen.tavoitteet-ja-keskeiset-sisallot.title", docBase.getKieli()), "h5");
+        addTavoitealueetTaulukko(docBase, tavoitesisaltoalue.getTavoitealueet());
 
+        docBase.getGenerator().increaseDepth();
+        addPerusteenOsat(docBase, lapsi);
+        docBase.getGenerator().decreaseDepth();
+        docBase.getGenerator().increaseNumber();
+    }
+
+    private void addTavoitealueetTaulukko(DokumenttiPeruste docBase, List<TavoiteAlueDto> tavoitealueet) {
         DokumenttiTaulukko tavoitesisaltoalueTaulukko = new DokumenttiTaulukko();
         tavoitesisaltoalueTaulukko.addOtsikkosarakkeet(
                 messages.translate("docgen.tavoitteet.title", docBase.getKieli()),
                 messages.translate("docgen.keskeiset-sisaltoalueet.title", docBase.getKieli()));
 
-        tavoitesisaltoalue.getTavoitealueet().forEach(tavoitealue -> {
+        tavoitealueet.forEach(tavoitealue -> {
             DokumenttiRivi rivi = new DokumenttiRivi();
 
             if (tavoitealue.getTavoiteAlueTyyppi().equals(TavoiteAlueTyyppi.OTSIKKO)) {
@@ -1493,11 +1542,6 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
         });
 
         tavoitesisaltoalueTaulukko.addToDokumentti(docBase);
-
-        docBase.getGenerator().increaseDepth();
-        addPerusteenOsat(docBase, lapsi);
-        docBase.getGenerator().decreaseDepth();
-        docBase.getGenerator().increaseNumber();
     }
 
     private void addKoulutuksenOsa(DokumenttiPeruste docBase, KoulutuksenOsaDto koulutuksenOsa, PerusteenOsaDto po,
