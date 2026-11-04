@@ -39,7 +39,7 @@ public enum NavigationType {
     aipekurssi,
     aipeoppiaine,
     kurssit,
-    taiteenosa,
+    taiteentekstiosa,
     termi,
     opintokokonaisuus,
     tavoitesisaltoalue,
