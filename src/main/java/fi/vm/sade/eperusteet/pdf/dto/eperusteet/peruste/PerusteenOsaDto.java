@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.KotoOpintoDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.OpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.vst.TavoitesisaltoalueDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TaiteenalaDto;
+import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.TaiteenalaVaiheDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.lukio.osaviitteet.AihekokonaisuudetLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.lukio.osaviitteet.LukioOpetussuunnitelmaRakenneLaajaDto;
 import fi.vm.sade.eperusteet.pdf.dto.eperusteet.yl.lukio.osaviitteet.OpetuksenYleisetTavoitteetLaajaDto;
@@ -62,6 +63,7 @@ public abstract class PerusteenOsaDto implements ReferenceableDto {
             @JsonSubTypes.Type(value = TekstiKappaleDto.class),
             @JsonSubTypes.Type(value = TutkinnonOsaDto.class),
             @JsonSubTypes.Type(value = TaiteenalaDto.class),
+            @JsonSubTypes.Type(value = TaiteenalaVaiheDto.class),
             @JsonSubTypes.Type(value = AihekokonaisuudetLaajaDto.class),
             @JsonSubTypes.Type(value = OpetuksenYleisetTavoitteetLaajaDto.class),
             @JsonSubTypes.Type(value = LukioOpetussuunnitelmaRakenneLaajaDto.class),
