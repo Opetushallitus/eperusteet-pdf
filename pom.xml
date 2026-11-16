@@ -28,6 +28,12 @@
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
         </dependency>
+		<!-- Shared OPH application libraries -->
+		<dependency>
+			<groupId>fi.vm.sade.java-utils</groupId>
+			<artifactId>java-properties</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
     </dependencies>
 
 	<build>
