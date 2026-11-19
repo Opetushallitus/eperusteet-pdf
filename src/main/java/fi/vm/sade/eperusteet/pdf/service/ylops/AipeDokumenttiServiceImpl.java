@@ -98,6 +98,7 @@ public class AipeDokumenttiServiceImpl implements AipeDokumenttiService {
             addKuvaus(docBase, perusteSisalto.getPakollinenKurssiKuvaus(), "docgen.pakollinen_kurssi_kuvaus.title");
             addKuvaus(docBase, perusteSisalto.getSyventavaKurssiKuvaus(), "docgen.syventava_kurssi_kuvaus.title");
             addKuvaus(docBase, perusteSisalto.getSoveltavaKurssiKuvaus(), "docgen.soveltava_kurssi_kuvaus.title");
+            addKuvaus(docBase, perusteSisalto.getKielikasvatus(), "docgen.kielikasvatus.title");
         }
 
         addPaikallinenTarkennus(docBase, exportOppiaine.getPaikallinenTarkennus());
