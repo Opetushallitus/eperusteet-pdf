@@ -1505,16 +1505,18 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
 
         Integer minimiLaajuus = koulutuksenOsa.getLaajuusMinimi() != null ? koulutuksenOsa.getLaajuusMinimi() : koulutuksenOsa.getLaajuusMaksimi() != null ? koulutuksenOsa.getLaajuusMaksimi() : 0;
         Integer maksimiLaajuus = koulutuksenOsa.getLaajuusMaksimi() != null ? koulutuksenOsa.getLaajuusMaksimi() : koulutuksenOsa.getLaajuusMinimi() != null ? koulutuksenOsa.getLaajuusMinimi() : 0;
+        boolean telmaValmentava = KoulutusTyyppi.TELMA_VALMENTAVA.toString().equals(docBase.getPeruste().getKoulutustyyppi());
+        String laajuusYksikko = messages.translate(telmaValmentava ? "docgen.laajuus.osp" : "docgen.laajuus.vk", docBase.getKieli());
         String nimi = getTextString(docBase, koulutuksenOsa.getNimi());
         if (koulutuksenOsa.getNimiKoodi() != null) {
             nimi = getTextString(docBase, koulutuksenOsa.getNimiKoodi().getNimi());
         }
 
         if (minimiLaajuus.compareTo(maksimiLaajuus) == 0) {
-            String nimiSuffix = String.format(", %d %s", minimiLaajuus, messages.translate("docgen.laajuus.vk", docBase.getKieli()));
+            String nimiSuffix = String.format(", %d %s", minimiLaajuus, laajuusYksikko);
             addHeader(docBase, nimi + nimiSuffix);
         } else {
-            String nimiSuffix = String.format(", %d - %d %s", minimiLaajuus, maksimiLaajuus, messages.translate("docgen.laajuus.vk", docBase.getKieli()));
+            String nimiSuffix = String.format(", %d - %d %s", minimiLaajuus, maksimiLaajuus, laajuusYksikko);
             addHeader(docBase, nimi + nimiSuffix);
         }
 
@@ -1528,7 +1530,7 @@ public class EperusteetDokumenttiBuilderServiceImpl implements EperusteetDokumen
             addTeksti(docBase, kuvaus, "div");
         }
 
-        addTeksti(docBase, messages.translate("docgen.opetuksen-tavoitteet.title", docBase.getKieli()), "h5");
+        addTeksti(docBase, messages.translate(telmaValmentava ? "docgen.osaamistavoitteet" : "docgen.opetuksen-tavoitteet.title", docBase.getKieli()), "h5");
         addTeksti(docBase, messages.translate("docgen.info.opiskelija", docBase.getKieli()), "h6");
 
         Element tavoitteetEl = docBase.getDocument().createElement("ul");

@@ -38,6 +38,7 @@ import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiAmosaa;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiBase;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiRivi;
 import fi.vm.sade.eperusteet.pdf.dto.dokumentti.DokumenttiTaulukko;
+import fi.vm.sade.eperusteet.pdf.dto.enums.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.DokumenttiRiviTyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.Kuvatyyppi;
 import fi.vm.sade.eperusteet.pdf.dto.enums.OmaOsaAlueTyyppi;
@@ -395,7 +396,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
                     }
                 }
 
-                otsikkoBuilder.append(", " + minimilaajuus + " - " + maksimiLAajuus + " " + messages.translate("docgen.laajuus.viikkoa", docBase.getKieli()));
+                otsikkoBuilder.append(", " + minimilaajuus + " - " + maksimiLAajuus + " " + messages.translate(KoulutusTyyppi.TELMA_VALMENTAVA.equals(docBase.getOpetussuunnitelma().getKoulutustyyppi()) ? "docgen.laajuus.osp" : "docgen.laajuus.viikkoa", docBase.getKieli()));
             }
 
             DokumenttiUtils.addHeader(docBase, otsikkoBuilder.toString());
@@ -1406,7 +1407,7 @@ public class AmosaaDokumenttiBuilderServiceImpl implements AmosaaDokumenttiBuild
         KoulutuksenOsaDto koulutuksenOsaDto = sisaltoViiteExportDto.getKoulutuksenosa();
         addTeksti(docBase, getTextString(docBase, perusteenOsaDto != null ? perusteenOsaDto.getKuvaus() : koulutuksenOsaDto.getKuvaus()), "div");
 
-        addTeksti(docBase, messages.translate("docgen.tavoitteet.title", docBase.getKieli()), "h5");
+        addTeksti(docBase, messages.translate(docBase.getPeruste() != null && KoulutusTyyppi.TELMA_VALMENTAVA.toString().equals(docBase.getPeruste().getKoulutustyyppi()) ? "docgen.osaamistavoitteet" : "docgen.tavoitteet.title", docBase.getKieli()), "h5");
         Element tavoitteetEl = docBase.getDocument().createElement("ul");
         Stream.concat(
                 Stream.of(perusteenOsaDto != null ? perusteenOsaDto.getTavoitteet() : koulutuksenOsaDto.getTavoitteet()),
